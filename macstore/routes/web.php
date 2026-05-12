@@ -4,11 +4,10 @@ use App\Http\Controllers\ProfileController;
 use App\Livewire\ProductsIndex;
 use App\Livewire\ProductShow;
 use App\Livewire\Cart;
+use App\Livewire\Home;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', Home::class)->name('home');
 
 // Products
 Route::get('/products', ProductsIndex::class)->name('products.index');
