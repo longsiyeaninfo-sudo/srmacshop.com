@@ -1,0 +1,49 @@
+# 🎯 COPY & PASTE THESE COMMANDS ONE BY ONE
+
+## Command 1: Go to home directory
+cd ~
+
+## Command 2: Download the deployment script
+curl -o deploy.sh https://raw.githubusercontent.com/longsiyeaninfo-sudo/srmacshop.com/main/macbook-store/deploy-cpanel.sh
+
+## Command 3: Make it executable
+chmod +x deploy.sh
+
+## Command 4: Run the script
+./deploy.sh
+
+---
+
+# OR USE THIS ONE-LINE COMMAND (EASIER):
+
+cd ~ && curl -o deploy.sh https://raw.githubusercontent.com/longsiyeaninfo-sudo/srmacshop.com/main/macbook-store/deploy-cpanel.sh && chmod +x deploy.sh && ./deploy.sh
+
+---
+
+# WHAT WILL HAPPEN:
+
+The script will automatically:
+✅ Clean up old files
+✅ Download project from GitHub
+✅ Install all dependencies (2-3 minutes)
+✅ Build the application
+✅ Create configuration files
+
+You'll see messages like:
+📦 Step 1: Cleaning up old files...
+📥 Step 2: Downloading project from GitHub...
+📦 Step 4: Installing dependencies...
+🏗️ Step 6: Building application...
+✅ INSTALLATION COMPLETE!
+
+---
+
+# AFTER THE SCRIPT FINISHES:
+
+You need to:
+1. Create PostgreSQL database
+2. Set up Node.js app in cPanel
+3. Add environment variables
+4. Start the app
+
+I'll help you with each step!
