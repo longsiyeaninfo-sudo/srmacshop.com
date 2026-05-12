@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WebhookController;
 use App\Livewire\ProductsIndex;
 use App\Livewire\ProductShow;
 use App\Livewire\Cart;
@@ -9,12 +10,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', Home::class)->name('home');
 
+// Webhooks (no CSRF protection)
+Route::post('/webhook/stripe', [WebhookController::class, 'stripeWebhook'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
 // Products
 Route::get('/products', ProductsIndex::class)->name('products.index');
 Route::get('/products/{slug}', ProductShow::class)->name('products.show');
 
 // Cart
 Route::get('/cart', Cart::class)->name('cart');
+
+// Payment
+Route::middleware('auth')->group(function () {
+    Route::get('/payment/{order}', \App\Livewire\StripePayment::class)->name('payment');
+});
 
 // Account (requires authentication)
 Route::middleware('auth')->prefix('account')->name('account.')->group(function () {
