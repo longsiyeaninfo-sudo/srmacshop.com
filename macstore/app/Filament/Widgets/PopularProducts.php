@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class PopularProducts extends TableWidget
 {
-    protected ?string $heading = 'Popular Products';
+    protected static ?string $heading = 'Popular Products';
 
     protected static ?int $sort = 3;
 

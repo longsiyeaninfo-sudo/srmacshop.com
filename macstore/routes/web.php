@@ -33,6 +33,9 @@ Route::middleware('auth')->prefix('account')->name('account.')->group(function (
     Route::get('/wishlist', \App\Livewire\Account\Wishlist::class)->name('wishlist');
 });
 
+// Order Tracking (public or authenticated)
+Route::get('/track/{orderNumber}', \App\Livewire\OrderTracking::class)->name('order.track');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
