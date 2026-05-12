@@ -1,36 +1,168 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MacBook Store
+
+A premium e-commerce store for MacBooks with Apple-style design, built with Next.js 15, TypeScript, and Tailwind CSS.
+
+## Features
+
+- 🎨 macOS-inspired design with frosted-glass effects
+- 🛍️ Product catalog with filtering by category
+- ⚙️ Apple-style product configurator (chip, RAM, storage, color)
+- 🛒 Shopping cart with localStorage persistence
+- 🔐 Authentication with Auth.js (Google OAuth)
+- 💳 Stripe checkout integration (ready to configure)
+- 📱 Fully responsive design
+- 🌓 Dark/light mode support
+
+## Tech Stack
+
+- **Framework:** Next.js 15 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4
+- **UI Components:** shadcn/ui + Radix UI
+- **Database:** PostgreSQL with Prisma ORM
+- **Authentication:** Auth.js v5
+- **State Management:** Zustand
+- **Payments:** Stripe
+- **Deployment:** Vercel
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ 
+- PostgreSQL database (or use Neon/Supabase free tier)
+- Google OAuth credentials (optional, for authentication)
+- Stripe account (optional, for payments)
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <your-repo-url>
+cd macbook-store
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables:
+Create a `.env.local` file with:
+```env
+# Database
+DATABASE_URL="postgresql://user:password@localhost:5432/macbook_store"
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Auth
+AUTH_SECRET="your-secret-here"
+AUTH_GOOGLE_ID="your-google-client-id"
+AUTH_GOOGLE_SECRET="your-google-client-secret"
+NEXTAUTH_URL="http://localhost:3000"
 
-## Learn More
+# Stripe
+STRIPE_SECRET_KEY="sk_test_..."
+STRIPE_PUBLISHABLE_KEY="pk_test_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."
 
-To learn more about Next.js, take a look at the following resources:
+# App
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Set up the database:
+```bash
+# Run migrations
+npx prisma migrate dev --name init
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Seed with sample MacBook products
+npm run db:seed
+```
 
-## Deploy on Vercel
+5. Start the development server:
+```bash
+npm run dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Visit [http://localhost:3000](http://localhost:3000) to see the store.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment to Vercel
+
+1. Push your code to GitHub
+
+2. Import the project in Vercel
+
+3. Set up a PostgreSQL database (recommended: Neon)
+
+4. Add environment variables in Vercel dashboard
+
+5. Deploy!
+
+### Database Setup
+
+For production, use [Neon](https://neon.tech) (free tier available):
+```bash
+# Create database
+npx create-db
+
+# Run migrations
+npx prisma migrate deploy
+
+# Seed products
+npm run db:seed
+```
+
+### Stripe Webhook
+
+Configure webhook endpoint in Stripe dashboard:
+```
+https://yourdomain.com/api/webhooks/stripe
+```
+
+Events to listen for:
+- `checkout.session.completed`
+- `payment_intent.payment_failed`
+
+## Project Structure
+
+```
+macbook-store/
+├── app/
+│   ├── (storefront)/          # Public pages
+│   │   ├── shop/              # Product listing & detail
+│   │   └── page.tsx           # Homepage
+│   ├── api/                 # API routes
+│   │   └── auth/          # Auth.js routes
+│   ├── layout.tsx          # Root layout
+│   └── globals.css            # Global styles
+├── components/
+│   ├── storefront/            # Storefront components
+│   │   ├── nav.tsx            # Navigation
+│   │   ├── footer.tsx         # Footer
+│   │   └── product-configurator.tsx
+│   └── ui/               # shadcn components
+├── lib/
+│   ├── prisma.ts         # Prisma client
+│   ├── auth.ts              # Auth.js config
+│   └── cart-store.ts        # Zustand cart store
+├── prisma/
+│   ├── schema.prisma          # Database schema
+│   └── seed.ts              # Seed script
+└── middleware.ts              # Route protection
+```
+
+## Roadmap
+
+- [ ] Complete checkout flow with Stripe
+- [ ] Admin dashboard for product management
+- [ ] Customer account pages (orders, wishlist, addresses)
+- [ ] Order confirmation emails
+- [ ] Product search
+- [ ] Product reviews
+- [ ] Wishlist functionality
+
+## License
+
+MIT
+
+## Credits
+
+Built with [Claude Code](https://claude.ai/code)
