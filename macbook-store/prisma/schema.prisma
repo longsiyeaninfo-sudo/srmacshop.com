@@ -1,0 +1,142 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id      String    @id @default(cuid())
+  email      String    @unique
+  name          String?
+  image         String?
+  role          Role      @default(CUSTOMER)
+  addresses     Address[]
+  orders        Order[]
+  wishlist      WishlistItem[]
+  createdAt     DateTime  @default(now())
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+model Product {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  tagline     String
+  description String    @db.Text
+  basePrice   Int
+  images      Image[]
+  variants    Variant[]
+  category    Category  @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  featured    Boolean   @default(false)
+  inStock     Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+}
+
+model Variant {
+  id     String   @id @default(cuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  chip       String
+  ram        Int
+  storage    Int
+  color      String
+  priceDelta Int
+  sku        String   @unique
+  stock      Int      @default(0)
+}
+
+model Image {
+  id      String   @id @default(cuid())
+  url       String
+  alt       String
+  order     Int      @default(0)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  slug     String    @unique
+  name     String
+  products Product[]
+}
+
+model Order {
+  id            String       @id @default(cuid())
+  orderNumber     String       @unique
+  userId          String
+  user            User         @relation(fields: [userId], references: [id])
+  items           OrderItem[]
+  subtotal        Int
+  tax             Int
+  shipping        Int
+  total           Int
+  status          OrderStatus  @default(PENDING)
+  stripeSessionId String?      @unique
+  shippingAddress Json
+  createdAt       DateTime     @default(now())
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variantId String
+  quantity  Int
+  unitPrice Int
+  snapshot  Json
+}
+
+model Address {
+  id         String  @id @default(cuid())
+  userId     String
+  user       User    @relation(fields: [userId], references: [id])
+  fullName   String
+  line1      String
+  line2      String?
+  city       String
+  state      String?
+  postalCode String
+  country    String
+  phone      String?
+  isDefault  Boolean @default(false)
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String
+  user    User     @relation(fields: [userId], references: [id])
+  productId String
+  createdAt DateTime @default(now())
+  @@unique([userId, productId])
+}
+
+model Review {
+  id     String   @id @default(cuid())
+  productId String
+  userId    String
+  rating    Int
+  title     String
+  body      String   @db.Text
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
