@@ -17,6 +17,14 @@ Route::get('/products/{slug}', ProductShow::class)->name('products.show');
 // Cart
 Route::get('/cart', Cart::class)->name('cart');
 
+// Account (requires authentication)
+Route::middleware('auth')->prefix('account')->name('account.')->group(function () {
+    Route::get('/', \App\Livewire\Account\Dashboard::class)->name('dashboard');
+    Route::get('/orders', \App\Livewire\Account\Orders::class)->name('orders');
+    Route::get('/addresses', \App\Livewire\Account\Addresses::class)->name('addresses');
+    Route::get('/wishlist', \App\Livewire\Account\Wishlist::class)->name('wishlist');
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
