@@ -1,11 +1,17 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Livewire\ProductsIndex;
+use App\Livewire\ProductShow;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('home');
 });
+
+// Products
+Route::get('/products', ProductsIndex::class)->name('products.index');
+Route::get('/products/{slug}', ProductShow::class)->name('products.show');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
