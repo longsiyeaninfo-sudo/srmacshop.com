@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Translatable\HasTranslations;
 
 class Product extends Model implements HasMedia
 {
-    use InteractsWithMedia, HasTranslations;
+    use InteractsWithMedia, HasTranslations, Searchable;
 
     protected $fillable = [
         'category_id', 'name', 'slug', 'sku_prefix',
@@ -28,6 +29,18 @@ class Product extends Model implements HasMedia
         'is_featured' => 'boolean',
         'is_active' => 'boolean',
     ];
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'short_description' => $this->short_description,
+            'description' => $this->description,
+            'sku_prefix' => $this->sku_prefix,
+            'category_name' => $this->category?->name,
+        ];
+    }
 
     public function category(): BelongsTo
     {

@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Reviews\Schemas;
 
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
@@ -13,24 +13,32 @@ class ReviewForm
     {
         return $schema
             ->components([
-                TextInput::make('product_id')
+            Select::make('product_id')
+          ->relationship('product', 'name')
                     ->required()
-                    ->numeric(),
-                TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
-                TextInput::make('order_id')
-                    ->numeric(),
-                TextInput::make('rating')
-                    ->required()
-                    ->numeric(),
-                TextInput::make('title'),
-                Textarea::make('body')
-                    ->columnSpanFull(),
+                  ->searchable()
+                    ->preload(),
+                Select::make('user_id')
+             ->relationship('user', 'name')
+                  ->required()
+               ->searchable()
+                    ->preload(),
+            Select::make('rating')
+                    ->options([
+               5 => '5 Stars',
+                      4 => '4 Stars',
+                 3 => '3 Stars',
+                2 => '2 Stars',
+                        1 => '1 Star',
+                ])
+                 ->required(),
+                Textarea::make('comment')
+             ->required()
+                    ->rows(4)
+                 ->columnSpanFull(),
                 Toggle::make('is_approved')
-                    ->required(),
-                Textarea::make('admin_reply')
-                    ->columnSpanFull(),
+                 ->label('Approved')
+                  ->default(false),
             ]);
     }
 }

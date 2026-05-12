@@ -114,6 +114,9 @@
              </x-card>
             @endif
 
+            <!-- Reviews -->
+            @livewire('product-reviews', ['product' => $product])
+
             <!-- Related Products -->
             @if($relatedProducts->count() > 0)
                 <div>

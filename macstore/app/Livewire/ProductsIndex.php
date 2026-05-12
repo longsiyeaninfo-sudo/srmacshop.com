@@ -22,8 +22,9 @@ class ProductsIndex extends Component
         'search' => ['except' => ''],
         'categoryFilter' => ['except' => '', 'as' => 'category'],
         'conditionFilter' => ['except' => '', 'as' => 'condition'],
-    'sortBy' => ['except' => 'latest', 'as' => 'sort'],
+        'sortBy' => ['except' => 'latest', 'as' => 'sort'],
     ];
+
     public function updatingSearch()
     {
         $this->resetPage();
@@ -33,6 +34,7 @@ class ProductsIndex extends Component
     {
         $this->resetPage();
     }
+
     public function updatingConditionFilter()
     {
         $this->resetPage();
@@ -41,57 +43,81 @@ class ProductsIndex extends Component
     public function clearFilters()
     {
         $this->reset(['search', 'categoryFilter', 'conditionFilter', 'minPrice', 'maxPrice']);
-        $this->resetPage();
+      $this->resetPage();
     }
 
     public function render()
     {
-        $query = Product::with(['category', 'media'])
-            ->where('is_active', true);
-
-        // Search
+        // Search with Scout
         if ($this->search) {
-        $query->where(function ($q) {
-                $q->where('name->en', 'like', '%' . $this->search . '%')
-                ->orWhere('name->km', 'like', '%' . $this->search . '%')
-                  ->orWhere('slug', 'like', '%' . $this->search . '%');
-            });
-      }
+            $query = Product::search($this->search)
+             ->query(fn ($builder) => $builder->with(['category', 'media'])
+                    ->where('is_active', true));
 
-        // Category filter
-        if ($this->categoryFilter) {
-          $query->where('category_id', $this->categoryFilter);
-        }
+            // Apply filters
+            if ($this->categoryFilter) {
+                $query->query(fn ($builder) => $builder->where('category_id', $this->categoryFilter));
+       }
 
-        // Condition filter
-      if ($this->conditionFilter) {
-            $query->where('condition', $this->conditionFilter);
-        }
+          if ($this->conditionFilter) {
+             $query->query(fn ($builder) => $builder->where('condition', $this->conditionFilter));
+            }
 
-        // Price range
-        $query->whereBetween('base_price', [$this->minPrice, $this->maxPrice]);
+            $query->query(fn ($builder) => $builder->whereBetween('base_price', [$this->minPrice, $this->maxPrice]));
 
-        // Sorting
-        switch ($this->sortBy) {
-            case 'price_low':
-                $query->orderBy('base_price', 'asc');
-                break;
-        case 'price_high':
-             $query->orderBy('base_price', 'desc');
-                break;
-         case 'name':
-                $query->orderBy('name->en', 'asc');
+            // Sorting
+         switch ($this->sortBy) {
+              case 'price_low':
+                  $query->query(fn ($builder) => $builder->orderBy('base_price', 'asc'));
              break;
-            default:
-                $query->latest();
+                case 'price_high':
+                    $query->query(fn ($builder) => $builder->orderBy('base_price', 'desc'));
+                    break;
+                case 'name':
+                $query->query(fn ($builder) => $builder->orderBy('name->en', 'asc'));
+            break;
+              default:
+             $query->query(fn ($builder) => $builder->latest());
+            }
+
+            $products = $query->paginate(12);
+        } else {
+            // Regular query when no search
+            $query = Product::with(['category', 'media'])
+             ->where('is_active', true);
+
+         if ($this->categoryFilter) {
+             $query->where('category_id', $this->categoryFilter);
+            }
+
+            if ($this->conditionFilter) {
+                $query->where('condition', $this->conditionFilter);
+            }
+
+            $query->whereBetween('base_price', [$this->minPrice, $this->maxPrice]);
+
+            switch ($this->sortBy) {
+          case 'price_low':
+                    $query->orderBy('base_price', 'asc');
+                    break;
+                case 'price_high':
+                 $query->orderBy('base_price', 'desc');
+               break;
+          case 'name':
+                $query->orderBy('name->en', 'asc');
+                  break;
+        default:
+               $query->latest();
+         }
+
+            $products = $query->paginate(12);
         }
 
-      $products = $query->paginate(12);
         $categories = Category::where('is_active', true)->get();
 
-        return view('livewire.products-index', [
+     return view('livewire.products-index', [
             'products' => $products,
-         'categories' => $categories,
+            'categories' => $categories,
         ]);
-    }
+  }
 }
