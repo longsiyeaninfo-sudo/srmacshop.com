@@ -4,12 +4,13 @@ namespace App\Livewire;
 
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\CartService;
 use Livewire\Component;
 
 class ProductShow extends Component
 {
     public Product $product;
-    public $selectedVariantId;
+  public $selectedVariantId;
     public $quantity = 1;
 
     public function mount($slug)
@@ -23,9 +24,9 @@ class ProductShow extends Component
         $this->selectedVariantId = $this->product->variants()->where('is_active', true)->first()?->id;
     }
 
-    public function getSelectedVariantProperty()
+  public function getSelectedVariantProperty()
     {
-        return ProductVariant::find($this->selectedVariantId);
+      return ProductVariant::find($this->selectedVariantId);
     }
 
     public function getFinalPriceProperty()
@@ -40,22 +41,28 @@ class ProductShow extends Component
 
     public function addToCart()
     {
-        if (!$this->selectedVariant) {
-        session()->flash('error', __('Please select a variant'));
-            return;
-     }
+      if (!$this->selectedVariant) {
+            session()->flash('error', __('Please select a variant'));
+      return;
+        }
 
-        // Cart functionality will be implemented in Phase 6
-        session()->flash('success', __('Product added to cart!'));
-        $this->dispatch('product-added-to-cart');
+        try {
+            $cartService = app(CartService::class);
+            $cartService->addItem($this->selectedVariantId, $this->quantity);
+
+       session()->flash('success', __('Product added to cart!'));
+            $this->dispatch('cart-updated');
+        } catch (\Exception $e) {
+            session()->flash('error', $e->getMessage());
+        }
     }
 
     public function render()
     {
-    $relatedProducts = Product::where('category_id', $this->product->category_id)
-        ->where('id', '!=', $this->product->id)
+        $relatedProducts = Product::where('category_id', $this->product->category_id)
+       ->where('id', '!=', $this->product->id)
             ->where('is_active', true)
-            ->limit(4)
+         ->limit(4)
             ->get();
 
         return view('livewire.product-show', [
