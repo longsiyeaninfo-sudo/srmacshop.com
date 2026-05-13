@@ -80,7 +80,7 @@ class InventoryService
             ->get();
     }
 
-    public function updateStock(int $variantId, int $quantity, string $reason = null): void
+    public function updateStock(int $variantId, int $quantity, ?string $reason = null): void
     {
         $variant = ProductVariant::find($variantId);
 
