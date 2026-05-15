@@ -1,5 +1,9 @@
 # MacStore - Production Environment Configuration
 
+**Laravel Version:** 13.9.0  
+**PHP Version:** 8.2+  
+**Repository:** https://github.com/longsiyeaninfo-sudo/srmacshop.com.git
+
 ## Required Environment Variables
 
 ```env
@@ -9,7 +13,7 @@ APP_ENV=production
 APP_KEY=base64:YOUR_APP_KEY_HERE
 APP_DEBUG=false
 APP_TIMEZONE=UTC
-APP_URL=https://yourdomain.com
+APP_URL=https://srmacshop.com
 APP_LOCALE=en
 APP_FALLBACK_LOCALE=en
 
@@ -22,41 +26,19 @@ DB_USERNAME=your_db_user
 DB_PASSWORD=your_secure_password
 
 # Cache & Session
-CACHE_STORE=redis
-SESSION_DRIVER=redis
-QUEUE_CONNECTION=redis
-
-# Redis
-REDIS_HOST=127.0.0.1
-REDIS_PASSWORD=null
-REDIS_PORT=6379
+CACHE_STORE=file
+SESSION_DRIVER=file
+QUEUE_CONNECTION=database
 
 # Mail
 MAIL_MAILER=smtp
-MAIL_HOST=smtp.mailtrap.io
-MAIL_PORT=2525
+MAIL_HOST=smtp.example.com
+MAIL_PORT=587
 MAIL_USERNAME=your_username
 MAIL_PASSWORD=your_password
 MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS="noreply@yourdomain.com"
+MAIL_FROM_ADDRESS="noreply@srmacshop.com"
 MAIL_FROM_NAME="${APP_NAME}"
-
-# Scout
-SCOUT_DRIVER=database
-# For production, consider using Meilisearch or Algolia
-# SCOUT_DRIVER=meilisearch
-# MEILISEARCH_HOST=http://127.0.0.1:7700
-# MEILISEARCH_KEY=your_master_key
-
-# Filament
-FILAMENT_FILESYSTEM_DISK=public
-
-# AWS S3 (Optional - for production file storage)
-# AWS_ACCESS_KEY_ID=
-# AWS_SECRET_ACCESS_KEY=
-# AWS_DEFAULT_REGION=us-east-1
-# AWS_BUCKET=
-# AWS_USE_PATH_STYLE_ENDPOINT=false
 
 # Logging
 LOG_CHANNEL=stack
@@ -78,41 +60,106 @@ LOG_LEVEL=error
 - [ ] Set correct `APP_URL`
 - [ ] Review and update `.env` file
 
-### Server Requirements
+## Server Requirements
 
 - PHP 8.2 or higher
-- MySQL 8.0+ or PostgreSQL 13+
-- Redis (recommended for caching)
+- MySQL 8.0+ or MariaDB 10.3+
 - Composer 2.x
-- Node.js 18+ and NPM (for asset compilation)
-- Web server (Nginx or Apache)
+- Web server (Apache with mod_rewrite or Nginx)
+- SSH access to cPanel/server
 
-### Optimization Commands
+## cPanel Deployment Steps
+
+### 1. Clone Repository via SSH
 
 ```bash
-# Clear all caches
-php artisan config:clear
-php artisan cache:clear
-php artisan view:clear
-php artisan route:clear
+# SSH into your cPanel server
+ssh username@your-server.com
 
-# Optimize for production
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-php artisan event:cache
+# Navigate to your domain directory (usually public_html or a subdomain folder)
+cd public_html
 
-# Compile assets
-npm run build
+# Clone the repository
+git clone git@github.com:longsiyeaninfo-sudo/srmacshop.com.git .
+# OR if using HTTPS:
+# git clone https://github.com/longsiyeaninfo-sudo/srmacshop.com.git .
 
-# Create storage link
-php artisan storage:link
+# Navigate to the Laravel project
+cd macstore
+```
 
+### 2. Install Dependencies
+
+```bash
+# Install PHP dependencies
+composer install --optimize-autoloader --no-dev
+
+# Set proper permissions
+chmod -R 755 storage bootstrap/cache
+```
+
+### 3. Environment Configuration
+
+```bash
+# Copy environment file
+cp .env.example .env
+# Generate application key
+php artisan key:generate
+
+# Edit .env file with your production settings
+nano .env
+```
+
+**Important .env settings for cPanel:**
+- Set `APP_URL` to your domain (e.g., https://srmacshop.com)
+- Configure database credentials from cPanel MySQL
+- Set `APP_ENV=production` and `APP_DEBUG=false`
+
+### 4. Database Setup
+```bash
 # Run migrations
 php artisan migrate --force
 
-# Index products for search
-php artisan scout:import "App\Models\Product"
+# Optional: Seed initial data
+php artisan db:seed
+```
+
+### 5. Configure Web Server
+
+**For cPanel with Apache:**
+
+The Laravel project includes a `.htaccess` file in the `public` directory. You need to point your domain to the `public` folder.
+
+**Option A: Using cPanel File Manager**
+1. Go to cPanel → Domains → Domains
+2. Edit your domain
+3. Change Document Root to: `/home/username/public_html/macstore/public`
+
+**Option B: Using .htaccess redirect (if you can't change document root)**
+
+Create a `.htaccess` file in your root directory:
+
+```apache
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(.*)$ macstore/public/$1 [L]
+</IfModule>
+```
+
+### 6. Storage Link
+
+```bash
+# Create symbolic link for storage
+php artisan storage:link
+```
+
+### 7. Optimize for Production
+
+```bash
+# Cache configuration
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 ```
 
 ### Security
@@ -145,52 +192,74 @@ php artisan scout:import "App\Models\Product"
 - [ ] Set up database backups
 - [ ] Monitor disk space and performance
 
-## Deployment Steps
+## Git Deployment Workflow
 
-1. **Clone Repository**
-   ```bash
-   git clone https://github.com/longsiyeaninfo-sudo/srmacshop.com.git
-   cd srmacshop.com/macstore
-   ```
+### Initial Setup
+```bash
+# Add remote if not already added
+git remote add origin git@github.com:longsiyeaninfo-sudo/srmacshop.com.git
 
-2. **Install Dependencies**
-   ```bash
-   composer install --optimize-autoloader --no-dev
-   npm install
-   npm run build
-   ```
+# Verify remote
+git remote -v
+```
 
-3. **Environment Setup**
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   # Edit .env with production values
-   ```
+### Deploying Updates
 
-4. **Database Setup**
-   ```bash
-   php artisan migrate --force
-   php artisan db:seed --class=AdminSeeder
-   ```
+**On your local machine:**
+```bash
+# Make your changes
+git add .
+git commit -m "Your commit message"
+git push origin main
+```
 
-5. **Storage & Permissions**
-   ```bash
-   php artisan storage:link
-   chmod -R 775 storage bootstrap/cache
-   chown -R www-data:www-data storage bootstrap/cache
-   ```
+**On cPanel server via SSH:**
+```bash
+# Navigate to project
+cd /home/username/public_html/macstore
 
-6. **Optimize**
-   ```bash
-   php artisan config:cache
-   php artisan route:cache
-   php artisan view:cache
-   ```
+# Pull latest changes
+git pull origin main
 
-7. **Queue Worker** (Supervisor recommended)
-   ```bash
-   php artisan queue:work --daemon
-   ```
+# Update dependencies if composer.json changed
+composer install --optimize-autoloader --no-dev
+
+# Run migrations if database changed
+php artisan migrate --force
+
+# Clear and recache
+php artisan config:clear
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+### Automated Deployment (Optional)
+
+You can set up a webhook or cron job to automatically pull changes:
+
+```bash
+# Create a deployment script: deploy.sh
+#!/bin/bash
+cd /home/username/public_html/macstore
+git pull origin main
+composer install --optimize-autoloader --no-dev
+php artisan migrate --force
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+## Production Checklist
+
+### Before Deployment
+
+- [ ] Set `APP_ENV=production`
+- [ ] Set `APP_DEBUG=false`
+- [ ] Generate new `APP_KEY` with `php artisan key:generate`
+- [ ] Configure production database credentials
+- [ ] Set correct `APP_URL`
+- [ ] Review and update `.env` file
 
 ## Web Server Configuration
 
