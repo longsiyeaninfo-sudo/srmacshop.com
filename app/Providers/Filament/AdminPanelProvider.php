@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Pages\Dashboard;
 use App\Filament\Admin\Widgets\CategoryDonutWidget;
 use App\Filament\Admin\Widgets\KpiStatsOverview;
 use App\Filament\Admin\Widgets\RecentOrdersTable;
@@ -36,7 +37,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
           ->pages([
-                Pages\Dashboard::class,
+                Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
