@@ -45,31 +45,74 @@
                 <a href="{{ route('shop') }}" class="detail-back">← <span data-en="Back to Shop" data-km="ត្រឡប់ទៅហាង">Back to Shop</span></a>
 
                 {{-- Gallery --}}
-                <div class="detail-gallery" x-data="{ activeImg: '{{ $firstImg }}' }">
-                    <div>
+                @php
+                    $allImages = $media->map(fn($m) => $m->getUrl())->toArray();
+                    $imgCount = count($allImages);
+                    $visibleThumbs = 8;
+                @endphp
+                <div class="detail-gallery"
+                     x-data="{
+                        activeIdx: 0,
+                        images: @js($allImages),
+                        lightbox: false,
+                        get activeImg() { return this.images[this.activeIdx] || '' },
+                        open(i) { this.activeIdx = i; this.lightbox = true; document.body.style.overflow = 'hidden'; },
+                        close() { this.lightbox = false; document.body.style.overflow = ''; },
+                        next() { this.activeIdx = (this.activeIdx + 1) % this.images.length },
+                        prev() { this.activeIdx = (this.activeIdx - 1 + this.images.length) % this.images.length },
+                     }"
+                     x-on:keydown.escape.window="lightbox && close()"
+                     x-on:keydown.arrow-right.window="lightbox && next()"
+                     x-on:keydown.arrow-left.window="lightbox && prev()">
+
+                    {{-- Hero image --}}
+                    <div class="detail-hero" @click="images.length && open(activeIdx)">
                         @if($firstImg)
                             <img class="detail-main-img" :src="activeImg" alt="{{ $product->name }}"
-                                style="font-size:0"
+                                style="font-size:0;cursor:zoom-in"
                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
                             <div class="detail-main-emoji" style="display:none">{{ $product->emoji ?: '💻' }}</div>
                         @else
                             <div class="detail-main-emoji">{{ $product->emoji ?: '💻' }}</div>
                         @endif
+                        @if($imgCount > 0)
+                            <div class="detail-zoom-hint">🔍 <span data-en="Click to zoom" data-km="ចុចដើម្បីពង្រីក">Click to zoom</span></div>
+                        @endif
                     </div>
-                    @if($media->count() > 1)
-                        <div class="detail-thumbs">
-                            @foreach($media as $i => $m)
-                                <div class="dthumb {{ $i === 0 ? 'on' : '' }}"
-                                    @click="activeImg = '{{ $m->getUrl() }}'; document.querySelectorAll('.dthumb').forEach(t => t.classList.remove('on')); $el.classList.add('on')">
-                                    <img src="{{ $m->getUrl() }}" alt="">
+
+                    {{-- 8 thumbnails strip (Khmer24 style) --}}
+                    @if($imgCount > 0)
+                        <div class="detail-thumbs-grid">
+                            @foreach($media->take($visibleThumbs) as $i => $m)
+                                <div class="dthumb-cell"
+                                    :class="activeIdx === {{ $i }} && 'on'"
+                                    @click.stop="activeIdx = {{ $i }}">
+                                    <img src="{{ $m->getUrl() }}" alt="" @click="open({{ $i }})">
+                                    @if($i === $visibleThumbs - 1 && $imgCount > $visibleThumbs)
+                                        <div class="dthumb-more" @click="open({{ $i }})">+{{ $imgCount - $visibleThumbs + 1 }}</div>
+                                    @endif
                                 </div>
                             @endforeach
-                        </div>
-                    @elseif(!$firstImg)
-                        <div class="detail-thumbs">
-                            <div class="dthumb on">{{ $product->emoji ?: '💻' }}</div>
+                            @if(!$firstImg)
+                                <div class="dthumb-cell on">{{ $product->emoji ?: '💻' }}</div>
+                            @endif
                         </div>
                     @endif
+
+                    {{-- Lightbox (teleported to body so it escapes parent overflow) --}}
+                    <template x-teleport="body">
+                        <div x-show="lightbox" x-cloak
+                             class="lb-overlay"
+                             @click.self="close()">
+                            <button class="lb-btn lb-close" @click="close()" aria-label="Close">✕</button>
+                            @if($imgCount > 1)
+                                <button class="lb-btn lb-prev" @click="prev()" aria-label="Previous">‹</button>
+                                <button class="lb-btn lb-next" @click="next()" aria-label="Next">›</button>
+                                <div class="lb-counter"><span x-text="activeIdx + 1"></span> / {{ $imgCount }}</div>
+                            @endif
+                            <img class="lb-img" :src="activeImg" alt="{{ $product->name }}">
+                        </div>
+                    </template>
                 </div>
 
                 {{-- Info Card --}}
