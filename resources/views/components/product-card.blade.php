@@ -1,22 +1,38 @@
 @props(['product'])
 
-{{-- TODO Phase 3: port the prototype's .pcard markup verbatim --}}
-<a href="{{ route('product', $product->slug) }}" class="pcard"
-   style="display:block;background:#fff;border-radius:14px;padding:16px;text-decoration:none;color:inherit;border:1px solid #eee">
-    @if($product->getFirstMediaUrl('gallery'))
-        <img src="{{ $product->getFirstMediaUrl('gallery') }}" alt="{{ $product->name }}"
-             style="width:100%;aspect-ratio:1;object-fit:contain;background:#fafafa;border-radius:10px">
-    @else
-        <div style="width:100%;aspect-ratio:1;background:#fafafa;border-radius:10px;display:grid;place-items:center;font-size:48px">
-          {{ $product->emoji ?: '💻' }}
-        </div>
-    @endif
-    <div style="margin-top:12px;font-weight:600">{{ $product->name }}</div>
-    <div style="font-size:13px;color:#666">{{ $product->spec }}</div>
-    <div style="margin-top:8px;font-weight:600">${{ number_format($product->price_dollars, 0) }}</div>
+@php
+    $firstImg = $product->getFirstMediaUrl('gallery');
+    $stockClass = $product->stock > 5 ? 'tok' : ($product->stock > 0 ? 'tlow' : 'tout');
+    $stockText = $product->stock > 5 ? 'In Stock' : ($product->stock > 0 ? "Only {$product->stock} left" : 'Out of Stock');
+@endphp
+
+<a href="{{ route('product', $product->slug) }}" class="pcard" style="display:block;text-decoration:none;color:inherit">
     @if($product->badge)
-        <span style="display:inline-block;margin-top:6px;padding:2px 8px;background:#007AFF;color:#fff;border-radius:999px;font-size:11px;text-transform:uppercase">
-            {{ $product->badge }}
-        </span>
+        <div class="pcard-badge b-{{ $product->badge }}">{{ strtoupper($product->badge) }}</div>
     @endif
+
+    <div class="pcard-img">
+        @if($firstImg)
+            <img src="{{ $firstImg }}" alt="{{ $product->name }}" style="width:100%;height:100%;object-fit:cover">
+        @else
+            <div>{{ $product->emoji ?: '💻' }}</div>
+        @endif
+    </div>
+
+    <div class="pcard-body">
+        <div class="pcard-cat">{{ $product->category?->name }}</div>
+        <div class="pcard-name">{{ $product->name }}</div>
+        <div class="pcard-spec">{{ $product->spec }}</div>
+        <div class="pcard-foot">
+            <div>
+                <div class="pcard-price">${{ number_format($product->price / 100, 0) }}</div>
+                <div class="stock-tag {{ $stockClass }}">
+                    <div class="dot"></div>
+                    <span>{{ $stockText }}</span>
+                </div>
+            </div>
+            <span style="font-size:11px;font-weight:600;color:var(--blue);white-space:nowrap"
+                data-en="View →" data-km="មើល →">View →</span>
+        </div>
+    </div>
 </a>
