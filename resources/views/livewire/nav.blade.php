@@ -30,7 +30,7 @@
 
                 {{-- Cart FAB --}}
                 <button class="cart-fab" type="button"
-                    @click="$dispatch('cart.open')"
+                    onclick="window.dispatchEvent(new CustomEvent('cart-open'))"
                     data-en="🛒 Cart" data-km="🛒 កន្ត្រក">
                     🛒 Cart
                     @if($cartCount > 0)

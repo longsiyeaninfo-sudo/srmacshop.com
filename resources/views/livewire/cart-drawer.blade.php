@@ -1,8 +1,8 @@
 <div>
     {{-- Cart Overlay --}}
     <div class="cart-overlay {{ $isOpen ? 'on' : '' }}"
-        x-on:cart.open.window="$wire.open()"
-        x-on:cart.add.window="$wire.handleAdd($event.detail.productId, $event.detail.qty || 1)"
+        x-on:cart-open.window="$wire.open()"
+        x-on:cart-add.window="$wire.handleAdd($event.detail.productId, $event.detail.qty || 1)"
         x-on:keydown.escape.window="$wire.close()">
 
         <div class="cart-backdrop" wire:click="close"></div>
@@ -58,7 +58,7 @@
                     data-en="Apply" data-km="អនុវត្ត">Apply</button>
             </div>
             @if($couponStatus)
-                <div class="coupon-status {{ str_contains($couponStatus, 'applied') || str_contains($couponStatus, 'Coupon applied') ? 'cs-ok' : 'cs-err' }}">
+                <div class="coupon-status {{ str_contains($couponStatus, 'applied') ? 'cs-ok' : 'cs-err' }}">
                     {{ $couponStatus }}
                 </div>
             @endif
@@ -97,7 +97,6 @@
                     </div>
                 </div>
 
-                {{-- KHQR info --}}
                 @if($paymentMethod === 'qr')
                     <div style="background:var(--blue-l);border:1px solid var(--border2);border-radius:var(--rs);padding:10px;margin-bottom:8px;text-align:center;font-size:11px;color:var(--text2)">
                         📱 <strong style="color:var(--blue)">Scan KHQR to pay</strong><br>
@@ -115,7 +114,7 @@
 
                 @if(!$items->isEmpty())
                     <button class="checkout-btn" type="button"
-                        x-data @click="$dispatch('checkout.open', { method: '{{ $paymentMethod }}' })"
+                        x-data @click="window.dispatchEvent(new CustomEvent('checkout-open', {detail: {method: '{{ $paymentMethod }}'}}))"
                         data-en="Place Order →" data-km="ដាក់ការបញ្ជាទិញ →">Place Order →</button>
                 @else
                     <button class="checkout-btn" type="button" disabled
@@ -127,7 +126,7 @@
 
     {{-- Checkout Modal --}}
     <div x-data="{ open: false, method: 'cash' }"
-         x-on:checkout.open.window="open = true; method = $event.detail.method"
+         x-on:checkout-open.window="open = true; method = $event.detail.method"
          x-on:keydown.escape.window="open = false"
          x-show="open" x-cloak
          class="overlay" style="z-index:600">
