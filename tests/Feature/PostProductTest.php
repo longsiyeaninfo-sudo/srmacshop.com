@@ -119,6 +119,16 @@ class PostProductTest extends TestCase
             ->assertCount('contact_phones', 1);
     }
 
+    public function test_old_create_page_redirects_to_post_product(): void
+    {
+        $admin = User::firstOrCreate(['email' => 'admin@srmacshop.com'], [
+            'name' => 'Admin', 'password' => bcrypt('password'),
+        ]);
+
+        $response = $this->actingAs($admin)->get('/admin/products/create');
+        $response->assertRedirect('/admin/post-product');
+    }
+
     public function test_step_1_requires_category(): void
     {
         $admin = User::firstOrCreate(['email' => 'admin@srmacshop.com'], [

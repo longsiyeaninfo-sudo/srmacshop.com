@@ -15,10 +15,10 @@ class PostProduct extends Page
     use WithFileUploads;
 
     protected static ?string $navigationIcon = 'heroicon-o-plus-circle';
-    protected static ?string $navigationLabel = 'Post Product';
+    protected static ?string $navigationLabel = 'Add Product';
     protected static ?string $navigationGroup = 'Catalog';
     protected static ?int $navigationSort = -1;
-    protected static ?string $title = 'Post a Product';
+    protected static ?string $title = 'Add a Product';
     protected static string $view = 'filament.admin.pages.post-product';
 
     public int $step = 1;
