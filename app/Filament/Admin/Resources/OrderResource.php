@@ -102,6 +102,7 @@ class OrderResource extends Resource
                 Tables\Actions\Action::make('invoice')
                     ->label('Invoice')
                     ->icon('heroicon-o-printer')
+                    ->color('warning')
                     ->url(fn (Order $r) => route('invoice', $r))
                     ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),

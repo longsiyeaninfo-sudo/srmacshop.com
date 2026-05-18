@@ -16,7 +16,8 @@ class ListProducts extends ListRecords
         return [
             Actions\Action::make('addProduct')
                 ->label('+ Add Product')
-                ->color('primary')
+                ->color('warning')
+                ->icon('heroicon-o-plus-circle')
                 ->url(PostProduct::getUrl()),
         ];
     }
