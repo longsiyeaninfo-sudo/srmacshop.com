@@ -2,6 +2,7 @@
     {{-- Cart Overlay --}}
     <div class="cart-overlay {{ $isOpen ? 'on' : '' }}"
         x-on:cart.open.window="$wire.open()"
+        x-on:cart.add.window="$wire.handleAdd($event.detail.productId, $event.detail.qty || 1)"
         x-on:keydown.escape.window="$wire.close()">
 
         <div class="cart-backdrop" wire:click="close"></div>

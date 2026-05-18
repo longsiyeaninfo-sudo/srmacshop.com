@@ -30,7 +30,7 @@
 
                 {{-- Cart FAB --}}
                 <button class="cart-fab" type="button"
-                    wire:click="$dispatchTo('cart-drawer', 'cart.open')"
+                    @click="$dispatch('cart.open')"
                     data-en="🛒 Cart" data-km="🛒 កន្ត្រក">
                     🛒 Cart
                     @if($cartCount > 0)

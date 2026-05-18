@@ -138,7 +138,8 @@
 
                     @if($product->stock > 0)
                         <button class="detail-add-btn" type="button"
-                            wire:click="$dispatchTo('cart-drawer', 'cart.add', { productId: {{ $product->id }}, qty: 1 })"
+                            x-data
+                            @click="$dispatch('cart.add', { productId: {{ $product->id }}, qty: 1 })"
                             data-en="🛒 Add to Cart" data-km="🛒 បន្ថែមទៅកន្ត្រក">🛒 Add to Cart</button>
                     @else
                         <button class="detail-add-btn" type="button" disabled
