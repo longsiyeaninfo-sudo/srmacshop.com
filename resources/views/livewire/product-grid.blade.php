@@ -11,6 +11,17 @@
                         placeholder="Search MacBooks..."
                         data-en="Search MacBooks..." data-km="ស្វែងរក MacBook...">
                 </div>
+                <div class="shop-sort">
+                    <select wire:model.live="sort" class="sort-sel">
+                        <option value="featured" data-en="Featured" data-km="ពិសេស">Featured</option>
+                        <option value="newest" data-en="Newest" data-km="ថ្មីបំផុត">Newest</option>
+                        <option value="price_asc" data-en="Price: Low → High" data-km="តម្លៃ: ទាប → ខ្ពស់">Price: Low → High</option>
+                        <option value="price_desc" data-en="Price: High → Low" data-km="តម្លៃ: ខ្ពស់ → ទាប">Price: High → Low</option>
+                    </select>
+                </div>
+                <div class="shop-count" wire:loading.class="opacity-50">
+                    <span>{{ $products->total() }}</span> <span data-en="products" data-km="ផលិតផល">products</span>
+                </div>
             </div>
 
             <div class="chip-bar">

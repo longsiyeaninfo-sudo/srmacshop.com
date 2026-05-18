@@ -17,6 +17,9 @@ class ProductGrid extends Component
     #[Url(except: '')]
     public string $category = '';
 
+    #[Url(except: 'featured')]
+    public string $sort = 'featured';
+
     public $categories;
 
     public function mount($categories = null): void
@@ -26,7 +29,7 @@ class ProductGrid extends Component
 
     public function updatedSearch(): void
     {
-      $this->resetPage();
+        $this->resetPage();
     }
 
     public function updatedCategory(): void
@@ -34,17 +37,27 @@ class ProductGrid extends Component
         $this->resetPage();
     }
 
+    public function updatedSort(): void
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
-     $products = Product::query()
-      ->where('is_active', true)
+        $query = Product::query()
+            ->where('is_active', true)
             ->when($this->search, fn ($q) => $q->where('name', 'like', '%'.$this->search.'%'))
-            ->when($this->category, function ($q) {
-             $q->whereHas('category', fn ($c) => $c->where('slug', $this->category));
-        })
-            ->with('media', 'category')
-            ->orderBy('sort_order')
-            ->paginate(12);
+            ->when($this->category, fn ($q) => $q->whereHas('category', fn ($c) => $c->where('slug', $this->category)))
+            ->with('media', 'category');
+
+        match ($this->sort) {
+            'price_asc'  => $query->orderBy('price'),
+            'price_desc' => $query->orderByDesc('price'),
+            'newest'     => $query->latest(),
+            default      => $query->orderBy('sort_order'),
+        };
+
+        $products = $query->paginate(12);
 
         return view('livewire.product-grid', compact('products'));
     }
