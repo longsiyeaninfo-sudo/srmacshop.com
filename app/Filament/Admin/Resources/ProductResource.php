@@ -97,7 +97,11 @@ class ProductResource extends Resource
                 Tables\Filters\TernaryFilter::make('is_active'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('edit')
+                    ->label('Edit')
+                    ->icon('heroicon-o-pencil-square')
+                    ->color('primary')
+                    ->url(fn (\App\Models\Product $r) => \App\Filament\Admin\Pages\EditProductKhmer::getUrl(['record' => $r->id])),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
@@ -113,7 +117,6 @@ class ProductResource extends Resource
         return [
             'index'  => Pages\ListProducts::route('/'),
             'create' => Pages\CreateProduct::route('/create'),
-            'edit'   => Pages\EditProduct::route('/{record}/edit'),
         ];
     }
 }

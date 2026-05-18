@@ -119,6 +119,60 @@ class PostProductTest extends TestCase
             ->assertCount('contact_phones', 1);
     }
 
+    public function test_edit_product_khmer_pre_fills_and_saves(): void
+    {
+        Storage::fake('public');
+
+        $admin = User::firstOrCreate(['email' => 'admin@srmacshop.com'], [
+            'name' => 'Admin', 'password' => bcrypt('password'),
+        ]);
+        $this->actingAs($admin);
+
+        Filament::setCurrentPanel(Filament::getPanel('admin'));
+
+        $category = Category::firstOrCreate(['slug' => 'macbook-pro'], ['name' => 'MacBook Pro']);
+
+        \App\Models\Product::where('slug', 'like', 'test-edit-product-%')->delete();
+        $slug = 'test-edit-product-' . uniqid();
+        $product = \App\Models\Product::create([
+            'name' => 'Test Edit Product',
+            'slug' => $slug,
+            'spec' => 'Apple M3 · 16GB RAM · 512GB SSD · 14"',
+            'price' => 199900,
+            'category_id' => $category->id,
+            'stock' => 3,
+            'is_active' => true,
+            'description' => 'Initial description for the test product.',
+        ]);
+
+        $existingPhoto = UploadedFile::fake()->image('existing.jpg', 800, 800);
+        $product->addMedia($existingPhoto->getRealPath())
+            ->usingFileName('existing.jpg')
+            ->toMediaCollection('gallery');
+
+        $component = Livewire::test(\App\Filament\Admin\Pages\EditProductKhmer::class, ['record' => $product]);
+
+        // Pre-fill assertions
+        $component->assertSet('name', 'Test Edit Product')
+            ->assertSet('cpu', 'Apple M3')
+            ->assertSet('ram', '16GB')
+            ->assertSet('storage', '512GB SSD')
+            ->assertSet('screen_size', '14"')
+            ->assertSet('stock', 3);
+
+        // Edit + save
+        $component->set('name', 'Updated Product Name')
+            ->set('price', 1899)
+            ->set('storage', '1TB SSD')
+            ->call('submit')
+            ->assertHasNoErrors();
+
+        $product->refresh();
+        $this->assertEquals('Updated Product Name', $product->name);
+        $this->assertEquals(189900, $product->price);
+        $this->assertStringContainsString('1TB SSD', $product->spec);
+    }
+
     public function test_old_create_page_redirects_to_post_product(): void
     {
         $admin = User::firstOrCreate(['email' => 'admin@srmacshop.com'], [

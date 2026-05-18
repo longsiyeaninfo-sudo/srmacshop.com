@@ -9,24 +9,30 @@ use Filament\Pages\Page;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
 use Livewire\WithFileUploads;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class PostProduct extends Page
+class EditProductKhmer extends Page
 {
     use WithFileUploads;
 
-    protected static ?string $navigationIcon = 'heroicon-o-plus-circle';
-    protected static ?string $navigationLabel = 'Add Product';
-    protected static ?string $navigationGroup = 'Catalog';
-    protected static ?int $navigationSort = -1;
-    protected static ?string $title = 'Add a Product';
-    protected static string $view = 'filament.admin.pages.post-product';
+    protected static bool $shouldRegisterNavigation = false;
+    protected static ?string $title = 'Edit Product';
+    protected static string $view = 'filament.admin.pages.edit-product-khmer';
 
-    public int $step = 1;
+    public static function getRoutePath(): string
+    {
+        return '/edit-product/{record}';
+    }
+
+    public Product $record;
 
     public ?int $category_id = null;
 
     /** @var array<\Livewire\Features\SupportFileUploads\TemporaryUploadedFile> */
     public array $photos = [];
+
+    /** @var array<int,int> Existing media IDs the admin wants to keep */
+    public array $existing_media_ids = [];
 
     #[Validate('required|string|max:255')]
     public string $name = '';
@@ -37,22 +43,12 @@ class PostProduct extends Page
     #[Validate('required|in:new,used')]
     public string $condition = 'new';
 
-    #[Validate('required|string')]
     public string $screen_size = '';
-
-    #[Validate('required|string')]
     public string $storage = '';
-
-    #[Validate('required|string')]
     public string $ram = '';
-
-    #[Validate('required|string')]
     public string $cpu = '';
-
-    #[Validate('nullable|string')]
     public string $vga = '';
 
-    #[Validate('nullable|numeric|min:0')]
     public ?float $discount = null;
 
     #[Validate('required|in:%,$')]
@@ -79,7 +75,6 @@ class PostProduct extends Page
     public string $contact_name = 'SR MAC SHOP';
 
     /** @var array<int,string> */
-    #[Validate(['contact_phones' => 'required|array|min:1', 'contact_phones.*' => 'required|string|max:32'])]
     public array $contact_phones = ['+855 98 33 47 55'];
 
     #[Validate('nullable|email|max:255')]
@@ -93,10 +88,48 @@ class PostProduct extends Page
 
     public string $warranty = '2 Year Apple Official';
 
-    public function mount(): void
+    public function mount(Product $record): void
     {
-        if ($default = Category::orderBy('name')->first()) {
-            $this->category_id = $default->id;
+        $this->record = $record->load('media', 'category');
+
+        $this->category_id = $this->record->category_id;
+        $this->name = $this->record->name;
+        $this->price = $this->record->price / 100;
+        $this->stock = $this->record->stock ?? 1;
+        $this->badge = $this->record->badge;
+        $this->description = $this->record->description ?? '';
+        $this->warranty = $this->record->warranty ?? '2 Year Apple Official';
+
+        $this->existing_media_ids = $this->record->getMedia('gallery')->pluck('id')->all();
+
+        $this->parseSpec($this->record->spec ?? '');
+    }
+
+    /**
+     * Best-effort parser: spec was concatenated in this order:
+     * cpu · ram+" RAM" · storage · screen_size · vga(optional, !=Integrated)
+     */
+    protected function parseSpec(string $spec): void
+    {
+        if ($spec === '') return;
+
+        $parts = array_map('trim', preg_split('/\s*·\s*/', $spec) ?: []);
+
+        foreach ($parts as $part) {
+            if (in_array($part, $this->cpuOptions ?? $this->getCpuOptionsProperty(), true)) {
+                $this->cpu = $part;
+            } elseif (str_ends_with($part, ' RAM')) {
+                $ram = trim(substr($part, 0, -4));
+                if (in_array($ram, $this->getRamOptionsProperty(), true)) {
+                    $this->ram = $ram;
+                }
+            } elseif (in_array($part, $this->getStorageOptionsProperty(), true)) {
+                $this->storage = $part;
+            } elseif (in_array($part, $this->getScreenSizesProperty(), true)) {
+                $this->screen_size = $part;
+            } elseif (in_array($part, $this->getVgaOptionsProperty(), true)) {
+                $this->vga = $part;
+            }
         }
     }
 
@@ -151,18 +184,9 @@ class PostProduct extends Page
         ];
     }
 
-    public function nextStep(): void
+    public function removeExistingMedia(int $id): void
     {
-        if (! $this->category_id) {
-            $this->addError('category_id', 'Please choose a category.');
-            return;
-        }
-        $this->step = 2;
-    }
-
-    public function prevStep(): void
-    {
-        $this->step = 1;
+        $this->existing_media_ids = array_values(array_filter($this->existing_media_ids, fn ($x) => $x !== $id));
     }
 
     public function removePhoto(int $index): void
@@ -188,33 +212,20 @@ class PostProduct extends Page
         }
     }
 
-    public function reset_form(): void
-    {
-        $this->resetExcept(['categories']);
-        $this->step = 1;
-        $this->brand = 'Apple';
-        $this->condition = 'new';
-        $this->discount_type = '%';
-        $this->province = 'Phnom Penh';
-        $this->address = 'Sangkat Kambol, Khan Kambol';
-        $this->contact_name = 'SR MAC SHOP';
-        $this->contact_phones = ['+855 98 33 47 55'];
-        $this->warranty = '2 Year Apple Official';
-        $this->stock = 1;
-        $this->latitude = 11.5564;
-        $this->longitude = 104.9282;
-        $this->mount();
-    }
-
     public function submit(): void
     {
         $this->validate([
             'photos.*' => 'image|max:8192',
+            'cpu' => 'required|string',
+            'ram' => 'required|string',
+            'storage' => 'required|string',
+            'screen_size' => 'required|string',
         ]);
         $this->validate();
 
-        if (count($this->photos) === 0) {
-            $this->addError('photos', 'Please upload at least one photo.');
+        $totalPhotos = count($this->existing_media_ids) + count($this->photos);
+        if ($totalPhotos === 0) {
+            $this->addError('photos', 'Please keep or upload at least one photo.');
             return;
         }
 
@@ -236,49 +247,50 @@ class PostProduct extends Page
             }
         }
 
-        $slug = Str::slug($this->name);
-        $base = $slug;
-        $i = 2;
-        while (Product::where('slug', $slug)->exists()) {
-            $slug = $base . '-' . $i++;
+        if ($this->name !== $this->record->name) {
+            $slug = Str::slug($this->name);
+            $base = $slug;
+            $i = 2;
+            while (Product::where('slug', $slug)->where('id', '!=', $this->record->id)->exists()) {
+                $slug = $base . '-' . $i++;
+            }
+            $this->record->slug = $slug;
         }
 
-        $emojiMap = ['Apple' => '💻', 'Dell' => '🖥️', 'HP' => '🖥️', 'Lenovo' => '💻', 'Asus' => '💻'];
-
-        $product = Product::create([
+        $this->record->update([
             'name'        => $this->name,
-            'slug'        => $slug,
+            'slug'        => $this->record->slug,
             'spec'        => $spec,
             'price'       => $finalPrice,
-            'emoji'       => $emojiMap[$this->brand] ?? '💻',
             'category_id' => $this->category_id,
             'stock'       => $this->stock,
             'badge'       => $this->badge,
             'description' => $this->description,
             'warranty'    => $this->warranty,
-            'is_active'   => true,
-            'sort_order'  => 0,
         ]);
 
+        // Remove media the admin deleted
+        $currentMediaIds = $this->record->getMedia('gallery')->pluck('id')->all();
+        $toDelete = array_diff($currentMediaIds, $this->existing_media_ids);
+        if (! empty($toDelete)) {
+            Media::whereIn('id', $toDelete)->delete();
+        }
+
+        // Attach new uploads
         foreach ($this->photos as $photo) {
-            $product->addMedia($photo->getRealPath())
+            $this->record->addMedia($photo->getRealPath())
                 ->usingFileName($photo->getClientOriginalName())
                 ->toMediaCollection('gallery');
         }
 
         Notification::make()
-            ->title('Product posted successfully')
-            ->body($product->name . ' has been added to your catalog.')
+            ->title('Product updated')
+            ->body($this->record->name . ' has been saved.')
             ->success()
             ->send();
 
-        $this->reset_form();
-
-        $this->redirect(\App\Filament\Admin\Pages\EditProductKhmer::getUrl(['record' => $product->id]));
-    }
-
-    public static function getNavigationBadge(): ?string
-    {
-        return null;
+        $this->photos = [];
+        $this->record->refresh();
+        $this->existing_media_ids = $this->record->getMedia('gallery')->pluck('id')->all();
     }
 }
