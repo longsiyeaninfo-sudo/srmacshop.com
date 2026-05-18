@@ -15,6 +15,8 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -30,6 +32,9 @@ class AdminPanelProvider extends PanelProvider
         ->id('admin')
           ->path('admin')
             ->brandName('SR MAC SHOP — Admin')
+            ->brandLogo(asset('img/srmac-logo.svg'))
+            ->brandLogoHeight('2.25rem')
+            ->favicon(asset('favicon.ico'))
             ->login()
             ->colors([
                 'primary' => Color::Blue,
@@ -60,6 +65,15 @@ class AdminPanelProvider extends PanelProvider
           ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->renderHook(
+                PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,
+                fn (): string => Blade::render(<<<'BLADE'
+                    <p style="text-align:center;font-size:12px;color:#6b7280;margin-top:18px;line-height:1.5">
+                        Cambodia's most trusted MacBook specialist since 2018.<br>
+                        <a href="https://srmacshop.com" style="color:#f97316;font-weight:600;text-decoration:none">srmacshop.com</a> · Phnom Penh
+                    </p>
+                BLADE)
+            );
     }
 }
