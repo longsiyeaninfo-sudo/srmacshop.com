@@ -48,8 +48,7 @@ button,input,select,textarea{font-family:var(--font)}
 @keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
 /* ═══════════════ OVERLAY ═══════════════ */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)}
-.overlay.on{display:flex}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)}
 .modal{background:var(--card);border-radius:var(--r);padding:24px;width:100%;max-width:460px;box-shadow:var(--shadow-lg);max-height:90vh;overflow-y:auto}
 .modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .modal-title{font-size:17px;font-weight:700}

@@ -30,7 +30,7 @@
 
                 {{-- Cart FAB --}}
                 <button class="cart-fab" type="button"
-                    onclick="window.dispatchEvent(new CustomEvent('cart-open'))"
+                    onclick="Livewire.dispatch('cart.open')"
                     data-en="🛒 Cart" data-km="🛒 កន្ត្រក">
                     🛒 Cart
                     @if($cartCount > 0)

@@ -13,7 +13,10 @@
 
     <div class="pcard-img">
         @if($firstImg)
-            <img src="{{ $firstImg }}" alt="{{ $product->name }}" style="width:100%;height:100%;object-fit:cover">
+            <img src="{{ $firstImg }}" alt="{{ $product->name }}"
+                style="width:100%;height:100%;object-fit:cover;font-size:0"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:72px">{{ $product->emoji ?: '💻' }}</div>
         @else
             <div>{{ $product->emoji ?: '💻' }}</div>
         @endif

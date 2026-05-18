@@ -48,7 +48,10 @@
                 <div class="detail-gallery" x-data="{ activeImg: '{{ $firstImg }}' }">
                     <div>
                         @if($firstImg)
-                            <img class="detail-main-img" :src="activeImg" alt="{{ $product->name }}">
+                            <img class="detail-main-img" :src="activeImg" alt="{{ $product->name }}"
+                                style="font-size:0"
+                                onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                            <div class="detail-main-emoji" style="display:none">{{ $product->emoji ?: '💻' }}</div>
                         @else
                             <div class="detail-main-emoji">{{ $product->emoji ?: '💻' }}</div>
                         @endif
@@ -138,7 +141,7 @@
 
                     @if($product->stock > 0)
                         <button class="detail-add-btn" type="button"
-                            onclick="window.dispatchEvent(new CustomEvent('cart-add', {detail: {productId: {{ $product->id }}, qty: 1}}))"
+                            onclick="Livewire.dispatch('cart.add', {productId: {{ $product->id }}, qty: 1})"
                             data-en="🛒 Add to Cart" data-km="🛒 បន្ថែមទៅកន្ត្រក">🛒 Add to Cart</button>
                     @else
                         <button class="detail-add-btn" type="button" disabled

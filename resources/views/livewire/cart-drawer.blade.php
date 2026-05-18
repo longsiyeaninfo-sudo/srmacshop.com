@@ -1,9 +1,8 @@
 <div>
     {{-- Cart Overlay --}}
     <div class="cart-overlay {{ $isOpen ? 'on' : '' }}"
-        x-on:cart-open.window="$wire.open()"
-        x-on:cart-add.window="$wire.handleAdd($event.detail.productId, $event.detail.qty || 1)"
-        x-on:keydown.escape.window="$wire.close()">
+        x-data
+        @keydown.escape.window="$wire.close()">
 
         <div class="cart-backdrop" wire:click="close"></div>
 
@@ -114,7 +113,7 @@
 
                 @if(!$items->isEmpty())
                     <button class="checkout-btn" type="button"
-                        x-data @click="window.dispatchEvent(new CustomEvent('checkout-open', {detail: {method: '{{ $paymentMethod }}'}}))"
+                        onclick="window.dispatchEvent(new CustomEvent('checkout-open', {detail: {method: '{{ $paymentMethod }}'}}))"
                         data-en="Place Order →" data-km="ដាក់ការបញ្ជាទិញ →">Place Order →</button>
                 @else
                     <button class="checkout-btn" type="button" disabled

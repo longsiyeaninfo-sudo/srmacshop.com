@@ -30,7 +30,7 @@ class CheckoutService
         $coupon = $cart->coupon();
 
         $order = Order::create([
-            'order_number'    => 'TMP',
+            'order_number'    => 'TMP-' . bin2hex(random_bytes(8)),
             'customer_name'   => $customer['customer_name'],
             'customer_phone'  => $customer['customer_phone'],
             'customer_address'=> $customer['customer_address'],

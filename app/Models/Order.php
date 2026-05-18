@@ -24,10 +24,10 @@ class Order extends Model
 
     protected static function booted(): void
     {
-      static::created(function (self $order) {
-          if (empty($order->order_number)) {
-             $order->order_number = 'SR-'.str_pad((string) (1000 + $order->id), 4, '0', STR_PAD_LEFT);
-              $order->saveQuietly();
+        static::created(function (self $order) {
+            if (empty($order->order_number) || str_starts_with($order->order_number, 'TMP')) {
+                $order->order_number = 'SR-' . str_pad((string) (1000 + $order->id), 4, '0', STR_PAD_LEFT);
+                $order->saveQuietly();
             }
         });
     }

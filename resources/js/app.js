@@ -1,44 +1,48 @@
 import './bootstrap';
-import Alpine from 'alpinejs';
-import persist from '@alpinejs/persist';
 
-Alpine.plugin(persist);
+// NOTE: Do NOT import Alpine here — Livewire 3 includes Alpine and exposes it
+// as window.Alpine. Importing again causes "Multiple instances of Alpine" and
+// breaks $wire bindings.
 
-// ── Theme store ──
-Alpine.store('theme', {
-    current: Alpine.$persist('light').as('srmac_theme'),
-    init() {
-        document.documentElement.setAttribute('data-theme', this.current);
-    },
-    toggle() {
-        this.current = this.current === 'light' ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', this.current);
-    },
+// Wait for Alpine (from Livewire) to be ready before registering stores
+document.addEventListener('alpine:init', () => {
+    const Alpine = window.Alpine;
+
+    Alpine.store('theme', {
+        current: Alpine.$persist
+            ? Alpine.$persist('light').as('srmac_theme')
+            : (localStorage.getItem('srmac_theme') || 'light').replace(/"/g, ''),
+        init() {
+            document.documentElement.setAttribute('data-theme', this.current);
+        },
+        toggle() {
+            this.current = this.current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', this.current);
+            localStorage.setItem('srmac_theme', JSON.stringify(this.current));
+        },
+    });
+
+    Alpine.store('lang', {
+        current: (localStorage.getItem('srmac_lang') || 'en').replace(/"/g, ''),
+        init() {
+            this.apply(this.current);
+        },
+        toggle() {
+            this.current = this.current === 'en' ? 'km' : 'en';
+            this.apply(this.current);
+            localStorage.setItem('srmac_lang', JSON.stringify(this.current));
+        },
+        apply(lang) {
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const val = el.getAttribute('data-' + lang);
+                if (val !== null) el.textContent = val;
+            });
+            document.documentElement.setAttribute('lang', lang);
+        },
+    });
 });
 
-// ── Language store ──
-Alpine.store('lang', {
-    current: Alpine.$persist('en').as('srmac_lang'),
-    init() {
-        this.apply(this.current);
-    },
-    toggle() {
-        this.current = this.current === 'en' ? 'km' : 'en';
-        this.apply(this.current);
-    },
-    apply(lang) {
-        document.querySelectorAll('[data-en]').forEach(el => {
-            const val = el.getAttribute('data-' + lang);
-            if (val !== null) el.textContent = val;
-        });
-        document.documentElement.setAttribute('lang', lang);
-    },
-});
-
-window.Alpine = Alpine;
-Alpine.start();
-
-// Apply theme & lang immediately on first load (before Alpine hydrates everything)
+// Pre-paint theme & lang before Alpine boots to prevent FOUC
 (function () {
     const theme = (localStorage.getItem('srmac_theme') || 'light').replace(/"/g, '');
     document.documentElement.setAttribute('data-theme', theme);
@@ -46,18 +50,12 @@ Alpine.start();
     document.documentElement.setAttribute('lang', lang);
 })();
 
-// Re-apply lang after Livewire morphs the DOM
+// Re-apply translations after every Livewire morph
 document.addEventListener('livewire:initialized', () => {
     if (window.Livewire && typeof window.Livewire.hook === 'function') {
         window.Livewire.hook('morph.updated', () => {
-            const lang = Alpine.store('lang')?.current || 'en';
-            Alpine.store('lang').apply(lang);
+            const store = window.Alpine?.store('lang');
+            if (store) store.apply(store.current);
         });
     }
-});
-
-// Also re-apply after any DOM update (e.g. modals opening)
-document.addEventListener('livewire:navigated', () => {
-    const lang = Alpine.store('lang')?.current || 'en';
-    Alpine.store('lang').apply(lang);
 });
