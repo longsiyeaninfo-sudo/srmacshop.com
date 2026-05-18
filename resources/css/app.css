@@ -101,6 +101,11 @@ button,input,select,textarea{font-family:var(--font)}
 .srch{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:10px 14px;flex:1;min-width:200px}
 .srch input{border:none;background:transparent;font-size:14px;color:var(--text);outline:none;flex:1;font-family:var(--font)}
 .srch input::placeholder{color:var(--text3)}
+.shop-sort{flex-shrink:0}
+.sort-sel{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:10px 14px;font-size:13px;font-weight:600;color:var(--text);font-family:var(--font);cursor:pointer;outline:none;transition:border-color .15s}
+.sort-sel:hover{border-color:var(--blue)}.sort-sel:focus{border-color:var(--blue)}
+.shop-count{font-size:12px;font-weight:600;color:var(--text3);white-space:nowrap;flex-shrink:0}
+.shop-count span:first-child{color:var(--text);font-size:14px}
 .chip-bar{display:flex;gap:6px;flex-wrap:wrap}
 .chip{padding:6px 16px;border-radius:980px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--card);color:var(--text2);transition:all .15s}
 .chip.on,.chip:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-l)}
