@@ -105,7 +105,11 @@ class OrderResource extends Resource
                     ->color('warning')
                     ->url(fn (Order $r) => route('invoice', $r))
                     ->openUrlInNewTab(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('view')
+                    ->label('View')
+                    ->icon('heroicon-o-eye')
+                    ->color('primary')
+                    ->url(fn (Order $r) => \App\Filament\Admin\Pages\OrderDetail::getUrl(['record' => $r->id])),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -153,7 +157,6 @@ class OrderResource extends Resource
         return [
             'index'  => Pages\ListOrders::route('/'),
             'create' => Pages\CreateOrder::route('/create'),
-            'edit'   => Pages\EditOrder::route('/{record}/edit'),
         ];
     }
 }
