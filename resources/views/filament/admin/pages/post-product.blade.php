@@ -117,14 +117,30 @@
 
         /* Actions */
         .pp-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+        .pp-actions-stack{display:flex;flex-direction:column;gap:10px;margin-top:8px}
         .pp-btn{padding:10px 22px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s}
         .pp-btn-primary{background:#3b82f6;color:#fff}
         .pp-btn-primary:hover:not(:disabled){background:#2563eb}
         .pp-btn-primary:disabled{opacity:.6;cursor:not-allowed}
+        .pp-btn-submit{width:100%;background:#f97316;color:#fff;padding:14px;font-size:16px;font-weight:700;border-radius:8px}
+        .pp-btn-submit:hover:not(:disabled){background:#ea580c}
+        .pp-btn-submit:disabled{opacity:.6;cursor:not-allowed}
         .pp-btn-ghost{background:transparent;border:1px solid #d1d5db;color:#374151}
         .dark .pp-btn-ghost{border-color:#374151;color:#d1d5db}
         .pp-btn-ghost:hover{background:#f3f4f6}
         .dark .pp-btn-ghost:hover{background:#374151}
+
+        /* Breadcrumb separator + posting rule links */
+        .pp-cat-sep{color:#9ca3af;margin:0 4px}
+        .pp-link-inline{color:#3b82f6;font-weight:600;text-decoration:none}
+        .pp-link-inline:hover{text-decoration:underline}
+
+        /* Multi-phone */
+        .pp-phone-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:6px}
+        .pp-phone-row .pp-input{flex:1}
+        .pp-phone-add,.pp-phone-rm{width:36px;height:36px;flex-shrink:0;border:none;border-radius:50%;color:#fff;font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+        .pp-phone-add{background:#3b82f6}.pp-phone-add:hover{background:#2563eb}
+        .pp-phone-rm{background:#ef4444;font-size:13px}.pp-phone-rm:hover{background:#dc2626}
 
         @media(max-width:640px){
             .pp-photos-grid{grid-template-columns:repeat(2,1fr)}
@@ -229,6 +245,8 @@
                     <div class="pp-field">
                         <label>Choose a category <span class="pp-req">*</span></label>
                         <div class="pp-cat-chip">
+                            <span>Computers &amp; Accessories</span>
+                            <span class="pp-cat-sep">›</span>
                             <span>{{ optional($this->categories->firstWhere('id', $category_id))->name ?? 'Not chosen' }}</span>
                             <button type="button" wire:click="prevStep" class="pp-cat-change">Change</button>
                         </div>
@@ -400,8 +418,17 @@
 
                     <div class="pp-field">
                         <label>Phone Number <span class="pp-req">*</span></label>
-                        <input type="tel" wire:model.blur="contact_phone" class="pp-input">
-                        @error('contact_phone') <div class="pp-err">{{ $message }}</div> @enderror
+                        @foreach($contact_phones as $i => $phone)
+                            <div class="pp-phone-row" wire:key="phone-{{ $i }}">
+                                <input type="tel" wire:model.blur="contact_phones.{{ $i }}" class="pp-input">
+                                @if($loop->last && count($contact_phones) < 5)
+                                    <button type="button" wire:click="addPhone" class="pp-phone-add" aria-label="Add phone">+</button>
+                                @elseif(count($contact_phones) > 1)
+                                    <button type="button" wire:click="removePhone({{ $i }})" class="pp-phone-rm" aria-label="Remove phone">✕</button>
+                                @endif
+                                @error('contact_phones.'.$i) <div class="pp-err">{{ $message }}</div> @enderror
+                            </div>
+                        @endforeach
                     </div>
 
                     <div class="pp-field">
@@ -413,14 +440,18 @@
 
                 {{-- Terms + Submit --}}
                 <div class="pp-card">
-                    <p class="pp-terms">By continuing, you agree to the shop's posting rules and privacy policy.</p>
-                    <div class="pp-actions">
-                        <button type="button" wire:click="prevStep" class="pp-btn pp-btn-ghost">← Back</button>
-                        <button type="submit" class="pp-btn pp-btn-primary"
+                    <p class="pp-terms">
+                        By continuing, you agree to our
+                        <a href="#" class="pp-link-inline">Posting Rule</a> and
+                        <a href="#" class="pp-link-inline">Privacy Policy</a> Terms of Use
+                    </p>
+                    <div class="pp-actions-stack">
+                        <button type="submit" class="pp-btn pp-btn-submit"
                             wire:loading.attr="disabled" wire:target="submit,photos">
                             <span wire:loading.remove wire:target="submit">Submit</span>
                             <span wire:loading wire:target="submit">Submitting…</span>
                         </button>
+                        <button type="button" wire:click="prevStep" class="pp-btn pp-btn-ghost">← Back to Category</button>
                     </div>
                 </div>
             </form>

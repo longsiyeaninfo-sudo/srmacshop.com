@@ -78,8 +78,9 @@ class PostProduct extends Page
     #[Validate('required|string|max:120')]
     public string $contact_name = 'SR MAC SHOP';
 
-    #[Validate('required|string|max:32')]
-    public string $contact_phone = '+855 98 33 47 55';
+    /** @var array<int,string> */
+    #[Validate(['contact_phones' => 'required|array|min:1', 'contact_phones.*' => 'required|string|max:32'])]
+    public array $contact_phones = ['+855 98 33 47 55'];
 
     #[Validate('nullable|email|max:255')]
     public string $contact_email = '';
@@ -172,6 +173,21 @@ class PostProduct extends Page
         }
     }
 
+    public function addPhone(): void
+    {
+        if (count($this->contact_phones) < 5) {
+            $this->contact_phones[] = '';
+        }
+    }
+
+    public function removePhone(int $index): void
+    {
+        if (count($this->contact_phones) > 1 && isset($this->contact_phones[$index])) {
+            unset($this->contact_phones[$index]);
+            $this->contact_phones = array_values($this->contact_phones);
+        }
+    }
+
     public function reset_form(): void
     {
         $this->resetExcept(['categories']);
@@ -182,7 +198,7 @@ class PostProduct extends Page
         $this->province = 'Phnom Penh';
         $this->address = 'Sangkat Kambol, Khan Kambol';
         $this->contact_name = 'SR MAC SHOP';
-        $this->contact_phone = '+855 98 33 47 55';
+        $this->contact_phones = ['+855 98 33 47 55'];
         $this->warranty = '2 Year Apple Official';
         $this->stock = 1;
         $this->latitude = 11.5564;

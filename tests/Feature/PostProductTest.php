@@ -55,7 +55,7 @@ class PostProductTest extends TestCase
             ->set('province', 'Phnom Penh')
             ->set('address', 'Sangkat Kambol, Khan Kambol')
             ->set('contact_name', 'SR MAC SHOP')
-            ->set('contact_phone', '+855 98 33 47 55')
+            ->set('contact_phones', ['+855 98 33 47 55', '+855 12 34 56 78'])
             ->set('stock', 5)
             ->set('free_delivery', true)
             ->call('submit')
@@ -96,6 +96,27 @@ class PostProductTest extends TestCase
             ->assertHasErrors(['photos']);
 
         $this->assertNull(Product::where('name', 'Test Product')->first());
+    }
+
+    public function test_admin_can_add_and_remove_phones(): void
+    {
+        $admin = User::firstOrCreate(['email' => 'admin@srmacshop.com'], [
+            'name' => 'Admin', 'password' => bcrypt('password'),
+        ]);
+        $this->actingAs($admin);
+
+        Livewire::test(PostProduct::class)
+            ->assertCount('contact_phones', 1)
+            ->call('addPhone')
+            ->assertCount('contact_phones', 2)
+            ->call('addPhone')
+            ->assertCount('contact_phones', 3)
+            ->call('removePhone', 1)
+            ->assertCount('contact_phones', 2)
+            // Cannot remove last phone
+            ->call('removePhone', 0)
+            ->call('removePhone', 0)
+            ->assertCount('contact_phones', 1);
     }
 
     public function test_step_1_requires_category(): void
