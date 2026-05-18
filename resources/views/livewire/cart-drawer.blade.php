@@ -88,13 +88,29 @@
                     <div class="pme {{ $paymentMethod === 'cash' ? 'sel' : '' }}" wire:click="selectPayment('cash')">
                         💵 <span data-en="Cash" data-km="សាច់ប្រាក់">Cash</span>
                     </div>
-                    <div class="pme {{ $paymentMethod === 'card' ? 'sel' : '' }}" wire:click="selectPayment('card')">
-                        💳 <span data-en="Card" data-km="កាត">Card</span>
+                    <div class="pme {{ $paymentMethod === 'aba' ? 'sel' : '' }}" wire:click="selectPayment('aba')">
+                        🏦 ABA
                     </div>
                     <div class="pme {{ $paymentMethod === 'qr' ? 'sel' : '' }}" wire:click="selectPayment('qr')">
-                        📱 QR
+                        📱 KHQR
                     </div>
                 </div>
+
+                {{-- KHQR info --}}
+                @if($paymentMethod === 'qr')
+                    <div style="background:var(--blue-l);border:1px solid var(--border2);border-radius:var(--rs);padding:10px;margin-bottom:8px;text-align:center;font-size:11px;color:var(--text2)">
+                        📱 <strong style="color:var(--blue)">Scan KHQR to pay</strong><br>
+                        ABA · WING · AclEDA · Any Cambodian bank<br>
+                        <span style="font-size:10px">Show payment screenshot when ordering</span>
+                    </div>
+                @endif
+                @if($paymentMethod === 'aba')
+                    <div style="background:#E3F5E9;border:1px solid #bbf7d0;border-radius:var(--rs);padding:10px;margin-bottom:8px;font-size:11px;color:#15803d">
+                        🏦 <strong>ABA Bank Transfer</strong><br>
+                        Account: <strong>000 123 456</strong> · SR MAC SHOP<br>
+                        <span style="font-size:10px">Show transfer receipt when ordering</span>
+                    </div>
+                @endif
 
                 @if(!$items->isEmpty())
                     <button class="checkout-btn" type="button"

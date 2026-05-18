@@ -35,4 +35,14 @@ return [
         ],
     ],
 
+    'telegram' => [
+        'bot_token' => env('TELEGRAM_BOT_TOKEN', ''),
+        'chat_id'   => env('TELEGRAM_CHAT_ID', ''),
+    ],
+
+    'analytics' => [
+        'google_id'      => env('GOOGLE_ANALYTICS_ID', ''),
+        'facebook_pixel' => env('FACEBOOK_PIXEL_ID', ''),
+    ],
+
 ];
