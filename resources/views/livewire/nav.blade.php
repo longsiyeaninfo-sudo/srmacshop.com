@@ -29,7 +29,8 @@
                 </button>
 
                 {{-- Cart FAB --}}
-                <button class="cart-fab" type="button" @click="$dispatch('cart.open')"
+                <button class="cart-fab" type="button"
+                    wire:click="$dispatchTo('cart-drawer', 'cart.open')"
                     data-en="🛒 Cart" data-km="🛒 កន្ត្រក">
                     🛒 Cart
                     @if($cartCount > 0)

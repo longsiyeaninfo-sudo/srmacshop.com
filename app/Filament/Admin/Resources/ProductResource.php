@@ -10,7 +10,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ProductResource extends Resource
 {
@@ -26,7 +25,7 @@ class ProductResource extends Resource
                     ->required()
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn ($state, callable $set, $record) =>
-                        $record?->exists ? null : $set('slug', Str::slug(($state ?? '') . ' ' . ''))
+                        $record?->exists ? null : $set('slug', Str::slug($state ?? ''))
                     ),
                 Forms\Components\TextInput::make('slug')
                     ->required()
@@ -63,16 +62,13 @@ class ProductResource extends Resource
                 Forms\Components\Toggle::make('is_active')->default(true)->inline(false),
             ])->columns(2),
 
-            Forms\Components\Section::make('Product Photos')->schema([
-                Forms\Components\SpatieMediaLibraryFileUpload::make('gallery')
-                    ->collection('gallery')
-                    ->multiple()
-                    ->reorderable()
-                    ->maxFiles(10)
-                    ->image()
-                    ->imageEditor()
-                    ->columnSpanFull(),
-            ]),
+            Forms\Components\Section::make('Product Photos')
+                ->description('Upload photos via the Media section after saving the product. Use the file manager to add images directly.')
+                ->schema([
+                    Forms\Components\Placeholder::make('photo_info')
+                        ->label('')
+                        ->content('Save the product first, then upload photos using the "Upload Photos" action on the products list.'),
+                ]),
         ]);
     }
 
@@ -80,11 +76,7 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\SpatieMediaLibraryImageColumn::make('gallery')
-                    ->collection('gallery')
-                    ->label('Photo')
-                    ->conversion('thumb')
-                    ->defaultImageUrl(fn ($record) => null),
+                Tables\Columns\TextColumn::make('emoji')->label('')->size('lg'),
                 Tables\Columns\TextColumn::make('name')->searchable()->sortable()->weight('bold'),
                 Tables\Columns\TextColumn::make('category.name')->sortable()->badge()->color('primary'),
                 Tables\Columns\TextColumn::make('price')

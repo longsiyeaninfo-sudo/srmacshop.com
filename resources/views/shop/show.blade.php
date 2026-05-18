@@ -138,8 +138,7 @@
 
                     @if($product->stock > 0)
                         <button class="detail-add-btn" type="button"
-                            x-data
-                            @click="$dispatch('cart.add', { productId: {{ $product->id }}, qty: 1 })"
+                            wire:click="$dispatchTo('cart-drawer', 'cart.add', { productId: {{ $product->id }}, qty: 1 })"
                             data-en="🛒 Add to Cart" data-km="🛒 បន្ថែមទៅកន្ត្រក">🛒 Add to Cart</button>
                     @else
                         <button class="detail-add-btn" type="button" disabled
@@ -196,10 +195,4 @@
     </section>
 </div>
 
-{{-- Listen for add to cart events --}}
-<script>
-    document.addEventListener('cart.add', function(e) {
-        Livewire.dispatch('cart.add', e.detail);
-    });
-</script>
 @endsection
