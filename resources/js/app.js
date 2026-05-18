@@ -25,7 +25,6 @@ Alpine.store('lang', {
     toggle() {
         this.current = this.current === 'en' ? 'km' : 'en';
         this.apply(this.current);
-        document.documentElement.setAttribute('lang', this.current);
     },
     apply(lang) {
         document.querySelectorAll('[data-en]').forEach(el => {
@@ -39,16 +38,26 @@ Alpine.store('lang', {
 window.Alpine = Alpine;
 Alpine.start();
 
-// Apply theme & lang on first load before Alpine hydrates
+// Apply theme & lang immediately on first load (before Alpine hydrates everything)
 (function () {
-    const theme = localStorage.getItem('srmac_theme')?.replace(/"/g, '') || 'light';
+    const theme = (localStorage.getItem('srmac_theme') || 'light').replace(/"/g, '');
     document.documentElement.setAttribute('data-theme', theme);
-    const lang = localStorage.getItem('srmac_lang')?.replace(/"/g, '') || 'en';
+    const lang = (localStorage.getItem('srmac_lang') || 'en').replace(/"/g, '');
     document.documentElement.setAttribute('lang', lang);
 })();
 
-// Re-apply lang when Livewire morphs the DOM
-document.addEventListener('livewire:update', () => {
+// Re-apply lang after Livewire morphs the DOM
+document.addEventListener('livewire:initialized', () => {
+    if (window.Livewire && typeof window.Livewire.hook === 'function') {
+        window.Livewire.hook('morph.updated', () => {
+            const lang = Alpine.store('lang')?.current || 'en';
+            Alpine.store('lang').apply(lang);
+        });
+    }
+});
+
+// Also re-apply after any DOM update (e.g. modals opening)
+document.addEventListener('livewire:navigated', () => {
     const lang = Alpine.store('lang')?.current || 'en';
     Alpine.store('lang').apply(lang);
 });
