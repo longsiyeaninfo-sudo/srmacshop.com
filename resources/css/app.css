@@ -104,12 +104,15 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 [data-theme="dark"] .cn-links a:hover{background:rgba(255,255,255,.06)}
 [data-theme="dark"] .cn-links a.on{background:rgba(255,255,255,.08)}
 .cn-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.lang-tog{display:flex;align-items:center;gap:4px;padding:2px}
-.lang-flag{width:32px;height:32px;border-radius:50%;border:none;background:transparent;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;transition:transform .2s var(--ease),box-shadow .2s var(--ease);opacity:.6;font-family:var(--font);position:relative}
-.lang-flag:hover{opacity:1;transform:scale(1.1)}
-.lang-flag.on{opacity:1;box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--blue)}
-.lang-flag iconify-icon{display:inline-flex;line-height:0;width:22px;height:22px;border-radius:50%;overflow:hidden}
-@media(max-width:520px){.lang-flag{width:28px;height:28px}.lang-flag iconify-icon{width:20px;height:20px}}
+/* Language switcher — DaisyUI-style btn-ghost btn-square rounded-full */
+.lang-tog{display:flex;align-items:center;gap:2px}
+.lang-flag{width:40px;height:40px;border-radius:50%;border:none;background:transparent;cursor:pointer;padding:0 8px;display:inline-flex;align-items:center;justify-content:center;transition:background .2s var(--ease),transform .2s var(--ease),box-shadow .2s var(--ease);opacity:.55;font-family:var(--font);position:relative;flex-shrink:0;-webkit-tap-highlight-color:transparent}
+.lang-flag:hover{opacity:1;background:rgba(0,0,0,.06)}
+[data-theme="dark"] .lang-flag:hover{background:rgba(255,255,255,.08)}
+.lang-flag:active{transform:scale(.94)}
+.lang-flag.on{opacity:1;box-shadow:inset 0 0 0 2px var(--blue)}
+.lang-flag iconify-icon{display:inline-flex;line-height:0;width:24px;height:24px;border-radius:50%;overflow:hidden;pointer-events:none}
+@media(max-width:520px){.lang-flag{width:36px;height:36px}.lang-flag iconify-icon{width:22px;height:22px}}
 .dark-tog{background:var(--bg3);border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center}
 .dark-tog:hover{background:var(--border)}
 .cart-fab{background:var(--blue);color:#fff;border:none;border-radius:980px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px}
