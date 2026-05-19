@@ -380,16 +380,15 @@ button,input,select,textarea{font-family:var(--font)}
 .spec-table td:first-child{color:var(--text2);width:38%;font-weight:500}
 .spec-table td:last-child{color:var(--blue);font-weight:600}
 .detail-desc{font-size:14px;line-height:1.9;color:var(--text);white-space:pre-line}
-.detail-contact-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);padding:18px;margin-bottom:14px;position:sticky;top:70px}
+.detail-contact-card{background:var(--card);border:1px solid var(--hairline);border-radius:var(--radius-lg);padding:var(--space-5);margin-bottom:14px;position:sticky;top:70px;box-shadow:var(--shadow-sm)}
 .detail-shop-name{font-size:15px;font-weight:800;margin-bottom:2px}
 .detail-shop-sub{font-size:12px;color:var(--text2);margin-bottom:14px}
-.detail-add-btn{width:100%;padding:13px;background:var(--blue);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .15s;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px}
-.detail-add-btn:hover{background:var(--blue-h);transform:translateY(-1px)}
-.detail-add-btn:disabled{background:var(--bg3);color:var(--text3);cursor:default}
-.detail-wa-btn{width:100%;padding:12px;background:#25D366;color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s}
-.detail-wa-btn:hover{background:#1fba57}
-.detail-tg-btn{width:100%;padding:12px;background:#229ED9;color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s}
-.detail-tg-btn:hover{background:#1a8ab8}
+.detail-add-btn{width:100%;padding:16px;background:linear-gradient(180deg,#0a84ff,#006fe6);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .2s var(--ease);margin-bottom:var(--space-3);display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 4px 12px rgba(0,122,255,.25);letter-spacing:-.01em}
+.detail-add-btn:hover{background:linear-gradient(180deg,#1a8eff,#0078f5);transform:translateY(-1px);box-shadow:0 1px 0 rgba(255,255,255,.22) inset,0 6px 18px rgba(0,122,255,.35)}
+.detail-add-btn:disabled{background:var(--bg3);color:var(--text3);cursor:default;box-shadow:none}
+.detail-secondary-links{display:flex;gap:var(--space-2);margin-bottom:var(--space-4);flex-wrap:wrap}
+.detail-sec-link{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px var(--space-3);border-radius:var(--radius);font-size:13px;font-weight:500;text-decoration:none;color:var(--text);background:var(--bg);border:1px solid var(--hairline);transition:all .2s var(--ease);min-width:90px}
+.detail-sec-link:hover{background:var(--bg3);border-color:var(--hairline-strong);transform:translateY(-1px)}
 .detail-contact-row{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--border2)}
 .detail-contact-ico{font-size:18px;margin-top:1px}
 .detail-contact-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin-bottom:1px}

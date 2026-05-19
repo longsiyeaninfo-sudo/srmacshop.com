@@ -121,8 +121,9 @@
                         @if($product->category)
                             <span>📦 {{ $product->category->name }}</span>
                         @endif
-                        <span class="stock-tag {{ $stockClass }}" style="display:flex;align-items:center;gap:3px">
-                            <div class="dot"></div>{{ $stockText }}
+                        <span class="stock-tag {{ $stockClass }}" style="display:inline-flex;align-items:center;gap:5px">
+                            <span style="width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0"></span>
+                            {{ $stockText }}
                         </span>
                     </div>
                     <h1 class="detail-title">{{ $product->name }}</h1>
@@ -161,9 +162,9 @@
                 @endif
 
                 {{-- Disclaimer --}}
-                <div style="background:var(--card);border-left:4px solid var(--orange);border-radius:var(--rs);padding:14px 16px;margin-bottom:14px;border:1px solid var(--border2)">
-                    <p style="font-size:12px;color:var(--orange);font-weight:700;margin-bottom:6px">⚠️ Disclaimer</p>
-                    <p style="font-size:12px;color:var(--text2);line-height:1.7"
+                <div style="background:var(--bg);border-radius:var(--radius);padding:14px 18px;margin-bottom:14px;border:1px solid var(--hairline)">
+                    <p style="font-size:11px;color:var(--text2);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px">Note</p>
+                    <p style="font-size:12px;color:var(--text2);line-height:1.6"
                         data-en="All products come with official warranty. Prices may vary. Contact us for the latest pricing and availability."
                         data-km="ផលិតផលទាំងអស់មានការធានា។ តម្លៃអាចផ្លាស់ប្តូរ។ ទំនាក់ទំនងយើងសម្រាប់តម្លៃ និងភាពអាចរកបាន។">
                         All products come with official warranty. Prices may vary. Contact us for the latest pricing and availability.
@@ -191,13 +192,14 @@
                             data-en="Out of Stock" data-km="អស់ស្តុក">Out of Stock</button>
                     @endif
 
-                    <a class="detail-wa-btn"
-                        href="https://wa.me/85598334755?text={{ $waMsg }}"
-                        target="_blank" rel="noopener">💬 WhatsApp</a>
-
-                    <a class="detail-tg-btn"
-                        href="https://t.me/srmacshop"
-                        target="_blank" rel="noopener">✈️ Telegram</a>
+                    <div class="detail-secondary-links">
+                        <a class="detail-sec-link"
+                            href="https://wa.me/85598334755?text={{ $waMsg }}"
+                            target="_blank" rel="noopener">💬 <span data-en="WhatsApp" data-km="WhatsApp">WhatsApp</span></a>
+                        <a class="detail-sec-link"
+                            href="https://t.me/srmacshop"
+                            target="_blank" rel="noopener">✈️ <span data-en="Telegram" data-km="Telegram">Telegram</span></a>
+                    </div>
 
                     <div class="detail-contact-row">
                         <div class="detail-contact-ico">📍</div>
