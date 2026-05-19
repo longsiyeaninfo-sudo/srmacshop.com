@@ -83,6 +83,10 @@ class AdminPanelProvider extends PanelProvider
                         🛍️ Visit Shop
                     </a>
                 BLADE)
+            )
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn (): string => view('filament.admin._mac-theme')->render()
             );
     }
 }
