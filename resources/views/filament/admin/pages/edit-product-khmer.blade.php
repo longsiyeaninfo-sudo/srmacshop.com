@@ -85,6 +85,26 @@
         .pp-map-wrap{position:relative;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;margin-top:14px}
         .pp-map{width:100%;height:200px}
         .pp-map-hint{position:absolute;bottom:0;left:0;right:0;background:rgba(255,255,255,.9);font-size:12px;text-align:center;padding:6px;margin:0;color:#374151}
+
+        /* Spec chips */
+        .pp-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+        .pp-chip{padding:5px 13px;border:1.5px solid #e5e7eb;border-radius:980px;background:#fff;font-size:13px;font-weight:500;color:#374151;cursor:pointer;transition:all .12s}
+        .dark .pp-chip{background:#1f2937;border-color:#374151;color:#d1d5db}
+        .pp-chip:hover{border-color:#3b82f6;background:#eff6ff;color:#1d4ed8}
+        .dark .pp-chip:hover{background:#1e3a8a;border-color:#60a5fa;color:#93c5fd}
+        .pp-chip.on{border-color:#f97316;background:#fff7ed;color:#c2410c;font-weight:700}
+        .dark .pp-chip.on{background:#431407;border-color:#ea580c;color:#fb923c}
+
+        /* Price preview */
+        .pp-price-preview{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:8px;padding:10px 14px;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px}
+        .dark .pp-price-preview{background:#431407;border-color:#9a3412}
+        .pp-price-orig{font-size:12px;color:#9ca3af;text-decoration:line-through}
+        .pp-price-final{font-size:18px;font-weight:800;color:#f97316}
+        .pp-price-save{font-size:11px;font-weight:700;color:#16a34a;background:#dcfce7;padding:2px 8px;border-radius:980px}
+
+        /* Spec summary */
+        .pp-spec-sum{font-size:12px;color:#6b7280;margin-top:4px;min-height:16px}
+        .dark .pp-spec-sum{color:#9ca3af}
         </style>
     @endpush
 
@@ -107,9 +127,10 @@
         <form wire:submit.prevent="submit" enctype="multipart/form-data">
             {{-- Photos --}}
             <div class="pp-card">
+                @php $totalPhotos = count($existing_media_ids) + count($photos); @endphp
                 <div class="pp-section-head">
-                    <h2 class="pp-h2">Photos</h2>
-                    <span class="pp-sub">{{ count($existing_media_ids) + count($photos) }} / 8</span>
+                    <h2 class="pp-h2">📷 Photos</h2>
+                    <span class="pp-sub" style="{{ $totalPhotos >= 8 ? 'color:#f97316;font-weight:700' : '' }}">{{ $totalPhotos }} / 8 photos</span>
                 </div>
 
                 <div class="pp-photos-grid">
@@ -148,7 +169,15 @@
 
             {{-- Post Details --}}
             <div class="pp-card">
-                <div class="pp-section-head"><h2 class="pp-h2">Product Details</h2></div>
+                <div class="pp-section-head">
+                    <div>
+                        <h2 class="pp-h2">📋 Product Details</h2>
+                        @php $specPreview = implode(' · ', array_filter([$cpu, $ram ? $ram.' RAM' : '', $storage, $screen_size])); @endphp
+                        @if($specPreview)
+                            <div class="pp-spec-sum">{{ $specPreview }}</div>
+                        @endif
+                    </div>
+                </div>
 
                 <div class="pp-field">
                     <label>Title <span class="pp-req">*</span></label>
@@ -184,56 +213,56 @@
 
                 <div class="pp-field">
                     <label>Screen Size <span class="pp-req">*</span></label>
-                    <select wire:model="screen_size" class="pp-input">
-                        <option value="">Choose…</option>
+                    <div class="pp-chips">
                         @foreach($this->screenSizes as $s)
-                            <option value="{{ $s }}">{{ $s }}</option>
+                            <button type="button" wire:click="$set('screen_size', '{{ $s }}')"
+                                class="pp-chip {{ $screen_size === $s ? 'on' : '' }}">{{ $s }}</button>
                         @endforeach
-                    </select>
+                    </div>
                     @error('screen_size') <div class="pp-err">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="pp-field">
                     <label>Storage <span class="pp-req">*</span></label>
-                    <select wire:model="storage" class="pp-input">
-                        <option value="">Choose…</option>
+                    <div class="pp-chips">
                         @foreach($this->storageOptions as $s)
-                            <option value="{{ $s }}">{{ $s }}</option>
+                            <button type="button" wire:click="$set('storage', '{{ $s }}')"
+                                class="pp-chip {{ $storage === $s ? 'on' : '' }}">{{ $s }}</button>
                         @endforeach
-                    </select>
+                    </div>
                     @error('storage') <div class="pp-err">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="pp-field">
                     <label>RAM <span class="pp-req">*</span></label>
-                    <select wire:model="ram" class="pp-input">
-                        <option value="">Choose…</option>
+                    <div class="pp-chips">
                         @foreach($this->ramOptions as $r)
-                            <option value="{{ $r }}">{{ $r }}</option>
+                            <button type="button" wire:click="$set('ram', '{{ $r }}')"
+                                class="pp-chip {{ $ram === $r ? 'on' : '' }}">{{ $r }}</button>
                         @endforeach
-                    </select>
+                    </div>
                     @error('ram') <div class="pp-err">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="pp-field">
                     <label>CPU <span class="pp-req">*</span></label>
-                    <select wire:model="cpu" class="pp-input">
-                        <option value="">Choose…</option>
+                    <div class="pp-chips">
                         @foreach($this->cpuOptions as $c)
-                            <option value="{{ $c }}">{{ $c }}</option>
+                            <button type="button" wire:click="$set('cpu', '{{ $c }}')"
+                                class="pp-chip {{ $cpu === $c ? 'on' : '' }}">{{ $c }}</button>
                         @endforeach
-                    </select>
+                    </div>
                     @error('cpu') <div class="pp-err">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="pp-field">
-                    <label>VGA</label>
-                    <select wire:model="vga" class="pp-input">
-                        <option value="">Choose…</option>
+                    <label>VGA / GPU</label>
+                    <div class="pp-chips">
                         @foreach($this->vgaOptions as $v)
-                            <option value="{{ $v }}">{{ $v }}</option>
+                            <button type="button" wire:click="$set('vga', '{{ $v }}')"
+                                class="pp-chip {{ $vga === $v ? 'on' : '' }}">{{ $v }}</button>
                         @endforeach
-                    </select>
+                    </div>
                 </div>
 
                 <div class="pp-field">
@@ -267,13 +296,32 @@
                     </div>
                 </div>
 
-                <div class="pp-field">
+                <div class="pp-field"
+                    x-data="{
+                        get preview() {
+                            const p = parseFloat($wire.price) || 0;
+                            const d = parseFloat($wire.discount) || 0;
+                            const dt = $wire.discount_type;
+                            if (!p) return null;
+                            const fp = d > 0 ? (dt === '%' ? p * (1 - d / 100) : Math.max(0, p - d)) : p;
+                            return { list: p, final: fp, saved: p - fp, pct: Math.round((1 - fp / p) * 100) };
+                        }
+                    }">
                     <label>Price <span class="pp-req">*</span></label>
                     <div class="pp-price-wrap">
                         <span class="pp-price-prefix">$</span>
                         <input type="number" min="0" step="0.01" wire:model="price" class="pp-input pp-price-input">
                     </div>
                     @error('price') <div class="pp-err">{{ $message }}</div> @enderror
+                    <div class="pp-price-preview" x-show="preview && preview.saved > 0" x-cloak>
+                        <span class="pp-price-orig">$<span x-text="preview?.list?.toFixed(2)"></span></span>
+                        <span class="pp-price-final">$<span x-text="preview?.final?.toFixed(2)"></span></span>
+                        <span class="pp-price-save">Save $<span x-text="preview?.saved?.toFixed(2)"></span> (<span x-text="preview?.pct"></span>% off)</span>
+                    </div>
+                    <div class="pp-price-preview" x-show="preview && preview.saved === 0" x-cloak>
+                        <span class="pp-price-final">$<span x-text="preview?.final?.toFixed(2)"></span></span>
+                        <span style="font-size:12px;color:#6b7280">No discount applied</span>
+                    </div>
                 </div>
 
                 <div class="pp-field">

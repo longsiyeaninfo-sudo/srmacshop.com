@@ -74,6 +74,15 @@ class AdminPanelProvider extends PanelProvider
                         <a href="https://srmacshop.com" style="color:#f97316;font-weight:600;text-decoration:none">srmacshop.com</a> · Phnom Penh
                     </p>
                 BLADE)
+            )
+            ->renderHook(
+                PanelsRenderHook::TOPBAR_END,
+                fn (): string => Blade::render(<<<'BLADE'
+                    <a href="{{ url('/') }}" target="_blank"
+                       style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;background:#f97316;color:#fff;border-radius:980px;font-size:12px;font-weight:700;text-decoration:none;margin-right:6px;white-space:nowrap;line-height:1">
+                        🛍️ Visit Shop
+                    </a>
+                BLADE)
             );
     }
 }
