@@ -11,6 +11,7 @@
                 <li><a href="{{ route('shop') }}" class="{{ request()->routeIs('shop') || request()->routeIs('product') ? 'on' : '' }}" data-en="Shop" data-km="ហាង">Shop</a></li>
                 <li><a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'on' : '' }}" data-en="About" data-km="អំពីយើង">About</a></li>
                 <li><a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'on' : '' }}" data-en="Contact" data-km="ទំនាក់ទំនង">Contact</a></li>
+                <li><a href="{{ route('track-order') }}" class="{{ request()->routeIs('track-order') ? 'on' : '' }}" data-en="Track Order" data-km="តាមដានការបញ្ជាទិញ">Track Order</a></li>
             </ul>
 
             <div class="cn-right">

@@ -26,4 +26,6 @@ Route::get('/invoice/{order}', [InvoiceController::class, 'show'])->name('invoic
 Route::post('/webhooks/stripe', [StripeWebhookController::class, 'handle'])
     ->name('webhooks.stripe');
 
+Route::get('/track-order', fn () => view('track-order'))->name('track-order');
+
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');

@@ -64,6 +64,22 @@
 
             {{-- Footer --}}
             <div class="cart-ft">
+                {{-- Delivery location toggle --}}
+                @if(!$items->isEmpty())
+                <div style="display:flex;gap:6px;margin-bottom:10px">
+                    <button type="button"
+                        wire:click="setLocation(false)"
+                        style="flex:1;padding:7px 0;font-size:12px;font-weight:600;border-radius:8px;border:1.5px solid {{ !$isProvince ? 'var(--blue)' : 'var(--border2)' }};background:{{ !$isProvince ? 'var(--blue-l)' : 'var(--card)' }};color:{{ !$isProvince ? 'var(--blue)' : 'var(--text2)' }};cursor:pointer;transition:all .15s">
+                        🏙 Phnom Penh
+                    </button>
+                    <button type="button"
+                        wire:click="setLocation(true)"
+                        style="flex:1;padding:7px 0;font-size:12px;font-weight:600;border-radius:8px;border:1.5px solid {{ $isProvince ? 'var(--blue)' : 'var(--border2)' }};background:{{ $isProvince ? 'var(--blue-l)' : 'var(--card)' }};color:{{ $isProvince ? 'var(--blue)' : 'var(--text2)' }};cursor:pointer;transition:all .15s">
+                        🗺 Province
+                    </button>
+                </div>
+                @endif
+
                 <div class="cft-row">
                     <span data-en="Subtotal" data-km="សរុបរង">Subtotal</span>
                     <span>${{ number_format($subtotal / 100, 2) }}</span>
@@ -74,10 +90,22 @@
                         <span>-${{ number_format($discount / 100, 2) }}</span>
                     </div>
                 @endif
-                <div class="cft-row">
-                    <span data-en="Tax (10%)" data-km="ពន្ធ (10%)">Tax (10%)</span>
-                    <span>${{ number_format($tax / 100, 2) }}</span>
-                </div>
+                @if($taxEnabled && $tax > 0)
+                    <div class="cft-row">
+                        <span data-en="Tax ({{ $taxPercent }}%)" data-km="ពន្ធ ({{ $taxPercent }}%)">Tax ({{ $taxPercent }}%)</span>
+                        <span>${{ number_format($tax / 100, 2) }}</span>
+                    </div>
+                @endif
+                @if(!$items->isEmpty())
+                    <div class="cft-row">
+                        <span data-en="Delivery" data-km="ដឹកជញ្ជូន">Delivery</span>
+                        @if($deliveryFee === 0)
+                            <span style="color:var(--green);font-weight:700" data-en="FREE" data-km="ឥតគិតថ្លៃ">FREE</span>
+                        @else
+                            <span>${{ number_format($deliveryFee / 100, 2) }}</span>
+                        @endif
+                    </div>
+                @endif
                 <div class="cft-total">
                     <span data-en="Total" data-km="សរុប">Total</span>
                     <span>${{ number_format($total / 100, 2) }}</span>
@@ -85,28 +113,40 @@
 
                 {{-- Payment methods --}}
                 <div class="pay-meths">
+                    @if($cashEnabled)
                     <div class="pme {{ $paymentMethod === 'cash' ? 'sel' : '' }}" wire:click="selectPayment('cash')">
                         💵 <span data-en="Cash" data-km="សាច់ប្រាក់">Cash</span>
                     </div>
+                    @endif
+                    @if($abaEnabled)
                     <div class="pme {{ $paymentMethod === 'aba' ? 'sel' : '' }}" wire:click="selectPayment('aba')">
                         🏦 ABA
                     </div>
                     <div class="pme {{ $paymentMethod === 'qr' ? 'sel' : '' }}" wire:click="selectPayment('qr')">
                         📱 KHQR
                     </div>
+                    @endif
+                    @if($cardEnabled)
+                    <div class="pme {{ $paymentMethod === 'card' ? 'sel' : '' }}" wire:click="selectPayment('card')">
+                        💳 Card
+                    </div>
+                    @endif
                 </div>
 
-                @if($paymentMethod === 'qr')
+                @if($paymentMethod === 'qr' && $abaEnabled)
                     <div style="background:var(--blue-l);border:1px solid var(--border2);border-radius:var(--rs);padding:10px;margin-bottom:8px;text-align:center;font-size:11px;color:var(--text2)">
+                        @if($abaQrUrl)
+                            <img src="{{ $abaQrUrl }}" alt="KHQR" style="max-width:140px;margin:0 auto 6px;display:block;border-radius:6px">
+                        @endif
                         📱 <strong style="color:var(--blue)">Scan KHQR to pay</strong><br>
-                        ABA · WING · AclEDA · Any Cambodian bank<br>
+                        ABA · WING · ACLEDA · Any Cambodian bank<br>
                         <span style="font-size:10px">Show payment screenshot when ordering</span>
                     </div>
                 @endif
-                @if($paymentMethod === 'aba')
+                @if($paymentMethod === 'aba' && $abaEnabled)
                     <div style="background:#E3F5E9;border:1px solid #bbf7d0;border-radius:var(--rs);padding:10px;margin-bottom:8px;font-size:11px;color:#15803d">
                         🏦 <strong>ABA Bank Transfer</strong><br>
-                        Account: <strong>000 123 456</strong> · SR MAC SHOP<br>
+                        Account: <strong>{{ $abaNumber }}</strong> · {{ $abaName }}<br>
                         <span style="font-size:10px">Show transfer receipt when ordering</span>
                     </div>
                 @endif

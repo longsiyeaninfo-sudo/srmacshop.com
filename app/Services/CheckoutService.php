@@ -38,6 +38,7 @@ class CheckoutService
             'subtotal'        => $cart->subtotal(),
             'discount'        => $cart->discount(),
             'tax'             => $cart->tax(),
+            'delivery_fee'    => $cart->deliveryFee(),
             'total'           => $cart->total(),
             'coupon_code'     => $coupon?->code,
             'status'          => OrderStatus::Pending,

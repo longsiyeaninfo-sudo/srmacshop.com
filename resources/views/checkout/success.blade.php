@@ -46,6 +46,7 @@
 
             <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
                 <a href="{{ route('home') }}" class="btn btn-blue" data-en="Continue Shopping" data-km="ទិញបន្ត">Continue Shopping</a>
+                <a href="{{ route('track-order') }}?order={{ $order->order_number }}" class="btn" style="background:var(--bg3);color:var(--text)">📦 Track Order</a>
                 <a href="{{ route('invoice', $order) }}" target="_blank" class="btn" style="background:var(--bg3);color:var(--text)">🧾 Print Invoice</a>
             </div>
 

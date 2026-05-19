@@ -10,7 +10,7 @@ class Order extends Model
 {
     protected $fillable = [
         'order_number', 'customer_name', 'customer_phone', 'customer_address',
-        'payment_method', 'subtotal', 'discount', 'tax', 'total', 'coupon_code',
+        'payment_method', 'subtotal', 'discount', 'tax', 'delivery_fee', 'total', 'coupon_code',
         'status', 'notes', 'stripe_session_id',
     ];
 
@@ -19,6 +19,7 @@ class Order extends Model
         'subtotal' => 'integer',
         'discount' => 'integer',
         'tax' => 'integer',
+        'delivery_fee' => 'integer',
         'total' => 'integer',
     ];
 
