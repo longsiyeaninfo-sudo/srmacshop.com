@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Order;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -10,16 +11,21 @@ class TelegramService
 {
     private string $token;
     private string $chatId;
+    private array $settings;
 
     public function __construct()
     {
-        $this->token  = config('services.telegram.bot_token', '');
-        $this->chatId = config('services.telegram.chat_id', '');
+        $this->settings = Setting::get('telegram', []) ?: [];
+        $this->token  = $this->settings['bot_token']     ?? config('services.telegram.bot_token', '');
+        $this->chatId = $this->settings['admin_chat_id'] ?? config('services.telegram.chat_id', '');
     }
 
     public function notifyNewOrder(Order $order): void
     {
         if (! $this->token || ! $this->chatId) {
+            return;
+        }
+        if (array_key_exists('notify_new', $this->settings) && ! $this->settings['notify_new']) {
             return;
         }
 
@@ -50,6 +56,9 @@ class TelegramService
     public function notifyOrderStatus(Order $order): void
     {
         if (! $this->token || ! $this->chatId) {
+            return;
+        }
+        if (array_key_exists('notify_status', $this->settings) && ! $this->settings['notify_status']) {
             return;
         }
 
