@@ -48,20 +48,21 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('order_number')->searchable()->sortable()->weight('bold'),
-                Tables\Columns\TextColumn::make('customer_name')->searchable(),
-                Tables\Columns\TextColumn::make('customer_phone')->searchable()->toggleable(),
-                Tables\Columns\TextColumn::make('items_count')->counts('items')->label('Items'),
+                Tables\Columns\TextColumn::make('order_number')->searchable()->sortable()->weight('bold')->label('Order #'),
+                Tables\Columns\ViewColumn::make('customer_name')
+                    ->label('Customer')
+                    ->view('filament.admin.tables.customer-cell')
+                    ->searchable(['customer_name', 'customer_phone']),
+                Tables\Columns\TextColumn::make('items_count')->counts('items')->label('Items')->alignCenter(),
                 Tables\Columns\TextColumn::make('total')->money('USD', divideBy: 100)->sortable()->weight('bold'),
                 Tables\Columns\TextColumn::make('payment_method')->badge()
+                    ->formatStateUsing(fn (string $state) => strtoupper($state))
                     ->color(fn (string $state) => match ($state) {
                         'cash' => 'success', 'card' => 'info', 'qr' => 'warning', 'aba' => 'primary', default => 'gray',
                     }),
-                Tables\Columns\TextColumn::make('status')
-                    ->badge()
-                    ->formatStateUsing(fn (OrderStatus $state) => $state->label())
-                    ->color(fn (OrderStatus $state) => $state->color()),
-                Tables\Columns\TextColumn::make('created_at')->dateTime('d M Y H:i')->sortable(),
+                Tables\Columns\ViewColumn::make('status')
+                    ->view('filament.admin.tables.status-pill'),
+                Tables\Columns\TextColumn::make('created_at')->dateTime('d M Y H:i')->sortable()->label('Placed'),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
