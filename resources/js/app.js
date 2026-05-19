@@ -59,3 +59,36 @@ document.addEventListener('livewire:initialized', () => {
         });
     }
 });
+
+// Scroll-aware nav: adds .is-scrolled when user scrolls past the top
+(function () {
+    const apply = () => {
+        const nav = document.getElementById('cust-nav');
+        if (!nav) return;
+        if (window.scrollY > 20) nav.classList.add('is-scrolled');
+        else nav.classList.remove('is-scrolled');
+    };
+    document.addEventListener('DOMContentLoaded', apply);
+    window.addEventListener('scroll', apply, { passive: true });
+})();
+
+// Scroll reveal: opt-in via .reveal class. Used by Phase 9; safe to ship now.
+(function () {
+    if (!('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+            if (e.isIntersecting) {
+                e.target.classList.add('is-visible');
+                io.unobserve(e.target);
+            }
+        });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+
+    const observe = () => document.querySelectorAll('.reveal:not(.is-visible)').forEach((el) => io.observe(el));
+    document.addEventListener('DOMContentLoaded', observe);
+    document.addEventListener('livewire:initialized', () => {
+        if (window.Livewire?.hook) {
+            window.Livewire.hook('morph.updated', observe);
+        }
+    });
+})();

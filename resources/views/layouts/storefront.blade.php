@@ -69,11 +69,11 @@
                 <div class="foot-logo">🍎 <span>SR</span> MAC SHOP</div>
                 <div style="font-size:11px;color:var(--text3)">www.srmacshop.com</div>
                 <div class="foot-desc" data-en="Cambodia's most trusted MacBook specialist since 2018." data-km="អ្នកជំនាញ MacBook ដែលគួរទុកចិត្ត នៅកម្ពុជា ចាប់ពី ២០១៨។">Cambodia's most trusted MacBook specialist since 2018.</div>
-                <div style="display:flex;gap:8px;margin-top:12px">
-                    <a href="https://wa.me/85598334755" target="_blank" rel="noopener"
-                        style="background:#25D366;color:#fff;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none">💬 WhatsApp</a>
-                    <a href="https://t.me/srmacshop" target="_blank" rel="noopener"
-                        style="background:#229ED9;color:#fff;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none">✈️ Telegram</a>
+                <div class="foot-social">
+                    <a href="https://wa.me/85598334755" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp">💬</a>
+                    <a href="https://t.me/srmacshop" target="_blank" rel="noopener" aria-label="Telegram" title="Telegram">✈️</a>
+                    <a href="mailto:hello@srmacshop.com" aria-label="Email" title="Email">✉️</a>
+                    <a href="tel:+85598334755" aria-label="Phone" title="Call us">📞</a>
                 </div>
             </div>
             <div class="foot-col">
@@ -90,8 +90,15 @@
                 <ul>
                     <li><a href="{{ route('about') }}" data-en="About Us" data-km="អំពីយើង">About Us</a></li>
                     <li><a href="{{ route('contact') }}" data-en="Contact" data-km="ទំនាក់ទំនង">Contact</a></li>
+                    <li><a href="/admin" data-en="Admin" data-km="អ្នកគ្រប់គ្រង">Admin</a></li>
+                </ul>
+            </div>
+            <div class="foot-col">
+                <h4 data-en="Support" data-km="ជំនួយ">Support</h4>
+                <ul>
+                    <li><a href="{{ route('track-order') }}" data-en="Track Order" data-km="តាមដានការបញ្ជាទិញ">Track Order</a></li>
+                    <li><a href="https://wa.me/85598334755" target="_blank" rel="noopener" data-en="WhatsApp Help" data-km="ជំនួយ WhatsApp">WhatsApp Help</a></li>
                     <li><a href="{{ route('sitemap') }}">Sitemap</a></li>
-                    <li><a href="/admin">⚙️ Admin</a></li>
                 </ul>
             </div>
         </div>
@@ -104,7 +111,8 @@
     {{-- WhatsApp floating button --}}
     <a href="https://wa.me/85598334755?text=Hi%20SR%20MAC%20SHOP!%20I%27d%20like%20to%20enquire%20about%20a%20MacBook."
         class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp">
-        💬 <span data-en="WhatsApp Us" data-km="ទំនាក់ទំនង">WhatsApp Us</span>
+        <span class="wa-icon">💬</span>
+        <span data-en="WhatsApp Us" data-km="ទំនាក់ទំនង">WhatsApp Us</span>
     </a>
 
     <livewire:cart-drawer />
