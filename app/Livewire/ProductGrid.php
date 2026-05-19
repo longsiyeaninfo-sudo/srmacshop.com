@@ -20,6 +20,9 @@ class ProductGrid extends Component
     #[Url(except: 'featured')]
     public string $sort = 'featured';
 
+    /** @var array<int, int> */
+    public array $compareIds = [];
+
     public $categories;
 
     public function mount($categories = null): void
@@ -40,6 +43,26 @@ class ProductGrid extends Component
     public function updatedSort(): void
     {
         $this->resetPage();
+    }
+
+    public function toggleCompare(int $productId): void
+    {
+        $i = array_search($productId, $this->compareIds, true);
+        if ($i !== false) {
+            unset($this->compareIds[$i]);
+            $this->compareIds = array_values($this->compareIds);
+        } else {
+            if (count($this->compareIds) >= 3) {
+                $this->dispatch('toast', message: __('You can compare up to 3 products at a time.'), type: 'warning');
+                return;
+            }
+            $this->compareIds[] = $productId;
+        }
+    }
+
+    public function clearCompare(): void
+    {
+        $this->compareIds = [];
     }
 
     public function render()

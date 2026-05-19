@@ -41,7 +41,7 @@
             @else
                 <div class="pgrid">
                     @foreach($products as $product)
-                        <x-product-card :product="$product" />
+                        <x-product-card :product="$product" :compare-ids="$compareIds" />
                     @endforeach
                 </div>
             @endif
