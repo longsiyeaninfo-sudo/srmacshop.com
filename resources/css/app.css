@@ -53,7 +53,15 @@ button,input,select,textarea{font-family:var(--font)}
 /* macOS premium — respect reduced motion */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}
+  .reveal{opacity:1!important;transform:none!important}
 }
+
+/* Scroll reveal animation — applied to .reveal elements by IntersectionObserver in app.js */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .65s var(--ease),transform .65s var(--ease);will-change:opacity,transform}
+.reveal.is-visible{opacity:1;transform:none}
+
+/* Smooth body color transitions for theme toggle */
+body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{transition:background-color .25s var(--ease),color .25s var(--ease),border-color .25s var(--ease)}
 
 /* ═══════════════ SHARED BUTTONS ═══════════════ */
 .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 22px;border-radius:980px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:var(--font)}

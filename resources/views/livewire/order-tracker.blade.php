@@ -76,10 +76,17 @@
             </div>
         </div>
 
-        <button class="ot-btn" wire:click="track" wire:loading.attr="disabled">
-            <span wire:loading.remove>🔍 <span data-en="Track Order" data-km="តាមដានការបញ្ជាទិញ">Track Order</span></span>
-            <span wire:loading>Searching…</span>
+        <button class="ot-btn" wire:click="track" wire:loading.attr="disabled" wire:target="track">
+            <span wire:loading.remove wire:target="track">🔍 <span data-en="Track Order" data-km="តាមដានការបញ្ជាទិញ">Track Order</span></span>
+            <span wire:loading wire:target="track" style="display:inline-flex;align-items:center;gap:8px">
+                <span class="ot-spinner"></span> <span data-en="Searching…" data-km="កំពុងស្វែងរក…">Searching…</span>
+            </span>
         </button>
+
+        <style>
+            .ot-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:otSpin .7s linear infinite;vertical-align:-2px}
+            @keyframes otSpin{to{transform:rotate(360deg)}}
+        </style>
 
         @if($error)
             <div class="ot-err">⚠️ {{ $error }}</div>

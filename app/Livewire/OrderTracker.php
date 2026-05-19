@@ -13,6 +13,13 @@ class OrderTracker extends Component
     public ?string $error = null;
     public bool $searched = false;
 
+    public function mount(): void
+    {
+        if ($prefill = request()->query('order')) {
+            $this->orderNumber = strtoupper(trim((string) $prefill));
+        }
+    }
+
     public function track(): void
     {
         $this->validate([

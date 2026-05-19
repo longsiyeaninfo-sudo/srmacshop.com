@@ -231,7 +231,7 @@
 
         {{-- Related Products --}}
         @if($related->count())
-            <div class="related-section">
+            <div class="related-section reveal">
                 <div class="related-title" data-en="🛍️ Related Products" data-km="🛍️ ផលិតផលពាក់ព័ន្ធ">🛍️ Related Products</div>
                 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px">
                     @foreach($related as $rel)

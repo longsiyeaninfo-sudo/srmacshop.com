@@ -53,8 +53,10 @@
             <div class="coupon-row">
                 <input class="coupon-inp" type="text" wire:model="couponCode"
                     placeholder="Coupon code..." data-en="Coupon code..." data-km="លេខកូដប្រូម៉ូសិន...">
-                <button class="coupon-apply" wire:click="applyCoupon" type="button"
-                    data-en="Apply" data-km="អនុវត្ត">Apply</button>
+                <button class="coupon-apply" wire:click="applyCoupon" wire:loading.attr="disabled" wire:target="applyCoupon" type="button">
+                    <span wire:loading.remove wire:target="applyCoupon" data-en="Apply" data-km="អនុវត្ត">Apply</span>
+                    <span wire:loading wire:target="applyCoupon" data-en="…" data-km="…">…</span>
+                </button>
             </div>
             @if($couponStatus)
                 <div class="coupon-status {{ str_contains($couponStatus, 'applied') ? 'cs-ok' : 'cs-err' }}">

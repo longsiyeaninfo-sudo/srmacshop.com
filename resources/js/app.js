@@ -72,9 +72,13 @@ document.addEventListener('livewire:initialized', () => {
     window.addEventListener('scroll', apply, { passive: true });
 })();
 
-// Scroll reveal: opt-in via .reveal class. Used by Phase 9; safe to ship now.
+// Scroll reveal: opt-in via .reveal class.
 (function () {
-    if (!('IntersectionObserver' in window)) return;
+    if (!('IntersectionObserver' in window)) {
+        // No IO support — show everything immediately so content isn't hidden.
+        document.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-visible'));
+        return;
+    }
     const io = new IntersectionObserver((entries) => {
         entries.forEach((e) => {
             if (e.isIntersecting) {
@@ -82,9 +86,13 @@ document.addEventListener('livewire:initialized', () => {
                 io.unobserve(e.target);
             }
         });
-    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
 
     const observe = () => document.querySelectorAll('.reveal:not(.is-visible)').forEach((el) => io.observe(el));
+
+    // Run immediately (script is loaded at end of body via Vite), and also on
+    // DOMContentLoaded for safety + after Livewire morphs new content in.
+    observe();
     document.addEventListener('DOMContentLoaded', observe);
     document.addEventListener('livewire:initialized', () => {
         if (window.Livewire?.hook) {
