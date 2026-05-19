@@ -7,8 +7,6 @@
     {{-- HERO --}}
     <div class="hero">
         <div class="hero-mesh"></div>
-        <div class="hero-orb orb1"></div>
-        <div class="hero-orb orb2"></div>
         <div class="hero-content">
             <div class="hero-pill" data-en="🍎 SR MAC SHOP — Apple Hardware &amp; Care" data-km="អ្នកជំនាញ MacBook លេខ១ នៅកម្ពុជា">🍎 SR MAC SHOP — Apple Hardware &amp; Care</div>
             <h1>
@@ -20,7 +18,7 @@
             </p>
             <div class="hero-btns">
                 <a href="{{ route('shop') }}" class="btn btn-blue" data-en="Shop Now →" data-km="ទិញឥឡូវ →">Shop Now →</a>
-                <a href="{{ route('contact') }}" class="btn" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)"
+                <a href="{{ route('contact') }}" class="btn" style="background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px)"
                     data-en="Contact Us" data-km="ទំនាក់ទំនង">Contact Us</a>
             </div>
             <div class="hero-stats">
@@ -41,34 +39,42 @@
                     <div class="hstat-l" data-en="Support" data-km="គាំទ្រ">Support</div>
                 </div>
             </div>
-            {{-- Product Spotlight --}}
-            <div style="display:flex;gap:10px;justify-content:center;margin-top:2.5rem;flex-wrap:wrap">
-                <a href="{{ route('shop') }}" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:10px 18px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .2s;backdrop-filter:blur(8px);text-decoration:none"
-                    onmouseover="this.style.background='rgba(255,255,255,.15)'" onmouseout="this.style.background='rgba(255,255,255,.08)'">
-                    <span style="font-size:22px">💻</span>
-                    <div style="text-align:left"><div style="color:#fff;font-size:12px;font-weight:700">MacBook Air M4</div><div style="color:rgba(255,255,255,.5);font-size:11px">From $1,099</div></div>
+            {{-- Product spotlight pills --}}
+            <div class="spot-row">
+                <a href="{{ route('shop') }}?category=macbook-air" class="spot-card">
+                    <span class="spot-card-emoji">💻</span>
+                    <div style="text-align:left">
+                        <div class="spot-card-title">MacBook Air M4</div>
+                        <div class="spot-card-meta">From $1,099</div>
+                    </div>
                 </a>
-                <a href="{{ route('shop') }}" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:10px 18px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .2s;backdrop-filter:blur(8px);text-decoration:none"
-                    onmouseover="this.style.background='rgba(255,255,255,.15)'" onmouseout="this.style.background='rgba(255,255,255,.08)'">
-                    <span style="font-size:22px">🖥️</span>
-                    <div style="text-align:left"><div style="color:#fff;font-size:12px;font-weight:700">MacBook Pro M4</div><div style="color:rgba(255,255,255,.5);font-size:11px">From $1,555</div></div>
+                <a href="{{ route('shop') }}?category=macbook-pro" class="spot-card">
+                    <span class="spot-card-emoji">🖥️</span>
+                    <div style="text-align:left">
+                        <div class="spot-card-title">MacBook Pro M4</div>
+                        <div class="spot-card-meta">From $1,555</div>
+                    </div>
                 </a>
-                <a href="{{ route('shop') }}" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:10px 18px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .2s;backdrop-filter:blur(8px);text-decoration:none"
-                    onmouseover="this.style.background='rgba(255,255,255,.15)'" onmouseout="this.style.background='rgba(255,255,255,.08)'">
-                    <span style="font-size:22px">🛡️</span>
-                    <div style="text-align:left"><div style="color:#fff;font-size:12px;font-weight:700">AppleCare+</div><div style="color:rgba(255,255,255,.5);font-size:11px">3-Year Coverage</div></div>
+                <a href="{{ route('shop') }}?category=protection" class="spot-card">
+                    <span class="spot-card-emoji">🛡️</span>
+                    <div style="text-align:left">
+                        <div class="spot-card-title">AppleCare+</div>
+                        <div class="spot-card-meta">3-Year Coverage</div>
+                    </div>
                 </a>
-                <a href="{{ route('contact') }}" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:10px 18px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .2s;backdrop-filter:blur(8px);text-decoration:none"
-                    onmouseover="this.style.background='rgba(255,255,255,.15)'" onmouseout="this.style.background='rgba(255,255,255,.08)'">
-                    <span style="font-size:22px">💬</span>
-                    <div style="text-align:left"><div style="color:#fff;font-size:12px;font-weight:700">WhatsApp Us</div><div style="color:rgba(255,255,255,.5);font-size:11px">+855 98 33 47 55</div></div>
+                <a href="https://wa.me/85598334755" class="spot-card" target="_blank" rel="noopener">
+                    <span class="spot-card-emoji">💬</span>
+                    <div style="text-align:left">
+                        <div class="spot-card-title">WhatsApp Us</div>
+                        <div class="spot-card-meta">+855 98 33 47 55</div>
+                    </div>
                 </a>
             </div>
         </div>
     </div>
 
     {{-- FEATURED PRODUCTS --}}
-    <section class="shop-section" style="background:var(--bg2)">
+    <section class="shop-section reveal" style="background:var(--bg2)">
         <div class="inner">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:8px">
                 <div>
@@ -80,7 +86,7 @@
                     <span style="background:var(--blue-l);color:var(--blue);font-size:11px;font-weight:700;padding:4px 12px;border-radius:980px">🚀 Same-Day Delivery</span>
                 </div>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;margin-top:20px">
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px;margin-top:20px">
                 @foreach($featured as $product)
                     <x-product-card :product="$product" />
                 @endforeach
@@ -91,8 +97,62 @@
         </div>
     </section>
 
+    {{-- FEATURED SPOTLIGHT BAND (apple.com signature) --}}
+    <section class="spotlight-band reveal">
+        <div class="spotlight-band-inner">
+            <div class="spotlight-eyebrow" data-en="New" data-km="ថ្មី">New</div>
+            <h2 class="spotlight-h" data-en="MacBook Air M4." data-km="MacBook Air M4។">MacBook Air M4.</h2>
+            <p class="spotlight-sub" data-en="The everyday laptop, supercharged by Apple silicon. Now starting at $1,099." data-km="កុំព្យូទ័រយួរដៃប្រចាំថ្ងៃ ដែលបានពង្រឹងដោយ Apple silicon។ ចាប់ផ្ដើមពី $1,099។">The everyday laptop, supercharged by Apple silicon. Now starting at $1,099.</p>
+            <div class="spotlight-img">💻</div>
+            <div class="spotlight-actions">
+                <a href="{{ route('shop') }}?category=macbook-air" data-en="Buy →" data-km="ទិញ →">Buy →</a>
+                <a href="{{ route('contact') }}" data-en="Learn more →" data-km="ស្វែងយល់បន្ថែម →">Learn more →</a>
+            </div>
+        </div>
+    </section>
+
+    {{-- HOW TO ORDER --}}
+    <section class="shop-section reveal" style="background:var(--bg2)">
+        <div class="inner">
+            <div style="text-align:center;margin-bottom:0">
+                <div class="sec-eyebrow" data-en="How It Works" data-km="វិធីដំណើរការ">How It Works</div>
+                <h2 class="sec-h" data-en="Order in 4 simple steps" data-km="ការបញ្ជាទិញក្នុង ៤ ជំហានសាមញ្ញ">Order in 4 simple steps</h2>
+            </div>
+            <div class="how-grid">
+                <div class="how-step">
+                    <div class="how-step-content">
+                        <div class="how-emoji">🔍</div>
+                        <div class="how-title" data-en="Browse the catalog" data-km="មើលបញ្ជី">Browse the catalog</div>
+                        <div class="how-desc" data-en="Filter by MacBook Air or Pro. Compare specs side by side." data-km="ច្រោះតាម MacBook Air ឬ Pro។ ប្រៀបធៀបលក្ខណៈពិសេស។">Filter by MacBook Air or Pro. Compare specs side by side.</div>
+                    </div>
+                </div>
+                <div class="how-step">
+                    <div class="how-step-content">
+                        <div class="how-emoji">🛒</div>
+                        <div class="how-title" data-en="Add to cart" data-km="បន្ថែមទៅកន្ត្រក">Add to cart</div>
+                        <div class="how-desc" data-en="Pick your model. Apply a coupon. See the total instantly." data-km="ជ្រើសរើសម៉ូដែលរបស់អ្នក។ អនុវត្តកូដបញ្ចុះតម្លៃ។">Pick your model. Apply a coupon. See the total instantly.</div>
+                    </div>
+                </div>
+                <div class="how-step">
+                    <div class="how-step-content">
+                        <div class="how-emoji">✅</div>
+                        <div class="how-title" data-en="Confirm your order" data-km="បញ្ជាក់ការបញ្ជាទិញ">Confirm your order</div>
+                        <div class="how-desc" data-en="Cash, ABA, or KHQR. Pay your way. We'll call to confirm." data-km="សាច់ប្រាក់ ABA ឬ KHQR។ ទូទាត់តាមរបៀបរបស់អ្នក។">Cash, ABA, or KHQR. Pay your way. We'll call to confirm.</div>
+                    </div>
+                </div>
+                <div class="how-step">
+                    <div class="how-step-content">
+                        <div class="how-emoji">🚀</div>
+                        <div class="how-title" data-en="Same-day delivery" data-km="ដឹកជញ្ជូនថ្ងៃនេះ">Same-day delivery</div>
+                        <div class="how-desc" data-en="Order before 2 PM in Phnom Penh and we'll deliver today." data-km="បញ្ជាទិញមុនម៉ោង ២ រសៀលនៅភ្នំពេញ យើងដឹកថ្ងៃនេះ។">Order before 2 PM in Phnom Penh and we'll deliver today.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     {{-- WHY US --}}
-    <section class="shop-section" style="background:var(--bg)">
+    <section class="shop-section reveal" style="background:var(--bg)">
         <div class="inner">
             <div class="sec-eyebrow" data-en="Why SR MAC SHOP" data-km="ហេតុអ្វីជ្រើស SR MAC SHOP">Why SR MAC SHOP</div>
             <h2 class="sec-h" data-en="Shop With Confidence" data-km="ទិញដោយទំនុកចិត្ត">Shop With Confidence</h2>

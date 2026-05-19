@@ -103,18 +103,54 @@ button,input,select,textarea{font-family:var(--font)}
 .cart-badge{background:rgba(255,255,255,.25);border-radius:10px;padding:1px 6px;font-size:11px;font-weight:800;min-width:18px;text-align:center}
 
 /* ── HERO ── */
-.hero{min-height:88vh;background:#000;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding:4rem 1.5rem}
-.hero-mesh{position:absolute;inset:0;background:radial-gradient(ellipse 100% 80% at 50% 30%,#091a2e 0%,#000 65%)}
-.hero-orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.6}
-.orb1{width:500px;height:500px;background:radial-gradient(circle,#0055cc,transparent);top:-100px;left:-100px}
-.orb2{width:400px;height:400px;background:radial-gradient(circle,#003388,transparent);bottom:-80px;right:-80px}
-.hero-content{position:relative;z-index:1;max-width:720px}
-.hero-pill{display:inline-block;background:rgba(0,122,255,.2);border:1px solid rgba(0,122,255,.4);color:#60A5FA;padding:5px 16px;border-radius:980px;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1.5rem}
-.hero h1{font-size:clamp(3rem,7.5vw,5.5rem);font-weight:900;line-height:.95;letter-spacing:-.04em;color:#fff;margin-bottom:1.5rem}
+.hero{min-height:88vh;background:#0a0a0a;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding:5rem 1.5rem 4rem}
+.hero-mesh{position:absolute;inset:0;background:
+  radial-gradient(ellipse 65% 45% at 15% 25%, rgba(10,132,255,.14) 0%, transparent 55%),
+  radial-gradient(ellipse 55% 40% at 85% 75%, rgba(175,82,222,.08) 0%, transparent 55%),
+  radial-gradient(ellipse 100% 80% at 50% 30%, #0e1726 0%, #0a0a0a 65%);
+  animation:heroBreath 18s ease-in-out infinite}
+@keyframes heroBreath{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.hero-orb{display:none}
+.hero-content{position:relative;z-index:1;max-width:780px}
+.hero-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(10px);color:rgba(255,255,255,.85);padding:6px 16px;border-radius:980px;font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:1.75rem}
+.hero h1{font-size:clamp(2.8rem,7.5vw,5.5rem);font-weight:700;line-height:1;letter-spacing:-.045em;color:#fff;margin-bottom:1.5rem}
 .hero h1 .grad{background:linear-gradient(135deg,#60A5FA 0%,#93C5FD 50%,#C4B5FD 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero-sub{font-size:18px;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:2.5rem;font-weight:300;max-width:560px;margin-left:auto;margin-right:auto}
+.hero-sub{font-size:19px;color:rgba(255,255,255,.65);line-height:1.55;margin-bottom:2.5rem;font-weight:400;max-width:560px;margin-left:auto;margin-right:auto;letter-spacing:-.01em}
 .hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.hero-stats{display:flex;gap:2.5rem;justify-content:center;margin-top:3rem;padding-top:2.5rem;border-top:1px solid rgba(255,255,255,.08);flex-wrap:wrap}
+.hero .btn-blue{background:linear-gradient(180deg,#0a84ff,#006fe6);box-shadow:0 1px 0 rgba(255,255,255,.18) inset,0 6px 20px rgba(10,132,255,.35)}
+.hero .btn-blue:hover{background:linear-gradient(180deg,#1a8eff,#0078f5);transform:translateY(-1px);box-shadow:0 1px 0 rgba(255,255,255,.22) inset,0 8px 24px rgba(10,132,255,.45)}
+.hero-stats{display:flex;gap:0;justify-content:center;margin-top:3rem;padding-top:2.5rem;border-top:1px solid rgba(255,255,255,.08);flex-wrap:wrap}
+.hero-stats > div{padding:0 2rem;border-left:1px solid rgba(255,255,255,.08);min-width:120px}
+.hero-stats > div:first-child{border-left:none}
+
+/* Spotlight cards (replaces inline-styled hero product tiles) */
+.spot-row{display:flex;gap:10px;justify-content:center;margin-top:2.5rem;flex-wrap:wrap}
+.spot-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:10px 18px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:transform .25s var(--ease),background .25s var(--ease),border-color .25s var(--ease);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);text-decoration:none}
+.spot-card:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.18);transform:translateY(-2px)}
+.spot-card-emoji{font-size:22px;line-height:1}
+.spot-card-title{color:#fff;font-size:12px;font-weight:600;letter-spacing:-.005em}
+.spot-card-meta{color:rgba(255,255,255,.5);font-size:11px}
+
+/* Featured spotlight band (apple.com signature) */
+.spotlight-band{background:#000;color:#fff;padding:96px 1.5rem;text-align:center;position:relative;overflow:hidden}
+.spotlight-band::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 50% 35% at 50% 50%,rgba(10,132,255,.08) 0%,transparent 60%)}
+.spotlight-band-inner{position:relative;max-width:980px;margin:0 auto}
+.spotlight-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.55);margin-bottom:14px}
+.spotlight-h{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:700;letter-spacing:-.04em;line-height:1.05;margin-bottom:14px}
+.spotlight-sub{font-size:18px;color:rgba(255,255,255,.65);max-width:560px;margin:0 auto 28px;letter-spacing:-.01em}
+.spotlight-actions{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;font-size:15px;font-weight:500}
+.spotlight-actions a{color:#0a84ff;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:opacity .2s var(--ease)}
+.spotlight-actions a:hover{opacity:.85}
+.spotlight-img{font-size:140px;margin:20px 0;opacity:.95}
+
+/* "How to Order" 4-step section */
+.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--space-6);margin-top:var(--space-8);counter-reset:step}
+.how-step{padding:var(--space-6);position:relative}
+.how-step::before{counter-increment:step;content:"0" counter(step);position:absolute;top:0;left:var(--space-6);font-size:48px;font-weight:700;color:var(--blue);opacity:.18;letter-spacing:-.04em;line-height:1}
+.how-step-content{position:relative;padding-top:36px}
+.how-emoji{font-size:32px;margin-bottom:var(--space-3)}
+.how-title{font-size:16px;font-weight:600;margin-bottom:var(--space-2);letter-spacing:-.015em}
+.how-desc{font-size:13px;color:var(--text2);line-height:1.55}
 .hstat-n{font-size:28px;font-weight:800;color:#fff}
 .hstat-l{font-size:11px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:1.2px;margin-top:2px}
 
