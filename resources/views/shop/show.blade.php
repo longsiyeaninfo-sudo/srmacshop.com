@@ -175,10 +175,10 @@
             {{-- RIGHT SIDEBAR --}}
             <div class="detail-right">
                 <div class="detail-contact-card">
-                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-                        <div style="width:42px;height:42px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;font-weight:800">S</div>
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+                        <img src="{{ asset('img/srmac-logo.svg') }}" alt="" style="width:44px;height:44px;border-radius:50%;flex-shrink:0">
                         <div>
-                            <div class="detail-shop-name">🍎 SR MAC SHOP</div>
+                            <div class="detail-shop-name">SR MAC SHOP</div>
                             <div class="detail-shop-sub">www.srmacshop.com · Phnom Penh</div>
                         </div>
                     </div>

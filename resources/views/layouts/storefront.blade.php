@@ -24,12 +24,16 @@
 
     <link rel="canonical" href="{{ url()->current() }}">
     <link rel="sitemap" type="application/xml" href="{{ route('sitemap') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('img/srmac-logo.svg') }}">
 
     {{-- Prevent dark flash --}}
     <script>!function(){var t=localStorage.getItem('srmac_theme')||'light';document.documentElement.setAttribute('data-theme',t)}()</script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
+
+    {{-- Iconify icons (used for flag icons in language switcher) --}}
+    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js" defer></script>
 
     {{-- Google Analytics --}}
     @if(config('services.analytics.google_id'))
@@ -66,7 +70,10 @@
     <footer class="footer">
         <div class="foot-inner">
             <div>
-                <div class="foot-logo">🍎 <span>SR</span> MAC SHOP</div>
+                <div class="foot-logo">
+                    <img src="{{ asset('img/srmac-logo.svg') }}" alt="" class="foot-logo-img">
+                    <span><span class="foot-logo-sr">SR</span> MAC SHOP</span>
+                </div>
                 <div style="font-size:11px;color:var(--text3)">www.srmacshop.com</div>
                 <div class="foot-desc" data-en="Cambodia's most trusted MacBook specialist since 2018." data-km="អ្នកជំនាញ MacBook ដែលគួរទុកចិត្ត នៅកម្ពុជា ចាប់ពី ២០១៨។">Cambodia's most trusted MacBook specialist since 2018.</div>
                 <div class="foot-social">
@@ -77,27 +84,27 @@
                 </div>
             </div>
             <div class="foot-col">
-                <h4 data-en="Shop" data-km="ទិញ">Shop</h4>
+                <h4 data-en="Shop" data-km="ទិញ" data-zh="商店">Shop</h4>
                 <ul>
                     <li><a href="{{ route('shop') }}?category=macbook-air">MacBook Air</a></li>
                     <li><a href="{{ route('shop') }}?category=macbook-pro">MacBook Pro</a></li>
-                    <li><a href="{{ route('shop') }}?category=accessories" data-en="Accessories" data-km="គ្រឿងបន្ថែម">Accessories</a></li>
-                    <li><a href="{{ route('shop') }}?category=protection" data-en="Protection" data-km="ការពារ">Protection</a></li>
+                    <li><a href="{{ route('shop') }}?category=accessories" data-en="Accessories" data-km="គ្រឿងបន្ថែម" data-zh="配件">Accessories</a></li>
+                    <li><a href="{{ route('shop') }}?category=protection" data-en="Protection" data-km="ការពារ" data-zh="保护">Protection</a></li>
                 </ul>
             </div>
             <div class="foot-col">
-                <h4 data-en="Company" data-km="ក្រុមហ៊ុន">Company</h4>
+                <h4 data-en="Company" data-km="ក្រុមហ៊ុន" data-zh="公司">Company</h4>
                 <ul>
-                    <li><a href="{{ route('about') }}" data-en="About Us" data-km="អំពីយើង">About Us</a></li>
-                    <li><a href="{{ route('contact') }}" data-en="Contact" data-km="ទំនាក់ទំនង">Contact</a></li>
-                    <li><a href="/admin" data-en="Admin" data-km="អ្នកគ្រប់គ្រង">Admin</a></li>
+                    <li><a href="{{ route('about') }}" data-en="About Us" data-km="អំពីយើង" data-zh="关于我们">About Us</a></li>
+                    <li><a href="{{ route('contact') }}" data-en="Contact" data-km="ទំនាក់ទំនង" data-zh="联系">Contact</a></li>
+                    <li><a href="/admin" data-en="Admin" data-km="អ្នកគ្រប់គ្រង" data-zh="管理">Admin</a></li>
                 </ul>
             </div>
             <div class="foot-col">
-                <h4 data-en="Support" data-km="ជំនួយ">Support</h4>
+                <h4 data-en="Support" data-km="ជំនួយ" data-zh="支持">Support</h4>
                 <ul>
-                    <li><a href="{{ route('track-order') }}" data-en="Track Order" data-km="តាមដានការបញ្ជាទិញ">Track Order</a></li>
-                    <li><a href="https://wa.me/85598334755" target="_blank" rel="noopener" data-en="WhatsApp Help" data-km="ជំនួយ WhatsApp">WhatsApp Help</a></li>
+                    <li><a href="{{ route('track-order') }}" data-en="Track Order" data-km="តាមដានការបញ្ជាទិញ" data-zh="追踪订单">Track Order</a></li>
+                    <li><a href="https://wa.me/85598334755" target="_blank" rel="noopener" data-en="WhatsApp Help" data-km="ជំនួយ WhatsApp" data-zh="WhatsApp 帮助">WhatsApp Help</a></li>
                     <li><a href="{{ route('sitemap') }}">Sitemap</a></li>
                 </ul>
             </div>
@@ -112,7 +119,7 @@
     <a href="https://wa.me/85598334755?text=Hi%20SR%20MAC%20SHOP!%20I%27d%20like%20to%20enquire%20about%20a%20MacBook."
         class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp">
         <span class="wa-icon">💬</span>
-        <span data-en="WhatsApp Us" data-km="ទំនាក់ទំនង">WhatsApp Us</span>
+        <span data-en="WhatsApp Us" data-km="ទំនាក់ទំនង" data-zh="联系我们">WhatsApp Us</span>
     </a>
 
     <livewire:cart-drawer />

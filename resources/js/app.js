@@ -24,17 +24,26 @@ document.addEventListener('alpine:init', () => {
 
     Alpine.store('lang', {
         current: (localStorage.getItem('srmac_lang') || 'en').replace(/"/g, ''),
+        supported: ['en', 'km', 'zh'],
         init() {
+            if (!this.supported.includes(this.current)) this.current = 'en';
             this.apply(this.current);
         },
+        set(lang) {
+            if (!this.supported.includes(lang) || lang === this.current) return;
+            this.current = lang;
+            this.apply(lang);
+            localStorage.setItem('srmac_lang', JSON.stringify(lang));
+        },
         toggle() {
-            this.current = this.current === 'en' ? 'km' : 'en';
-            this.apply(this.current);
-            localStorage.setItem('srmac_lang', JSON.stringify(this.current));
+            // Cycle EN → KM → ZH → EN (kept for backwards compat with any old callers)
+            const i = this.supported.indexOf(this.current);
+            this.set(this.supported[(i + 1) % this.supported.length]);
         },
         apply(lang) {
             document.querySelectorAll('[data-en]').forEach(el => {
-                const val = el.getAttribute('data-' + lang);
+                // Fall back to English when the chosen lang isn't translated on this element
+                const val = el.getAttribute('data-' + lang) ?? el.getAttribute('data-en');
                 if (val !== null) el.textContent = val;
             });
             document.documentElement.setAttribute('lang', lang);

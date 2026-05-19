@@ -8,35 +8,35 @@
     <div class="hero">
         <div class="hero-mesh"></div>
         <div class="hero-content">
-            <div class="hero-pill" data-en="🍎 SR MAC SHOP — Apple Hardware &amp; Care" data-km="អ្នកជំនាញ MacBook លេខ១ នៅកម្ពុជា">🍎 SR MAC SHOP — Apple Hardware &amp; Care</div>
+            <div class="hero-pill" data-en="🍎 SR MAC SHOP — Apple Hardware &amp; Care" data-km="អ្នកជំនាញ MacBook លេខ១ នៅកម្ពុជា" data-zh="🍎 SR MAC SHOP — Apple 硬件与售后">🍎 SR MAC SHOP — Apple Hardware &amp; Care</div>
             <h1>
-                <span class="grad" data-en="Think Different." data-km="គិតខុសគេ។">Think Different.</span><br>
-                <span data-en="Buy Smarter." data-km="ទិញឆ្លាតជាង។">Buy Smarter.</span>
+                <span class="grad" data-en="Think Different." data-km="គិតខុសគេ។" data-zh="非同凡想。">Think Different.</span><br>
+                <span data-en="Buy Smarter." data-km="ទិញឆ្លាតជាង។" data-zh="智慧购物。">Buy Smarter.</span>
             </h1>
-            <p class="hero-sub" data-en="Authentic Apple MacBooks with official warranty. Best prices in Phnom Penh. Same-day delivery available." data-km="MacBook Apple ពិតប្រាកដ មានការធានា Apple ផ្លូវការ។ តម្លៃល្អបំផុត នៅភ្នំពេញ។ ដឹកជញ្ជូនបានក្នុងថ្ងៃ។">
+            <p class="hero-sub" data-en="Authentic Apple MacBooks with official warranty. Best prices in Phnom Penh. Same-day delivery available." data-km="MacBook Apple ពិតប្រាកដ មានការធានា Apple ផ្លូវការ។ តម្លៃល្អបំផុត នៅភ្នំពេញ។ ដឹកជញ្ជូនបានក្នុងថ្ងៃ។" data-zh="正品 Apple MacBook，官方保修。金边最优价格。当日送达。">
                 Authentic Apple MacBooks with official warranty. Best prices in Phnom Penh. Same-day delivery available.
             </p>
             <div class="hero-btns">
-                <a href="{{ route('shop') }}" class="btn btn-blue" data-en="Shop Now →" data-km="ទិញឥឡូវ →">Shop Now →</a>
+                <a href="{{ route('shop') }}" class="btn btn-blue" data-en="Shop Now →" data-km="ទិញឥឡូវ →" data-zh="立即选购 →">Shop Now →</a>
                 <a href="{{ route('contact') }}" class="btn" style="background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px)"
-                    data-en="Contact Us" data-km="ទំនាក់ទំនង">Contact Us</a>
+                    data-en="Contact Us" data-km="ទំនាក់ទំនង" data-zh="联系我们">Contact Us</a>
             </div>
             <div class="hero-stats">
                 <div>
                     <div class="hstat-n">500+</div>
-                    <div class="hstat-l" data-en="Happy Customers" data-km="អតិថិជន">Happy Customers</div>
+                    <div class="hstat-l" data-en="Happy Customers" data-km="អតិថិជន" data-zh="满意客户">Happy Customers</div>
                 </div>
                 <div>
                     <div class="hstat-n">100%</div>
-                    <div class="hstat-l" data-en="Authentic" data-km="ពិតប្រាកដ">Authentic</div>
+                    <div class="hstat-l" data-en="Authentic" data-km="ពិតប្រាកដ" data-zh="正品">Authentic</div>
                 </div>
                 <div>
                     <div class="hstat-n">2yr</div>
-                    <div class="hstat-l" data-en="Warranty" data-km="ការធានា">Warranty</div>
+                    <div class="hstat-l" data-en="Warranty" data-km="ការធានា" data-zh="保修">Warranty</div>
                 </div>
                 <div>
                     <div class="hstat-n">24/7</div>
-                    <div class="hstat-l" data-en="Support" data-km="គាំទ្រ">Support</div>
+                    <div class="hstat-l" data-en="Support" data-km="គាំទ្រ" data-zh="支持">Support</div>
                 </div>
             </div>
             {{-- Product spotlight pills --}}

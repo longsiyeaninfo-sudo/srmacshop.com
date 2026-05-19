@@ -92,8 +92,11 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 #cust-nav.is-scrolled{background:rgba(255,255,255,.88);border-bottom-color:var(--hairline-strong)}
 [data-theme="dark"] #cust-nav.is-scrolled{background:rgba(20,20,22,.88)}
 .cn-inner{max-width:1200px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:56px;gap:12px}
-.cn-logo{font-size:18px;font-weight:800;letter-spacing:-.5px;cursor:pointer;display:flex;align-items:center;gap:8px}
-.cn-logo span{color:var(--blue)}
+.cn-logo{font-size:17px;font-weight:700;letter-spacing:-.5px;cursor:pointer;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+.cn-logo-img{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:block}
+.cn-logo-text{display:flex;align-items:center;gap:4px;line-height:1}
+.cn-logo-text span{color:var(--blue);font-weight:800}
+@media(max-width:480px){.cn-logo-text{display:none}}
 .cn-links{display:flex;gap:2px;list-style:none}
 .cn-links a{padding:6px 12px;font-size:13px;font-weight:500;color:var(--text2);border-radius:var(--radius-pill);cursor:pointer;transition:color .2s var(--ease),background .2s var(--ease);white-space:nowrap}
 .cn-links a:hover{color:var(--text);background:rgba(0,0,0,.04)}
@@ -101,9 +104,12 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 [data-theme="dark"] .cn-links a:hover{background:rgba(255,255,255,.06)}
 [data-theme="dark"] .cn-links a.on{background:rgba(255,255,255,.08)}
 .cn-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.lang-tog{display:flex;background:var(--bg3);border-radius:20px;padding:2px}
-.lang-b{padding:3px 9px;border-radius:18px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text2);font-family:var(--font)}
-.lang-b.on{background:var(--card);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.lang-tog{display:flex;align-items:center;gap:4px;padding:2px}
+.lang-flag{width:32px;height:32px;border-radius:50%;border:none;background:transparent;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;transition:transform .2s var(--ease),box-shadow .2s var(--ease);opacity:.6;font-family:var(--font);position:relative}
+.lang-flag:hover{opacity:1;transform:scale(1.1)}
+.lang-flag.on{opacity:1;box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--blue)}
+.lang-flag iconify-icon{display:inline-flex;line-height:0;width:22px;height:22px;border-radius:50%;overflow:hidden}
+@media(max-width:520px){.lang-flag{width:28px;height:28px}.lang-flag iconify-icon{width:20px;height:20px}}
 .dark-tog{background:var(--bg3);border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center}
 .dark-tog:hover{background:var(--border)}
 .cart-fab{background:var(--blue);color:#fff;border:none;border-radius:980px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px}
@@ -327,8 +333,9 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 /* ── FOOTER ── */
 .footer{background:var(--bg2);border-top:1px solid var(--hairline);padding:48px 1.5rem 32px}
 .foot-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px}
-.foot-logo{font-size:18px;font-weight:800;letter-spacing:-.5px;margin-bottom:6px;display:flex;align-items:center;gap:8px}
-.foot-logo span{color:var(--blue)}
+.foot-logo{font-size:17px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px;display:flex;align-items:center;gap:10px;color:var(--text)}
+.foot-logo-img{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:block}
+.foot-logo-sr{color:var(--blue);font-weight:800}
 .foot-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-top:6px;max-width:280px}
 .foot-col h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:12px}
 .foot-col ul{list-style:none;display:flex;flex-direction:column;gap:8px}
