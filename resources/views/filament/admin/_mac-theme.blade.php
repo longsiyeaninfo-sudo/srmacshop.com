@@ -337,4 +337,65 @@ html, body, .fi-body, .fi-layout {
   box-shadow: var(--mac-shadow-sm);
   border-radius: var(--mac-radius-lg) !important;
 }
+
+/* ──────────────── Login page: gradient backdrop + glass card ──────────────── */
+.fi-simple-layout {
+  background:
+    radial-gradient(at 20% 20%, rgba(0,122,255,.15) 0%, transparent 50%),
+    radial-gradient(at 80% 70%, rgba(249,115,22,.12) 0%, transparent 50%),
+    radial-gradient(at 50% 90%, rgba(175,82,222,.10) 0%, transparent 50%),
+    linear-gradient(135deg, #f5f5f7 0%, #e5e5ea 100%) !important;
+  min-height: 100vh;
+}
+.dark .fi-simple-layout {
+  background:
+    radial-gradient(at 20% 20%, rgba(0,122,255,.18) 0%, transparent 50%),
+    radial-gradient(at 80% 70%, rgba(249,115,22,.15) 0%, transparent 50%),
+    radial-gradient(at 50% 90%, rgba(175,82,222,.12) 0%, transparent 50%),
+    linear-gradient(135deg, #1c1c1e 0%, #0a0a0a 100%) !important;
+}
+
+.fi-simple-main {
+  background: rgba(255,255,255,.78) !important;
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255,255,255,.6) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 24px 60px rgba(0,0,0,.12),
+    0 8px 16px rgba(0,0,0,.06),
+    inset 0 1px 0 rgba(255,255,255,.5) !important;
+}
+.dark .fi-simple-main {
+  background: rgba(44,44,46,.78) !important;
+  border-color: rgba(255,255,255,.12) !important;
+}
+
+/* macOS traffic-light dots in the top-left of the login card */
+.fi-simple-main::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff5f57;
+  box-shadow:
+    20px 0 0 #ffbd2e,
+    40px 0 0 #28c940;
+}
+.fi-simple-main {
+  position: relative;
+}
+
+.fi-simple-main-ctn .fi-logo,
+.fi-simple-main-ctn img[alt*="logo" i] {
+  margin: 0 auto 4px;
+}
+
+.fi-simple-header-heading {
+  font-weight: 800 !important;
+  letter-spacing: -0.024em;
+}
 </style>
