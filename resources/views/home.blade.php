@@ -151,6 +151,9 @@
         </div>
     </section>
 
+    {{-- TESTIMONIALS --}}
+    <x-testimonials-section variant="light" />
+
     {{-- WHY US --}}
     <section class="shop-section reveal" style="background:var(--bg)">
         <div class="inner">
