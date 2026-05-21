@@ -17,7 +17,51 @@
             {{-- Desktop links --}}
             <ul class="cn-links">
                 <li><a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'on' : '' }}" data-en="Home" data-km="ដើម" data-zh="首页">Home</a></li>
-                <li><a href="{{ route('shop') }}" class="{{ request()->routeIs('shop') || request()->routeIs('product') ? 'on' : '' }}" data-en="Shop" data-km="ហាង" data-zh="商店">Shop</a></li>
+                {{-- Shop link with category mega-menu (desktop hover) --}}
+                <li x-data="{ megaOpen: false, megaTimer: null }" class="cn-mega-wrap"
+                    @mouseenter="clearTimeout(megaTimer); megaOpen = true"
+                    @mouseleave="megaTimer = setTimeout(() => megaOpen = false, 150)">
+                    <a href="{{ route('shop') }}"
+                       class="{{ request()->routeIs('shop') || request()->routeIs('product') ? 'on' : '' }}"
+                       data-en="Shop" data-km="ហាង" data-zh="商店">Shop</a>
+
+                    @if($navCategories->count())
+                    @php
+                        $megaEmoji = fn(string $slug): string => match(true) {
+                            str_contains($slug, 'air')     => '🌬️',
+                            str_contains($slug, 'pro')     => '⚡',
+                            str_contains($slug, 'access')  => '🎒',
+                            str_contains($slug, 'protect') => '🛡️',
+                            str_contains($slug, 'refurb')  => '♻️',
+                            str_contains($slug, 'ipad')    => '📱',
+                            str_contains($slug, 'airpod')  => '🎧',
+                            str_contains($slug, 'cable')   => '🔌',
+                            default                        => '💻',
+                        };
+                    @endphp
+                    <div class="cn-mega" x-show="megaOpen" x-cloak
+                         @mouseenter="clearTimeout(megaTimer)"
+                         @mouseleave="megaTimer = setTimeout(() => megaOpen = false, 150)">
+                        <div class="cn-mega-grid">
+                            @foreach($navCategories as $cat)
+                            <a href="{{ route('shop') }}?category={{ $cat->slug }}"
+                               class="cn-mega-card" @click="megaOpen = false">
+                                <span class="cn-mega-ico">{{ $megaEmoji($cat->slug) }}</span>
+                                <span class="cn-mega-body">
+                                    <span class="cn-mega-name">{{ $cat->name }}</span>
+                                    <span class="cn-mega-count">{{ $cat->products_count }} {{ $cat->products_count === 1 ? 'product' : 'products' }}</span>
+                                </span>
+                                <span class="cn-mega-arr">→</span>
+                            </a>
+                            @endforeach
+                        </div>
+                        <div class="cn-mega-foot">
+                            <a href="{{ route('shop') }}" @click="megaOpen = false"
+                               data-en="Browse all products →" data-km="មើលទំនិញទាំងអស់ →" data-zh="浏览所有商品 →">Browse all products →</a>
+                        </div>
+                    </div>
+                    @endif
+                </li>
                 <li><a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'on' : '' }}" data-en="About" data-km="អំពីយើង" data-zh="关于">About</a></li>
                 <li><a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'on' : '' }}" data-en="Contact" data-km="ទំនាក់ទំនង" data-zh="联系">Contact</a></li>
                 <li><a href="{{ route('track-order') }}" class="{{ request()->routeIs('track-order') ? 'on' : '' }}" data-en="Track Order" data-km="តាមដានការបញ្ជាទិញ" data-zh="追踪订单">Track Order</a></li>
