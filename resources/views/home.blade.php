@@ -4,71 +4,95 @@
 @section('description', 'Buy authentic MacBooks in Cambodia with official Apple warranty. MacBook Air, MacBook Pro with M3/M4 chips. Same-day delivery in Phnom Penh. Best prices guaranteed.')
 
 @section('content')
-    {{-- HERO --}}
-    <div class="hero">
+    {{-- HERO — sales-focused, mobile-first --}}
+    @php
+        $hp = $headline ?? null;
+        $hpImg = $hp ? $hp->getFirstMediaUrl('gallery') : '';
+        // Resolve the displayed price: admin override (cents in $promo['headline_price']) > product price
+        $hpPriceCents  = ($promo['headline_price'] ?? null) ?: ($hp->price ?? 0);
+        $hpOrigCents   = $hp->original_price ?? null;
+        $hpEndsAt      = $promo['headline_ends_at'] ?? optional($hp?->sale_ends_at)->toIso8601String();
+        $hpSavingCents = ($hpOrigCents && $hpOrigCents > $hpPriceCents) ? ($hpOrigCents - $hpPriceCents) : 0;
+        $hpPretextEn   = $promo['headline_text']    ?? "🔥 Today's Deal";
+        $hpPretextKm   = $promo['headline_text_km'] ?? "🔥 ការផ្តល់ជូនថ្ងៃនេះ";
+        $hpPretextZh   = $promo['headline_text_zh'] ?? "🔥 今日特惠";
+    @endphp
+
+    <div class="hero hp-hero">
         <div class="hero-mesh"></div>
-        <div class="hero-content">
-            <div class="hero-pill" data-en="🍎 SR MAC SHOP — Apple Hardware &amp; Care" data-km="អ្នកជំនាញ MacBook លេខ១ នៅកម្ពុជា" data-zh="🍎 SR MAC SHOP — Apple 硬件与售后">🍎 SR MAC SHOP — Apple Hardware &amp; Care</div>
-            <h1>
-                <span class="grad" data-en="Think Different." data-km="គិតខុសគេ។" data-zh="非同凡想。">Think Different.</span><br>
-                <span data-en="Buy Smarter." data-km="ទិញឆ្លាតជាង។" data-zh="智慧购物。">Buy Smarter.</span>
-            </h1>
-            <p class="hero-sub" data-en="Authentic Apple MacBooks with official warranty. Best prices in Phnom Penh. Same-day delivery available." data-km="MacBook Apple ពិតប្រាកដ មានការធានា Apple ផ្លូវការ។ តម្លៃល្អបំផុត នៅភ្នំពេញ។ ដឹកជញ្ជូនបានក្នុងថ្ងៃ។" data-zh="正品 Apple MacBook，官方保修。金边最优价格。当日送达。">
-                Authentic Apple MacBooks with official warranty. Best prices in Phnom Penh. Same-day delivery available.
-            </p>
-            <div class="hero-btns">
-                <a href="{{ route('shop') }}" class="btn btn-blue" data-en="Shop Now →" data-km="ទិញឥឡូវ →" data-zh="立即选购 →">Shop Now →</a>
-                <a href="{{ route('contact') }}" class="btn" style="background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px)"
-                    data-en="Contact Us" data-km="ទំនាក់ទំនង" data-zh="联系我们">Contact Us</a>
+        <div class="hp-hero-inner">
+            {{-- Media side --}}
+            @if($hp)
+            <div class="hp-hero-media">
+                @if($hpImg)
+                    <img src="{{ $hpImg }}" alt="{{ $hp->name }}" class="hp-hero-img" loading="eager">
+                @else
+                    <div class="hp-hero-emoji">{{ $hp->emoji ?: '💻' }}</div>
+                @endif
+                @if($hpSavingCents > 0)
+                    <div class="hp-hero-saving-badge">SAVE&nbsp;${{ number_format($hpSavingCents / 100, 0) }}</div>
+                @endif
             </div>
-            <div class="hero-stats">
-                <div>
-                    <div class="hstat-n">500+</div>
-                    <div class="hstat-l" data-en="Happy Customers" data-km="អតិថិជន" data-zh="满意客户">Happy Customers</div>
-                </div>
-                <div>
-                    <div class="hstat-n">100%</div>
-                    <div class="hstat-l" data-en="Authentic" data-km="ពិតប្រាកដ" data-zh="正品">Authentic</div>
-                </div>
-                <div>
-                    <div class="hstat-n">2yr</div>
-                    <div class="hstat-l" data-en="Warranty" data-km="ការធានា" data-zh="保修">Warranty</div>
-                </div>
-                <div>
-                    <div class="hstat-n">24/7</div>
-                    <div class="hstat-l" data-en="Support" data-km="គាំទ្រ" data-zh="支持">Support</div>
-                </div>
-            </div>
-            {{-- Product spotlight pills --}}
-            <div class="spot-row">
-                <a href="{{ route('shop') }}?category=macbook-air" class="spot-card">
-                    <span class="spot-card-emoji">💻</span>
-                    <div style="text-align:left">
-                        <div class="spot-card-title">MacBook Air M4</div>
-                        <div class="spot-card-meta">From $1,099</div>
+            @endif
+
+            {{-- Copy side --}}
+            <div class="hp-hero-copy">
+                <div class="hp-hero-pretext"
+                    data-en="{{ $hpPretextEn }}"
+                    data-km="{{ $hpPretextKm }}"
+                    data-zh="{{ $hpPretextZh }}">{{ $hpPretextEn }}</div>
+
+                @if($hp)
+                    <h1 class="hp-hero-h">{{ $hp->name }}</h1>
+                    @if($hp->spec)
+                        <p class="hp-hero-spec">{{ $hp->spec }}</p>
+                    @endif
+                    <div class="hp-hero-prices">
+                        <span class="hp-hero-price">${{ number_format($hpPriceCents / 100, 0) }}</span>
+                        @if($hpOrigCents && $hpOrigCents > $hpPriceCents)
+                            <span class="hp-hero-strike">${{ number_format($hpOrigCents / 100, 0) }}</span>
+                        @endif
                     </div>
-                </a>
-                <a href="{{ route('shop') }}?category=macbook-pro" class="spot-card">
-                    <span class="spot-card-emoji">🖥️</span>
-                    <div style="text-align:left">
-                        <div class="spot-card-title">MacBook Pro M4</div>
-                        <div class="spot-card-meta">From $1,555</div>
+
+                    {{-- Countdown timer --}}
+                    @if($hpEndsAt)
+                        <div class="hp-hero-countdown" data-countdown="{{ $hpEndsAt }}">
+                            <span data-en="Ends in" data-km="បញ្ចប់ក្នុង" data-zh="结束于">Ends in</span>
+                            <span class="hp-hero-cdtimer">…</span>
+                        </div>
+                    @endif
+
+                    <div class="hp-hero-cta">
+                        <a href="{{ route('product', $hp->slug) }}" class="hp-hero-btn-buy"
+                            data-en="🛒 Order Now →" data-km="🛒 បញ្ជាទិញឥឡូវ →" data-zh="🛒 立即订购 →">
+                            🛒 Order Now →
+                        </a>
+                        <a href="{{ route('shop') }}" class="hp-hero-btn-ghost"
+                            data-en="See all MacBooks" data-km="មើល MacBook ទាំងអស់" data-zh="查看所有 MacBook">See all MacBooks</a>
                     </div>
-                </a>
-                <a href="{{ route('shop') }}?category=protection" class="spot-card">
-                    <span class="spot-card-emoji">🛡️</span>
-                    <div style="text-align:left">
-                        <div class="spot-card-title">AppleCare+</div>
-                        <div class="spot-card-meta">3-Year Coverage</div>
+                @else
+                    {{-- Fallback if there's no product to feature --}}
+                    <h1 class="hp-hero-h"
+                        data-en="Think Different. Buy Smarter."
+                        data-km="គិតខុសគេ ទិញឆ្លាតជាង។"
+                        data-zh="非同凡想。智慧购物。">Think Different. Buy Smarter.</h1>
+                    <p class="hp-hero-spec"
+                        data-en="Authentic Apple MacBooks. Same-day delivery in Phnom Penh."
+                        data-km="MacBook Apple ពិតប្រាកដ ដឹកជញ្ជូនបានក្នុងថ្ងៃ នៅភ្នំពេញ។"
+                        data-zh="正品 Apple MacBook。金边当日送达。">Authentic Apple MacBooks. Same-day delivery in Phnom Penh.</p>
+                    <div class="hp-hero-cta">
+                        <a href="{{ route('shop') }}" class="hp-hero-btn-buy"
+                            data-en="🛒 Shop Now →" data-km="🛒 ទិញឥឡូវ →" data-zh="🛒 立即选购 →">🛒 Shop Now →</a>
                     </div>
-                </a>
-                <a href="https://wa.me/85598334755" class="spot-card" target="_blank" rel="noopener">
-                    <span class="spot-card-emoji">💬</span>
-                    <div style="text-align:left">
-                        <div class="spot-card-title">WhatsApp Us</div>
-                        <div class="spot-card-meta">+855 98 33 47 55</div>
-                    </div>
-                </a>
+                @endif
+
+                {{-- Trust stats (compact on mobile) --}}
+                <div class="hp-hero-stats">
+                    <div><b>500+</b> <span data-en="Customers" data-km="អតិថិជន" data-zh="客户">Customers</span></div>
+                    <div><b>100%</b> <span data-en="Authentic" data-km="ពិតប្រាកដ" data-zh="正品">Authentic</span></div>
+                    <div><b>2yr</b> <span data-en="Warranty" data-km="ការធានា" data-zh="保修">Warranty</span></div>
+                    <div><b>24/7</b> <span data-en="Support" data-km="គាំទ្រ" data-zh="支持">Support</span></div>
+                </div>
             </div>
         </div>
     </div>

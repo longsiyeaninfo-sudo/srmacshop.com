@@ -140,6 +140,51 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 .hero-stats > div{padding:0 2rem;border-left:1px solid rgba(255,255,255,.08);min-width:120px}
 .hero-stats > div:first-child{border-left:none}
 
+/* ═══════════════ HOME — SALES HERO (mobile-first) ═══════════════ */
+.hp-hero{padding:80px 1.25rem 56px}
+.hp-hero-inner{position:relative;z-index:1;max-width:1100px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:28px;text-align:center}
+.hp-hero-media{position:relative;width:100%;max-width:340px;aspect-ratio:1/1;border-radius:24px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;overflow:hidden;backdrop-filter:blur(10px)}
+.hp-hero-img{width:100%;height:100%;object-fit:contain;padding:18px}
+.hp-hero-emoji{font-size:140px;line-height:1}
+.hp-hero-saving-badge{position:absolute;top:14px;left:14px;background:#ff3b30;color:#fff;font-size:12px;font-weight:800;letter-spacing:.5px;padding:6px 12px;border-radius:980px;box-shadow:0 6px 18px rgba(255,59,48,.45)}
+.hp-hero-copy{display:flex;flex-direction:column;align-items:center;gap:14px;max-width:520px}
+.hp-hero-pretext{display:inline-flex;align-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#fff;padding:6px 14px;border-radius:980px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;backdrop-filter:blur(10px)}
+.hp-hero-h{font-size:clamp(1.75rem,5.5vw,2.6rem);font-weight:700;line-height:1.05;letter-spacing:-.03em;color:#fff;margin:0}
+.hp-hero-spec{font-size:14px;color:rgba(255,255,255,.65);line-height:1.5;margin:0;letter-spacing:-.005em}
+.hp-hero-prices{display:flex;align-items:baseline;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:4px}
+.hp-hero-price{font-size:clamp(2.5rem,8vw,3.5rem);font-weight:800;letter-spacing:-.04em;color:#fff;line-height:1;font-variant-numeric:tabular-nums}
+.hp-hero-strike{font-size:18px;color:rgba(255,255,255,.45);text-decoration:line-through;font-weight:500;font-variant-numeric:tabular-nums}
+.hp-hero-countdown{display:inline-flex;align-items:center;gap:8px;background:rgba(255,59,48,.15);border:1px solid rgba(255,59,48,.35);color:#ff6b62;padding:8px 14px;border-radius:var(--radius);font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.005em}
+.hp-hero-cdtimer{font-weight:800;color:#fff;min-width:8ch;text-align:left}
+.hp-hero-cta{display:flex;flex-direction:column;gap:10px;width:100%;max-width:340px;margin-top:6px}
+.hp-hero-btn-buy{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 24px;border-radius:var(--radius-pill);background:linear-gradient(180deg,#ff9522,#f97316);color:#fff;font-size:15px;font-weight:700;text-decoration:none;letter-spacing:-.005em;box-shadow:0 1px 0 rgba(255,255,255,.22) inset,0 8px 24px rgba(249,115,22,.42);transition:transform .2s var(--ease),box-shadow .2s var(--ease)}
+.hp-hero-btn-buy:hover{transform:translateY(-2px);box-shadow:0 1px 0 rgba(255,255,255,.25) inset,0 12px 30px rgba(249,115,22,.55)}
+.hp-hero-btn-ghost{display:inline-flex;align-items:center;justify-content:center;padding:12px;color:rgba(255,255,255,.7);font-size:13px;font-weight:500;text-decoration:none;transition:color .2s var(--ease)}
+.hp-hero-btn-ghost:hover{color:#fff}
+.hp-hero-stats{display:flex;gap:0;flex-wrap:wrap;justify-content:center;margin-top:14px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08);width:100%;max-width:560px;font-size:11px;color:rgba(255,255,255,.55);letter-spacing:.3px}
+.hp-hero-stats > div{padding:0 14px;border-left:1px solid rgba(255,255,255,.08);display:flex;align-items:baseline;gap:5px;text-transform:uppercase;font-weight:600}
+.hp-hero-stats > div:first-child{border-left:none}
+.hp-hero-stats b{color:#fff;font-size:14px;font-weight:800;letter-spacing:-.01em}
+
+/* Tablet / iPad: 2-column layout */
+@media (min-width: 720px){
+  .hp-hero{padding:90px 2rem 72px}
+  .hp-hero-inner{flex-direction:row;align-items:center;text-align:left;gap:48px}
+  .hp-hero-media{max-width:380px;flex-shrink:0}
+  .hp-hero-copy{align-items:flex-start;flex:1}
+  .hp-hero-prices{justify-content:flex-start}
+  .hp-hero-stats{justify-content:flex-start;max-width:none}
+  .hp-hero-cta{flex-direction:row;max-width:none;flex-wrap:wrap}
+  .hp-hero-cta .hp-hero-btn-buy{flex:0 1 auto;padding:16px 28px}
+}
+
+/* Desktop: more breathing room */
+@media (min-width: 1100px){
+  .hp-hero{padding:100px 2.5rem 80px}
+  .hp-hero-inner{gap:80px}
+  .hp-hero-media{max-width:440px}
+}
+
 /* Spotlight cards (replaces inline-styled hero product tiles) */
 .spot-row{display:flex;gap:10px;justify-content:center;margin-top:2.5rem;flex-wrap:wrap}
 .spot-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:10px 18px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:transform .25s var(--ease),background .25s var(--ease),border-color .25s var(--ease);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);text-decoration:none}

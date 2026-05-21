@@ -69,6 +69,40 @@ document.addEventListener('livewire:initialized', () => {
     }
 });
 
+// Live countdown timer: any element with [data-countdown="ISO8601"] gets a
+// child .hp-hero-cdtimer (or .cd-timer) updated every second.
+(function () {
+    const fmt = (ms) => {
+        if (ms <= 0) return 'Ended';
+        const s = Math.floor(ms / 1000);
+        const d = Math.floor(s / 86400);
+        const h = Math.floor((s % 86400) / 3600);
+        const m = Math.floor((s % 3600) / 60);
+        const sec = s % 60;
+        if (d > 0) return `${d}d ${h}h ${m}m`;
+        if (h > 0) return `${h}h ${m}m ${sec}s`;
+        if (m > 0) return `${m}m ${sec}s`;
+        return `${sec}s`;
+    };
+    const tick = () => {
+        document.querySelectorAll('[data-countdown]').forEach((el) => {
+            const target = new Date(el.getAttribute('data-countdown')).getTime();
+            const out = el.querySelector('.hp-hero-cdtimer, .cd-timer');
+            if (!out || isNaN(target)) return;
+            out.textContent = fmt(target - Date.now());
+        });
+    };
+    const start = () => {
+        tick();
+        setInterval(tick, 1000);
+    };
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', start);
+    } else {
+        start();
+    }
+})();
+
 // Scroll-aware nav: adds .is-scrolled when user scrolls past the top
 (function () {
     const apply = () => {
