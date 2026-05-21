@@ -57,6 +57,11 @@ class HomeController extends Controller
                 ->get();
         }
 
-        return view('home', compact('featured', 'headline', 'flashDeals', 'promo'));
+        // Hero slides: headline first, then up to 2 flash deals (excluding headline)
+        $heroSlides = collect($headline ? [$headline] : [])
+            ->concat($flashDeals->where('id', '!=', $headline?->id)->take(2))
+            ->values();
+
+        return view('home', compact('featured', 'headline', 'flashDeals', 'promo', 'heroSlides'));
     }
 }
