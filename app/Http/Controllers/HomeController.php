@@ -9,12 +9,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $featured = Product::query()
-            ->where('is_active', true)
-            ->whereIn('badge', ['new', 'hot'])
-            ->with('media')
-            ->take(4)
-            ->get();
+        // Always default to empty array — defensive against Setting::get() returning null
+        $promo = Setting::get('home_promo', []) ?: [];
 
         // Best Sellers: 8 active products, badged first
         $featured = Product::query()
@@ -67,6 +63,13 @@ class HomeController extends Controller
             ->concat($flashDeals->where('id', '!=', $headline?->id)->take(2))
             ->values();
 
-        return view('home', compact('featured', 'headline', 'flashDeals', 'promo', 'heroSlides'));
+        // Explicit array — safer than compact() on PHP 8.4 (which throws on undefined vars)
+        return view('home', [
+            'featured'   => $featured   ?? collect(),
+            'headline'   => $headline   ?? null,
+            'flashDeals' => $flashDeals ?? collect(),
+            'promo'      => $promo      ?? [],
+            'heroSlides' => $heroSlides ?? collect(),
+        ]);
     }
 }
