@@ -608,6 +608,38 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 .inv-footer{text-align:center;margin-top:16px;padding-top:12px;border-top:1px dashed #e0e0e0;font-size:10px;color:#999}
 
 /* ── MOBILE NAV ── */
+/* ═══════════════ NAV SEARCH (Nav Phase 1) ═══════════════ */
+/* Inline desktop search */
+.cn-search{display:flex;align-items:center;gap:8px;flex:1;max-width:340px;margin:0 16px;background:var(--bg);border:1px solid transparent;border-radius:var(--radius-pill);padding:7px 14px;box-shadow:inset 0 0 0 1px var(--hairline);transition:box-shadow .2s var(--ease)}
+.cn-search:focus-within{box-shadow:0 0 0 3px rgba(0,122,255,.18),inset 0 0 0 1px var(--blue)}
+.cn-search input{border:none;background:transparent;font-size:13px;color:var(--text);outline:none;flex:1;font-family:var(--font);letter-spacing:-.005em}
+.cn-search input::placeholder{color:var(--text3)}
+.cn-search-icon{font-size:13px;opacity:.6}
+
+/* Mobile search icon button */
+.cn-search-btn{display:none;background:transparent;border:none;border-radius:50%;width:36px;height:36px;font-size:15px;cursor:pointer;color:var(--text);align-items:center;justify-content:center;flex-shrink:0;transition:background .15s var(--ease)}
+.cn-search-btn:hover{background:rgba(0,0,0,.04)}
+[data-theme="dark"] .cn-search-btn:hover{background:rgba(255,255,255,.06)}
+
+@media (max-width: 899px){
+  .cn-search{display:none}
+  .cn-search-btn{display:flex}
+}
+
+/* Mobile full-screen search overlay */
+.cn-search-overlay{position:fixed;inset:0;z-index:220;background:var(--card);display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.cn-search-overlay-form{display:flex;flex-direction:column;height:100%;width:100%}
+.cn-search-overlay-head{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--hairline);flex-shrink:0}
+.cn-search-overlay-input-wrap{flex:1;display:flex;align-items:center;gap:8px;background:var(--bg);border-radius:var(--radius-pill);padding:11px 16px;box-shadow:inset 0 0 0 1px var(--hairline)}
+.cn-search-overlay-input-wrap input{border:none;background:transparent;font-size:15px;color:var(--text);outline:none;flex:1;font-family:var(--font);letter-spacing:-.01em}
+.cn-search-overlay-input-wrap input::placeholder{color:var(--text3)}
+.cn-search-overlay-close{background:transparent;border:none;color:var(--blue);font-size:15px;font-weight:600;cursor:pointer;padding:6px;font-family:var(--font)}
+.cn-search-overlay-section{padding:18px 16px;border-bottom:1px solid var(--hairline)}
+.cn-search-overlay-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:10px}
+.cn-search-overlay-cats{display:flex;flex-wrap:wrap;gap:8px}
+.cn-search-overlay-chip{display:inline-flex;align-items:center;padding:9px 16px;background:var(--bg);border:1px solid var(--hairline);border-radius:var(--radius-pill);font-size:13px;font-weight:500;color:var(--text);text-decoration:none;transition:background .15s var(--ease)}
+.cn-search-overlay-chip:hover,.cn-search-overlay-chip:active{background:var(--blue-l);border-color:var(--blue);color:var(--blue)}
+
 /* ═══════════════ MOBILE BOTTOM TAB BAR (Nav Phase 3) ═══════════════ */
 .cn-tabbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:165;background:rgba(255,255,255,.92);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-top:1px solid var(--hairline);box-shadow:0 -2px 12px rgba(0,0,0,.04);padding:6px 4px 8px;transition:transform .25s var(--ease)}
 [data-theme="dark"] .cn-tabbar{background:rgba(20,20,22,.92)}

@@ -1,10 +1,18 @@
-<div x-data="{ mobileOpen: false }">
+<div x-data="{ mobileOpen: false, searchOpen: false }">
     <nav id="cust-nav">
         <div class="cn-inner">
             <a href="{{ route('home') }}" class="cn-logo">
                 <img src="{{ asset('img/srmac-logo.svg') }}" alt="" class="cn-logo-img">
                 <span class="cn-logo-text"><span>SR</span> MAC SHOP</span>
             </a>
+
+            {{-- Inline search (desktop) --}}
+            <form action="{{ route('shop') }}" method="GET" class="cn-search">
+                <span class="cn-search-icon">🔍</span>
+                <input type="text" name="q" autocomplete="off"
+                    placeholder="Search MacBooks..."
+                    data-en="Search MacBooks..." data-km="ស្វែងរក MacBook..." data-zh="搜索 MacBook...">
+            </form>
 
             {{-- Desktop links --}}
             <ul class="cn-links">
@@ -16,6 +24,9 @@
             </ul>
 
             <div class="cn-right">
+                {{-- Mobile search icon (opens full-screen overlay) --}}
+                <button type="button" class="cn-search-btn" @click="searchOpen = true; $nextTick(() => $refs.searchInp.focus())" aria-label="Search">🔍</button>
+
                 {{-- Language switcher (3 flags) --}}
                 <div class="lang-tog" role="group" aria-label="Language">
                     <button class="lang-flag" type="button" @click="$store.lang.set('en')"
@@ -158,6 +169,43 @@
             </div>
         </div>
     </aside>
+
+    {{-- ═════ Mobile search overlay (Phase 1) ═════ --}}
+    <div class="cn-search-overlay" x-show="searchOpen" x-cloak x-transition.opacity @keydown.escape.window="searchOpen = false">
+        <form action="{{ route('shop') }}" method="GET" class="cn-search-overlay-form">
+            <div class="cn-search-overlay-head">
+                <div class="cn-search-overlay-input-wrap">
+                    <span class="cn-search-icon">🔍</span>
+                    <input type="text" name="q" x-ref="searchInp" autocomplete="off"
+                        placeholder="Search MacBooks..."
+                        data-en="Search MacBooks..." data-km="ស្វែងរក MacBook..." data-zh="搜索 MacBook...">
+                </div>
+                <button type="button" class="cn-search-overlay-close" @click="searchOpen = false"
+                    data-en="Cancel" data-km="បោះបង់" data-zh="取消">Cancel</button>
+            </div>
+
+            @if($navCategories->count())
+                <div class="cn-search-overlay-section">
+                    <div class="cn-search-overlay-title" data-en="Browse by category" data-km="មើលតាមប្រភេទ" data-zh="按类别浏览">Browse by category</div>
+                    <div class="cn-search-overlay-cats">
+                        @foreach($navCategories as $cat)
+                            <a href="{{ route('shop') }}?category={{ $cat->slug }}" class="cn-search-overlay-chip" @click="searchOpen = false">{{ $cat->name }}</a>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            <div class="cn-search-overlay-section">
+                <div class="cn-search-overlay-title" data-en="Popular searches" data-km="ការស្វែងរកពេញនិយម" data-zh="热门搜索">Popular searches</div>
+                <div class="cn-search-overlay-cats">
+                    <a href="{{ route('shop') }}?q=MacBook+Air" class="cn-search-overlay-chip" @click="searchOpen = false">MacBook Air</a>
+                    <a href="{{ route('shop') }}?q=MacBook+Pro" class="cn-search-overlay-chip" @click="searchOpen = false">MacBook Pro</a>
+                    <a href="{{ route('shop') }}?q=M4" class="cn-search-overlay-chip" @click="searchOpen = false">M4 chip</a>
+                    <a href="{{ route('shop') }}?q=AppleCare" class="cn-search-overlay-chip" @click="searchOpen = false">AppleCare</a>
+                </div>
+            </div>
+        </form>
+    </div>
 
     {{-- ═════ Mobile bottom tab bar (≤ 768px) — Phase 3 ═════ --}}
     <nav class="cn-tabbar" aria-label="Primary mobile">
