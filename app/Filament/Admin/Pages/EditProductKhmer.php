@@ -88,6 +88,15 @@ class EditProductKhmer extends Page
 
     public string $warranty = '2 Year Apple Official';
 
+    // Sale/promo fields (Phase 1)
+    #[Validate('nullable|numeric|min:0')]
+    public ?float $original_price = null;
+
+    #[Validate('nullable|date')]
+    public ?string $sale_ends_at = null;
+
+    public bool $is_flash_deal = false;
+
     public function mount(Product $record): void
     {
         $this->record = $record->load('media', 'category');
@@ -99,6 +108,10 @@ class EditProductKhmer extends Page
         $this->badge = $this->record->badge;
         $this->description = $this->record->description ?? '';
         $this->warranty = $this->record->warranty ?? '2 Year Apple Official';
+
+        $this->original_price = $this->record->original_price ? $this->record->original_price / 100 : null;
+        $this->sale_ends_at = $this->record->sale_ends_at?->format('Y-m-d\TH:i');
+        $this->is_flash_deal = (bool) $this->record->is_flash_deal;
 
         $this->existing_media_ids = $this->record->getMedia('gallery')->pluck('id')->all();
 
@@ -257,16 +270,30 @@ class EditProductKhmer extends Page
             $this->record->slug = $slug;
         }
 
+        // Resolve original_price for strike-through.
+        $originalPriceCents = null;
+        if ($this->original_price && $this->original_price > 0) {
+            $originalPriceCents = (int) round($this->original_price * 100);
+        } elseif ($this->discount && $this->discount > 0) {
+            $originalPriceCents = (int) round(((float) $this->price) * 100);
+        }
+        if ($originalPriceCents !== null && $originalPriceCents <= $finalPrice) {
+            $originalPriceCents = null;
+        }
+
         $this->record->update([
-            'name'        => $this->name,
-            'slug'        => $this->record->slug,
-            'spec'        => $spec,
-            'price'       => $finalPrice,
-            'category_id' => $this->category_id,
-            'stock'       => $this->stock,
-            'badge'       => $this->badge,
-            'description' => $this->description,
-            'warranty'    => $this->warranty,
+            'name'          => $this->name,
+            'slug'          => $this->record->slug,
+            'spec'          => $spec,
+            'price'         => $finalPrice,
+            'original_price'=> $originalPriceCents,
+            'sale_ends_at'  => $this->sale_ends_at ?: null,
+            'is_flash_deal' => $this->is_flash_deal,
+            'category_id'   => $this->category_id,
+            'stock'         => $this->stock,
+            'badge'         => $this->badge,
+            'description'   => $this->description,
+            'warranty'      => $this->warranty,
         ]);
 
         // Remove media the admin deleted

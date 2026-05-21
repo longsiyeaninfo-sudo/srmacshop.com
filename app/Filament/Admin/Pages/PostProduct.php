@@ -93,6 +93,15 @@ class PostProduct extends Page
 
     public string $warranty = '2 Year Apple Official';
 
+    // Sale/promo fields (Phase 1)
+    #[Validate('nullable|numeric|min:0')]
+    public ?float $original_price = null;
+
+    #[Validate('nullable|date')]
+    public ?string $sale_ends_at = null;
+
+    public bool $is_flash_deal = false;
+
     public function mount(): void
     {
         if ($default = Category::orderBy('name')->first()) {
@@ -245,19 +254,36 @@ class PostProduct extends Page
 
         $emojiMap = ['Apple' => '💻', 'Dell' => '🖥️', 'HP' => '🖥️', 'Lenovo' => '💻', 'Asus' => '💻'];
 
+        // Resolve original_price for strike-through. Priority:
+        // 1) explicit $original_price set by admin
+        // 2) auto-derived from $discount > 0 (the pre-discount price the admin typed)
+        // 3) null (no sale)
+        $originalPriceCents = null;
+        if ($this->original_price && $this->original_price > 0) {
+            $originalPriceCents = (int) round($this->original_price * 100);
+        } elseif ($this->discount && $this->discount > 0) {
+            $originalPriceCents = (int) round(((float) $this->price) * 100);
+        }
+        if ($originalPriceCents !== null && $originalPriceCents <= $finalPrice) {
+            $originalPriceCents = null; // not actually on sale
+        }
+
         $product = Product::create([
-            'name'        => $this->name,
-            'slug'        => $slug,
-            'spec'        => $spec,
-            'price'       => $finalPrice,
-            'emoji'       => $emojiMap[$this->brand] ?? '💻',
-            'category_id' => $this->category_id,
-            'stock'       => $this->stock,
-            'badge'       => $this->badge,
-            'description' => $this->description,
-            'warranty'    => $this->warranty,
-            'is_active'   => true,
-            'sort_order'  => 0,
+            'name'          => $this->name,
+            'slug'          => $slug,
+            'spec'          => $spec,
+            'price'         => $finalPrice,
+            'original_price'=> $originalPriceCents,
+            'sale_ends_at'  => $this->sale_ends_at ?: null,
+            'is_flash_deal' => $this->is_flash_deal,
+            'emoji'         => $emojiMap[$this->brand] ?? '💻',
+            'category_id'   => $this->category_id,
+            'stock'         => $this->stock,
+            'badge'         => $this->badge,
+            'description'   => $this->description,
+            'warranty'      => $this->warranty,
+            'is_active'     => true,
+            'sort_order'    => 0,
         ]);
 
         foreach ($this->photos as $photo) {

@@ -397,6 +397,24 @@
                         </div>
                     </div>
 
+                    {{-- Sale fields (Phase 1) --}}
+                    <div class="pp-field">
+                        <label>Original price ($) <span style="color:#86868b;font-weight:400">— optional, shows strike-through</span></label>
+                        <input type="number" min="0" step="0.01" wire:model="original_price" class="pp-input" placeholder="e.g. 1299">
+                    </div>
+
+                    <div class="pp-field">
+                        <label>Sale ends at <span style="color:#86868b;font-weight:400">— optional, drives countdown</span></label>
+                        <input type="datetime-local" wire:model="sale_ends_at" class="pp-input">
+                    </div>
+
+                    <div class="pp-field">
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                            <input type="checkbox" wire:model="is_flash_deal" style="width:18px;height:18px;cursor:pointer">
+                            <span>🔥 Feature in home Flash Deals reel</span>
+                        </label>
+                    </div>
+
                     <div class="pp-field"
                         x-data="{
                             get preview() {
