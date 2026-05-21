@@ -23,7 +23,7 @@ class LoanCalculator extends Component
             return 0.0;
         }
 
-        $r = $this->interestRate / 100 / 12;
+        $r = $this->interestRate / 100; // rate is already per-month (%/month)
         $n = max(1, $this->termMonths);
 
         if ($r == 0.0) {

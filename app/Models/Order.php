@@ -10,7 +10,7 @@ class Order extends Model
 {
     protected $fillable = [
         'order_number', 'customer_name', 'customer_phone', 'customer_address',
-        'payment_method', 'subtotal', 'discount', 'tax', 'total', 'coupon_code',
+        'payment_method', 'subtotal', 'discount', 'tax', 'delivery_fee', 'total', 'coupon_code',
         'status', 'notes', 'stripe_session_id',
     ];
 
@@ -19,15 +19,16 @@ class Order extends Model
         'subtotal' => 'integer',
         'discount' => 'integer',
         'tax' => 'integer',
+        'delivery_fee' => 'integer',
         'total' => 'integer',
     ];
 
     protected static function booted(): void
     {
-      static::created(function (self $order) {
-          if (empty($order->order_number)) {
-             $order->order_number = 'SR-'.str_pad((string) (1000 + $order->id), 4, '0', STR_PAD_LEFT);
-              $order->saveQuietly();
+        static::created(function (self $order) {
+            if (empty($order->order_number) || str_starts_with($order->order_number, 'TMP')) {
+                $order->order_number = 'SR-' . str_pad((string) (1000 + $order->id), 4, '0', STR_PAD_LEFT);
+                $order->saveQuietly();
             }
         });
     }

@@ -1,6 +1,6 @@
 #!/bin/bash
 # SR Mac Shop - cPanel Deployment Script
-# Run this on your cPanel server after cloning the repository
+# Run this on your cPanel server after cloning the repository via Git Deploy or SSH
 
 set -e  # Exit on any error
 
@@ -15,15 +15,18 @@ echo "Step 1: Installing PHP dependencies..."
 composer install --optimize-autoloader --no-dev
 
 echo ""
-echo "Step 2: Installing Node dependencies..."
-npm ci
+echo "Step 2: Building front-end assets..."
+if command -v npm &>/dev/null; then
+    echo "npm found — installing and building..."
+    npm ci
+    npm run build
+else
+    echo "npm not available on this server."
+    echo "Using pre-built assets committed in public/build/ — skipping npm step."
+fi
 
 echo ""
-echo "Step 3: Building assets..."
-npm run build
-
-echo ""
-echo "Step 4: Setting up environment file..."
+echo "Step 3: Setting up environment file..."
 if [ ! -f .env ]; then
     cp .env.example .env
     echo ".env file created from .env.example"
@@ -32,11 +35,11 @@ else
 fi
 
 echo ""
-echo "Step 5: Generating application key..."
+echo "Step 4: Generating application key..."
 php artisan key:generate --force
 
 echo ""
-echo "Step 6: Setting permissions..."
+echo "Step 5: Setting permissions..."
 chmod -R 775 storage bootstrap/cache
 
 echo ""

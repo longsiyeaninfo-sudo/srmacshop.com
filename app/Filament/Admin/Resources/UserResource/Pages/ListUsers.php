@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\UserResource\Pages;
 
+use App\Filament\Admin\Pages\InviteUser;
 use App\Filament\Admin\Resources\UserResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -13,7 +14,11 @@ class ListUsers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\Action::make('invite')
+                ->label('Invite a teammate')
+                ->icon('heroicon-o-user-plus')
+                ->color('primary')
+                ->url(fn () => InviteUser::getUrl()),
         ];
     }
 }

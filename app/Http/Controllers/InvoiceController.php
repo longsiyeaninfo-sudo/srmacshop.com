@@ -3,15 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\View\View;
 
 class InvoiceController extends Controller
 {
-    public function show(Order $order): Response
+    public function show(Order $order): View
     {
         $order->load('items');
-        $pdf = Pdf::loadView('checkout.invoice', compact('order'));
-      return $pdf->stream("invoice-{$order->order_number}.pdf");
+        return view('checkout.invoice', compact('order'));
     }
 }
