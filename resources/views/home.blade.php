@@ -97,6 +97,26 @@
         </div>
     </div>
 
+    {{-- ⚡ FLASH DEALS — swipeable reel (FB/TikTok style) --}}
+    @if(($promo['flash_deals_enabled'] ?? true) && $flashDeals->count() > 0)
+    <section class="fd-section reveal">
+        <div class="fd-head">
+            <div>
+                <div class="fd-eyebrow" data-en="⚡ Flash Deals" data-km="⚡ ការផ្តល់ជូនរហ័ស" data-zh="⚡ 限时特惠">⚡ Flash Deals</div>
+                <h2 class="fd-h" data-en="Limited time. Limited stock." data-km="មានកំណត់ពេលវេលា មានកំណត់ស្តុក។" data-zh="限时限量。">Limited time. Limited stock.</h2>
+            </div>
+            <a href="{{ route('shop') }}" class="fd-see-all"
+                data-en="See all →" data-km="មើលទាំងអស់ →" data-zh="查看全部 →">See all →</a>
+        </div>
+
+        <div class="fd-row">
+            @foreach($flashDeals as $deal)
+                <x-flash-deal-card :product="$deal" />
+            @endforeach
+        </div>
+    </section>
+    @endif
+
     {{-- FEATURED PRODUCTS --}}
     <section class="shop-section reveal" style="background:var(--bg2)">
         <div class="inner">
