@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        {{-- Mobile dropdown --}}
+        {{-- Mobile dropdown (legacy — will be replaced by slide-in panel in Phase 4) --}}
         <div class="mob-menu" x-show="mobileOpen" x-transition @click.outside="mobileOpen = false">
             <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'on' : '' }}" data-en="Home" data-km="ដើម" data-zh="首页">Home</a>
             <a href="{{ route('shop') }}" class="{{ request()->routeIs('shop') || request()->routeIs('product') ? 'on' : '' }}" data-en="Shop" data-km="ហាង" data-zh="商店">Shop</a>
@@ -69,5 +69,32 @@
             <a href="{{ route('track-order') }}" class="{{ request()->routeIs('track-order') ? 'on' : '' }}" data-en="Track Order" data-km="តាមដានការបញ្ជាទិញ" data-zh="追踪订单">Track Order</a>
             <a href="https://wa.me/85598334755" target="_blank" rel="noopener" style="color:#25D366;font-weight:700">💬 WhatsApp Us</a>
         </div>
+    </nav>
+
+    {{-- ═════ Mobile bottom tab bar (≤ 768px) — Phase 3 ═════ --}}
+    <nav class="cn-tabbar" aria-label="Primary mobile">
+        <a href="{{ route('home') }}" class="cn-tab {{ request()->routeIs('home') ? 'on' : '' }}">
+            <span class="cn-tab-ico">🏠</span>
+            <span class="cn-tab-lbl" data-en="Home" data-km="ដើម" data-zh="首页">Home</span>
+        </a>
+        <a href="{{ route('shop') }}" class="cn-tab {{ request()->routeIs('shop') || request()->routeIs('product') || request()->routeIs('compare') ? 'on' : '' }}">
+            <span class="cn-tab-ico">🛍</span>
+            <span class="cn-tab-lbl" data-en="Shop" data-km="ហាង" data-zh="商店">Shop</span>
+        </a>
+        <button type="button" class="cn-tab cn-tab-cart" onclick="Livewire.dispatch('cart.open')" aria-label="Cart">
+            <span class="cn-tab-ico">🛒</span>
+            <span class="cn-tab-lbl" data-en="Cart" data-km="កន្ត្រក" data-zh="购物车">Cart</span>
+            @if($cartCount > 0)
+                <span class="cn-tab-badge">{{ $cartCount }}</span>
+            @endif
+        </button>
+        <a href="https://wa.me/85598334755" target="_blank" rel="noopener" class="cn-tab">
+            <span class="cn-tab-ico">💬</span>
+            <span class="cn-tab-lbl">WhatsApp</span>
+        </a>
+        <button type="button" class="cn-tab" @click="mobileOpen = true" aria-label="Menu">
+            <span class="cn-tab-ico">☰</span>
+            <span class="cn-tab-lbl" data-en="Menu" data-km="ម៉ឺនុយ" data-zh="菜单">Menu</span>
+        </button>
     </nav>
 </div>

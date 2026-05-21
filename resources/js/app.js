@@ -103,6 +103,34 @@ document.addEventListener('livewire:initialized', () => {
     }
 })();
 
+// Mobile bottom tab bar: hides on scroll-down past 100px, shows on scroll-up.
+// Twitter / Instagram pattern. Pure CSS class toggle — no animation flicker.
+(function () {
+    let lastY = 0;
+    let ticking = false;
+    const update = () => {
+        const bar = document.querySelector('.cn-tabbar');
+        if (!bar) { ticking = false; return; }
+        const y = window.scrollY;
+        const delta = y - lastY;
+        if (y < 100) {
+            bar.classList.remove('is-hidden');
+        } else if (delta > 4) {
+            bar.classList.add('is-hidden');
+        } else if (delta < -4) {
+            bar.classList.remove('is-hidden');
+        }
+        lastY = y;
+        ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(update);
+            ticking = true;
+        }
+    }, { passive: true });
+})();
+
 // Scroll-aware nav: adds .is-scrolled when user scrolls past the top
 (function () {
     const apply = () => {

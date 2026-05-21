@@ -608,6 +608,28 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 .inv-footer{text-align:center;margin-top:16px;padding-top:12px;border-top:1px dashed #e0e0e0;font-size:10px;color:#999}
 
 /* ── MOBILE NAV ── */
+/* ═══════════════ MOBILE BOTTOM TAB BAR (Nav Phase 3) ═══════════════ */
+.cn-tabbar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:165;background:rgba(255,255,255,.92);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-top:1px solid var(--hairline);box-shadow:0 -2px 12px rgba(0,0,0,.04);padding:6px 4px 8px;transition:transform .25s var(--ease)}
+[data-theme="dark"] .cn-tabbar{background:rgba(20,20,22,.92)}
+.cn-tabbar.is-hidden{transform:translateY(100%)}
+.cn-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 4px;text-decoration:none;color:var(--text2);background:transparent;border:none;font-family:var(--font);cursor:pointer;font-size:10px;font-weight:500;position:relative;min-height:48px;transition:color .15s var(--ease)}
+.cn-tab-ico{font-size:21px;line-height:1;transition:transform .15s var(--ease)}
+.cn-tab-lbl{font-size:10px;letter-spacing:-.005em;line-height:1}
+.cn-tab.on{color:var(--blue)}
+.cn-tab.on::before{content:"";position:absolute;top:4px;width:5px;height:5px;border-radius:50%;background:var(--blue)}
+.cn-tab:active .cn-tab-ico{transform:scale(.9)}
+.cn-tab-badge{position:absolute;top:2px;right:calc(50% - 18px);background:#ff3b30;color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:980px;line-height:1.4;min-width:16px;text-align:center}
+
+@media (max-width: 768px){
+  .cn-tabbar{display:flex}
+  /* Push site bottom up by tab bar height (60px). On home, sticky CTA adds another 64px on top of that. */
+  body{padding-bottom:64px}
+  /* Hide the existing desktop cart pill on phones — it's redundant with the tab bar's Cart icon */
+  .cart-fab{display:none}
+  /* Hide the existing hamburger button — tab bar's Menu icon replaces it */
+  .mob-menu-btn{display:none!important}
+}
+
 .mob-menu-btn{display:none;background:var(--bg3);border:none;border-radius:var(--rs);width:34px;height:34px;font-size:16px;cursor:pointer;color:var(--text);align-items:center;justify-content:center}
 .mob-menu{background:var(--card);border-top:1px solid var(--border2);padding:8px 0;box-shadow:0 8px 24px rgba(0,0,0,.12)}
 .mob-menu a{display:block;padding:11px 1.5rem;font-size:14px;font-weight:500;color:var(--text);border-bottom:1px solid var(--border2);transition:background .1s}
@@ -623,13 +645,15 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 .float-wa{animation:waPulse 2.5s infinite}
 [data-theme="dark"] .float-pill{background:rgba(40,40,42,.85);color:#fff}
 @media (max-width: 768px){
-  .float-stack{bottom:84px;left:14px;gap:6px}
+  /* Lift floats above the bottom tab bar (64px) + sticky CTA (62px on home).
+     Use a calc that works in both contexts — body has tab bar padding by default. */
+  .float-stack{bottom:78px;left:14px;gap:6px}
   .float-label{display:none}
   .float-pill{padding:8px}
 }
 
 /* Mobile sticky "Today's Deal" CTA bar (home only, phones only) */
-.hp-sticky-cta{display:none;position:fixed;bottom:0;left:0;right:0;z-index:160;background:var(--card);border-top:1px solid var(--hairline);box-shadow:0 -8px 24px rgba(0,0,0,.08);padding:10px 14px;align-items:center;gap:12px;text-decoration:none;color:var(--text);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%)}
+.hp-sticky-cta{display:none;position:fixed;bottom:64px;left:0;right:0;z-index:160;background:var(--card);border-top:1px solid var(--hairline);box-shadow:0 -8px 24px rgba(0,0,0,.08);padding:10px 14px;align-items:center;gap:12px;text-decoration:none;color:var(--text);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%)}
 .hp-sticky-thumb{width:44px;height:44px;border-radius:var(--radius-sm);background:var(--bg);overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px}
 .hp-sticky-thumb img{width:100%;height:100%;object-fit:cover}
 .hp-sticky-info{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.15}
@@ -638,7 +662,10 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 .hp-sticky-btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 18px;background:linear-gradient(180deg,#ff9522,#f97316);color:#fff;border-radius:var(--radius-pill);font-size:14px;font-weight:700;letter-spacing:-.005em;box-shadow:0 1px 0 rgba(255,255,255,.22) inset,0 4px 12px rgba(249,115,22,.32);white-space:nowrap;flex-shrink:0}
 @media (max-width: 768px){
   .hp-sticky-cta{display:flex}
-  body{padding-bottom:72px}
+  /* Pages with the sticky CTA (home) need more bottom-padding: tab bar 64 + CTA 64 = 128 */
+  body:has(.hp-sticky-cta){padding-bottom:128px}
+  /* Float pills lift higher on home to clear both bars */
+  body:has(.hp-sticky-cta) .float-stack{bottom:142px}
 }
 @keyframes waPulse{0%,100%{box-shadow:0 4px 16px rgba(37,211,102,.4)}50%{box-shadow:0 4px 28px rgba(37,211,102,.7)}}
 
