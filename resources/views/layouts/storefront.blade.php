@@ -26,6 +26,10 @@
     <link rel="sitemap" type="application/xml" href="{{ route('sitemap') }}">
     <link rel="icon" type="image/svg+xml" href="{{ asset('img/srmac-logo.svg') }}">
 
+    {{-- iOS / Android browser chrome tinting --}}
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+
     {{-- Prevent dark flash --}}
     <script>!function(){var t=localStorage.getItem('srmac_theme')||'light';document.documentElement.setAttribute('data-theme',t)}()</script>
 
@@ -115,12 +119,64 @@
         </div>
     </footer>
 
-    {{-- WhatsApp floating button --}}
-    <a href="https://wa.me/85598334755?text=Hi%20SR%20MAC%20SHOP!%20I%27d%20like%20to%20enquire%20about%20a%20MacBook."
-        class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp">
-        <span class="wa-icon">💬</span>
-        <span data-en="WhatsApp Us" data-km="ទំនាក់ទំនង" data-zh="联系我们">WhatsApp Us</span>
-    </a>
+    {{-- Floating contact pills (stacked: Telegram on top, WhatsApp below) --}}
+    @php
+        $tgPromo = \App\Models\Setting::get('home_promo', []);
+        $tgChannelFloat = ltrim($tgPromo['telegram_channel'] ?? '@srmacshop', '@');
+    @endphp
+    <div class="float-stack">
+        <a href="https://t.me/{{ $tgChannelFloat }}"
+            class="float-pill float-tg" target="_blank" rel="noopener" aria-label="Telegram">
+            <span class="float-icon" style="background:#229ED9">✈️</span>
+            <span class="float-label" data-en="Telegram" data-km="តេឡេក្រាម" data-zh="Telegram">Telegram</span>
+        </a>
+        <a href="https://wa.me/85598334755?text=Hi%20SR%20MAC%20SHOP!%20I%27d%20like%20to%20enquire%20about%20a%20MacBook."
+            class="float-pill float-wa" target="_blank" rel="noopener" aria-label="WhatsApp">
+            <span class="float-icon" style="background:#25D366">💬</span>
+            <span class="float-label" data-en="WhatsApp Us" data-km="ទំនាក់ទំនង" data-zh="联系我们">WhatsApp Us</span>
+        </a>
+    </div>
+
+    {{-- Mobile sticky "Today's Deal" CTA bar (home page only, phones only) --}}
+    @if(request()->routeIs('home') && (\App\Models\Setting::get('home_promo.sticky_cta_enabled', true) ?? true))
+        @php
+            $stickyPromo = \App\Models\Setting::get('home_promo', []);
+            $stickyHp = null;
+            if (! empty($stickyPromo['headline_product_id'])) {
+                $stickyHp = \App\Models\Product::with('media')->find($stickyPromo['headline_product_id']);
+            }
+            if (! $stickyHp) {
+                $stickyHp = \App\Models\Product::with('media')
+                    ->where('is_active', true)
+                    ->where('stock', '>', 0)
+                    ->whereNotNull('original_price')
+                    ->whereColumn('original_price', '>', 'price')
+                    ->orderByRaw('(original_price - price) DESC')
+                    ->first();
+            }
+            if (! $stickyHp) {
+                $stickyHp = \App\Models\Product::with('media')->where('is_active', true)->where('stock', '>', 0)->first();
+            }
+            $stickyPriceCents = ($stickyPromo['headline_price'] ?? null) ?: ($stickyHp->price ?? 0);
+            $stickyImg = $stickyHp?->getFirstMediaUrl('gallery') ?? '';
+        @endphp
+        @if($stickyHp)
+        <a href="{{ route('product', $stickyHp->slug) }}" class="hp-sticky-cta">
+            <div class="hp-sticky-thumb">
+                @if($stickyImg)
+                    <img src="{{ $stickyImg }}" alt="" loading="lazy">
+                @else
+                    <span>{{ $stickyHp->emoji ?: '💻' }}</span>
+                @endif
+            </div>
+            <div class="hp-sticky-info">
+                <div class="hp-sticky-eyebrow" data-en="🔥 Today's Deal" data-km="🔥 ការផ្តល់ជូនថ្ងៃនេះ" data-zh="🔥 今日特惠">🔥 Today's Deal</div>
+                <div class="hp-sticky-price">${{ number_format($stickyPriceCents / 100, 0) }}</div>
+            </div>
+            <span class="hp-sticky-btn" data-en="Order →" data-km="បញ្ជាទិញ →" data-zh="订购 →">Order →</span>
+        </a>
+        @endif
+    @endif
 
     <livewire:cart-drawer />
     <livewire:toast />
