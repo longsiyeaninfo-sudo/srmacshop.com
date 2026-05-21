@@ -141,112 +141,184 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 .hero-stats > div:first-child{border-left:none}
 
 /* ═══════════════ HOME — SALES HERO (mobile-first) ═══════════════ */
-/* ═══════════════ HP HERO — Apple.com style (light/minimal, theme-responsive) ═══════════════ */
-/* Override base .hero dark background */
-.hero.hp-hero{background:var(--card);border-bottom:1px solid var(--hairline);min-height:unset;padding:80px 1.25rem 64px}
-.hero.hp-hero .hero-mesh{display:none}                           /* hide dark mesh in light mode */
-[data-theme="dark"] .hero.hp-hero{background:var(--bg)}
-[data-theme="dark"] .hero.hp-hero .hero-mesh{display:block}      /* keep gradient only in dark mode */
+/* ═══════════════ HP HERO — macOS Sonoma Window (premium frosted glass) ═══════════════ */
+/* A. Hero base — pastel aurora gradient */
+.hero.hp-hero{position:relative;background:linear-gradient(180deg,#F5F3FF 0%,#FDF2F8 40%,#EFF6FF 80%,#ECFEFF 100%);min-height:unset;padding:80px 1rem 64px;overflow:hidden;border-bottom:1px solid var(--hairline)}
+.hero.hp-hero .hero-mesh{display:none}
+[data-theme="dark"] .hero.hp-hero{background:linear-gradient(180deg,#0a0613 0%,#15091f 40%,#0a0a2a 80%,#091a24 100%)}
+[data-theme="dark"] .hero.hp-hero .hero-mesh{display:none}
 
-.hp-hero-inner{position:relative;z-index:1;max-width:1140px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:36px;text-align:center}
+/* B. Aurora — animated radial gradients (Sonoma wallpaper) */
+.hp-aurora{position:absolute;inset:-15%;z-index:0;pointer-events:none;background:
+  radial-gradient(ellipse 50% 45% at 18% 20%,rgba(255,111,216,.55) 0%,transparent 55%),
+  radial-gradient(ellipse 45% 50% at 82% 30%,rgba(168,127,255,.50) 0%,transparent 55%),
+  radial-gradient(ellipse 45% 40% at 25% 85%,rgba(110,182,255,.55) 0%,transparent 55%),
+  radial-gradient(ellipse 50% 45% at 88% 78%,rgba(122,232,255,.45) 0%,transparent 55%);
+  filter:blur(40px);animation:auroraBreath 18s ease-in-out infinite}
+@keyframes auroraBreath{
+  0%,100%{transform:scale(1) rotate(0deg);opacity:.85}
+  33%{transform:scale(1.06) rotate(1.5deg);opacity:1}
+  66%{transform:scale(1.04) rotate(-1deg);opacity:.92}
+}
+[data-theme="dark"] .hp-aurora{background:
+  radial-gradient(ellipse 50% 45% at 18% 20%,rgba(180,80,200,.45) 0%,transparent 55%),
+  radial-gradient(ellipse 45% 50% at 82% 30%,rgba(80,60,220,.50) 0%,transparent 55%),
+  radial-gradient(ellipse 45% 40% at 25% 85%,rgba(40,100,200,.55) 0%,transparent 55%),
+  radial-gradient(ellipse 50% 45% at 88% 78%,rgba(60,180,220,.40) 0%,transparent 55%)}
 
-/* Media: transparent — product floats directly on white, no card/border */
-.hp-hero-media{position:relative;width:100%;max-width:320px;aspect-ratio:1/1;overflow:hidden;background:transparent;border:none;backdrop-filter:none;-webkit-backdrop-filter:none}
-/* ── Slideshow slides ── */
-.hs-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center}
-.hs-slide.hs-active{opacity:1}
-.hp-hero-img{width:100%;height:100%;object-fit:contain;padding:12px}
-.hp-hero-emoji{font-size:140px;line-height:1}
+/* C. Grain texture overlay */
+.hp-aurora-grain{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.04;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
 
-/* SAVE badge: green pill (Apple-style savings, not alarm-red) */
-.hp-hero-saving-badge{position:absolute;top:14px;right:14px;left:auto;background:var(--green);color:#fff;font-size:11px;font-weight:700;letter-spacing:.4px;padding:5px 11px;border-radius:980px;box-shadow:0 3px 10px rgba(52,199,89,.35);z-index:10}
+/* D. macOS Window — frosted glass centerpiece */
+.hp-window{position:relative;z-index:2;max-width:1140px;margin:0 auto;
+  background:rgba(255,255,255,.62);
+  backdrop-filter:blur(40px) saturate(180%);
+  -webkit-backdrop-filter:blur(40px) saturate(180%);
+  border:1px solid rgba(255,255,255,.6);
+  border-radius:18px;
+  box-shadow:0 30px 80px -10px rgba(30,20,80,.18),0 12px 32px -8px rgba(30,20,80,.10),0 2px 0 rgba(255,255,255,.5) inset;
+  overflow:hidden;
+  animation:windowIn .7s cubic-bezier(.2,1,.3,1) both}
+@keyframes windowIn{from{opacity:0;transform:translateY(20px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+[data-theme="dark"] .hp-window{background:rgba(28,28,30,.65);border-color:rgba(255,255,255,.1);
+  box-shadow:0 30px 80px -10px rgba(0,0,0,.6),0 12px 32px -8px rgba(0,0,0,.4),0 1px 0 rgba(255,255,255,.05) inset}
 
-/* Dot indicators: dark on white */
-.hs-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10}
-.hs-dot{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.18);border:none;cursor:pointer;padding:0;transition:background .2s ease,width .25s ease;flex-shrink:0}
-.hs-dot.hs-dot-on{background:var(--blue);width:18px;border-radius:3px}
-[data-theme="dark"] .hs-dot{background:rgba(255,255,255,.3)}
-[data-theme="dark"] .hs-dot.hs-dot-on{background:#fff}
+/* E. Window title bar with traffic lights */
+.hp-window-bar{position:relative;display:flex;align-items:center;justify-content:center;padding:11px 16px;
+  background:rgba(255,255,255,.35);border-bottom:1px solid rgba(0,0,0,.06)}
+.hp-window-dots{position:absolute;left:14px;display:flex;gap:8px}
+.hp-dot{width:12px;height:12px;border-radius:50%;display:block;box-shadow:0 0 0 .5px rgba(0,0,0,.08) inset}
+.hp-dot-r{background:#FF5F57}
+.hp-dot-y{background:#FEBC2E}
+.hp-dot-g{background:#28C840}
+.hp-window-title{font-size:12px;font-weight:600;color:var(--text2);letter-spacing:-.005em;font-family:var(--font)}
+[data-theme="dark"] .hp-window-bar{background:rgba(255,255,255,.04);border-bottom-color:rgba(255,255,255,.06)}
+[data-theme="dark"] .hp-window-title{color:rgba(255,255,255,.5)}
 
-/* Arrow buttons: subtle dark on white */
-.hs-arrow{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.06);border:1px solid rgba(0,0,0,.1);color:var(--text);font-size:20px;font-weight:300;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;opacity:0;transition:opacity .15s ease,background .15s ease}
-.hp-hero-media:hover .hs-arrow{opacity:1}
-.hs-prev{left:6px}
-.hs-next{right:6px}
-.hs-arrow:hover{background:rgba(0,0,0,.12)}
-[data-theme="dark"] .hs-arrow{background:rgba(0,0,0,.4);border-color:rgba(255,255,255,.18);color:#fff}
-[data-theme="dark"] .hs-arrow:hover{background:rgba(0,0,0,.6)}
+/* F. Window body */
+.hp-window-body{display:flex;flex-direction:column;align-items:center;text-align:center;gap:32px;padding:44px 24px}
 
-/* Copy */
-.hp-hero-copy{display:flex;flex-direction:column;align-items:center;gap:14px;max-width:540px}
-
-/* Pretext chip: subtle light gray (not frosted dark pill) */
-.hp-hero-pretext{display:inline-flex;align-items:center;background:var(--bg3);border:1px solid var(--hairline);color:var(--text2);padding:5px 14px;border-radius:980px;font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;backdrop-filter:none}
-[data-theme="dark"] .hp-hero-pretext{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.65)}
-
-/* Headline */
-.hp-hero-h{font-size:clamp(1.85rem,5.5vw,2.8rem);font-weight:700;line-height:1.05;letter-spacing:-.03em;color:var(--text);margin:0}
+/* G. Copy */
+.hp-hero-copy{display:flex;flex-direction:column;align-items:center;gap:16px;max-width:540px}
+.hp-hero-pretext{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;
+  background:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.85);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  color:var(--text2);border-radius:980px;font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;
+  box-shadow:0 2px 8px rgba(0,0,0,.04)}
+[data-theme="dark"] .hp-hero-pretext{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.75)}
+.hp-hero-h{font-size:clamp(2rem,5.5vw,3.2rem);font-weight:700;line-height:1.02;letter-spacing:-.04em;color:var(--text);margin:0}
 [data-theme="dark"] .hp-hero-h{color:#fff}
-
-/* Spec */
 .hp-hero-spec{font-size:15px;color:var(--text2);line-height:1.5;margin:0;letter-spacing:-.005em}
-[data-theme="dark"] .hp-hero-spec{color:rgba(255,255,255,.6)}
-
-/* Prices */
+[data-theme="dark"] .hp-hero-spec{color:rgba(255,255,255,.65)}
 .hp-hero-prices{display:flex;align-items:baseline;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:2px}
-.hp-hero-price{font-size:clamp(2.2rem,7vw,3.2rem);font-weight:800;letter-spacing:-.04em;color:var(--text);line-height:1;font-variant-numeric:tabular-nums}
+.hp-hero-price{font-size:clamp(2.2rem,6.5vw,3rem);font-weight:800;letter-spacing:-.04em;color:var(--text);line-height:1;font-variant-numeric:tabular-nums}
 [data-theme="dark"] .hp-hero-price{color:#fff}
 .hp-hero-strike{font-size:17px;color:var(--text3);text-decoration:line-through;font-weight:500;font-variant-numeric:tabular-nums}
 [data-theme="dark"] .hp-hero-strike{color:rgba(255,255,255,.4)}
 
-/* Countdown: green tint in light, red tint in dark */
-.hp-hero-countdown{display:inline-flex;align-items:center;gap:8px;background:rgba(52,199,89,.08);border:1px solid rgba(52,199,89,.25);color:#1a7a3c;padding:7px 14px;border-radius:var(--radius);font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.005em}
+/* H. Countdown — frosted red glass pill */
+.hp-hero-countdown{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;
+  background:rgba(255,59,48,.10);border:1px solid rgba(255,59,48,.22);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  color:#B91C1C;border-radius:980px;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.005em}
 .hp-hero-cdtimer{font-weight:800;color:var(--text);min-width:8ch;text-align:left}
-[data-theme="dark"] .hp-hero-countdown{background:rgba(255,59,48,.15);border-color:rgba(255,59,48,.35);color:#ff6b62}
+[data-theme="dark"] .hp-hero-countdown{background:rgba(255,59,48,.18);border-color:rgba(255,59,48,.4);color:#ff8a82}
 [data-theme="dark"] .hp-hero-cdtimer{color:#fff}
 
-/* CTAs */
-.hp-hero-cta{display:flex;flex-direction:column;gap:10px;width:100%;max-width:340px;margin-top:6px}
-/* Primary: Apple Blue pill */
-.hp-hero-btn-buy{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:15px 24px;border-radius:var(--radius-pill);background:var(--blue);color:#fff;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:-.01em;box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 6px 20px rgba(0,122,255,.28);transition:transform .2s var(--ease),box-shadow .2s var(--ease),background .15s var(--ease)}
-.hp-hero-btn-buy:hover{background:var(--blue-h);transform:translateY(-1px);box-shadow:0 1px 0 rgba(255,255,255,.22) inset,0 10px 28px rgba(0,122,255,.42)}
-/* Ghost: blue text link */
+/* I. CTAs */
+.hp-hero-cta{display:flex;flex-direction:column;gap:8px;width:100%;max-width:340px;margin-top:8px;align-items:center}
+.hp-hero-btn-buy{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 28px;
+  background:linear-gradient(180deg,#0A84FF 0%,#0077E6 100%);color:#fff;border-radius:980px;
+  font-size:15px;font-weight:600;text-decoration:none;letter-spacing:-.01em;
+  box-shadow:0 1px 0 rgba(255,255,255,.28) inset,0 0 0 1px rgba(0,122,255,.12),0 8px 24px rgba(0,122,255,.36);
+  transition:transform .2s var(--ease),box-shadow .2s var(--ease)}
+.hp-hero-btn-buy:hover{transform:translateY(-1px);box-shadow:0 1px 0 rgba(255,255,255,.3) inset,0 0 0 1px rgba(0,122,255,.18),0 12px 32px rgba(0,122,255,.52)}
 .hp-hero-btn-ghost{display:inline-flex;align-items:center;justify-content:center;padding:10px;color:var(--blue);font-size:13px;font-weight:500;text-decoration:none;transition:color .15s var(--ease)}
 .hp-hero-btn-ghost:hover{color:var(--blue-h)}
 [data-theme="dark"] .hp-hero-btn-ghost{color:#0a84ff}
 [data-theme="dark"] .hp-hero-btn-ghost:hover{color:#409cff}
 
-/* Trust stats */
-.hp-hero-stats{display:flex;gap:0;flex-wrap:wrap;justify-content:center;margin-top:10px;padding-top:16px;border-top:1px solid var(--hairline);width:100%;max-width:560px;font-size:11px;color:var(--text3);letter-spacing:.3px}
-.hp-hero-stats > div{padding:0 14px;border-left:1px solid var(--hairline);display:flex;align-items:baseline;gap:5px;text-transform:uppercase;font-weight:600}
-.hp-hero-stats > div:first-child{border-left:none}
-.hp-hero-stats b{color:var(--text);font-size:14px;font-weight:800;letter-spacing:-.01em}
-[data-theme="dark"] .hp-hero-stats{border-top-color:rgba(255,255,255,.08);color:rgba(255,255,255,.45)}
-[data-theme="dark"] .hp-hero-stats > div{border-left-color:rgba(255,255,255,.08)}
-[data-theme="dark"] .hp-hero-stats b{color:#fff}
+/* J. Media — circular glow under floating product */
+.hp-hero-media{position:relative;width:100%;max-width:340px;aspect-ratio:1/1;overflow:visible;background:transparent;border:none}
+.hp-hero-media::before{content:'';position:absolute;inset:auto 0 -5% 0;height:30%;
+  background:radial-gradient(ellipse 60% 100% at 50% 50%,rgba(0,122,255,.22) 0%,transparent 70%);
+  filter:blur(20px);z-index:0;pointer-events:none}
+.hs-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center;z-index:1}
+.hs-slide.hs-active{opacity:1}
+.hp-hero-img{width:100%;height:100%;object-fit:contain;padding:6px;
+  filter:drop-shadow(0 20px 28px rgba(0,0,0,.18)) drop-shadow(0 6px 12px rgba(0,0,0,.08));
+  animation:heroFloat 5s ease-in-out infinite}
+@keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.hp-hero-emoji{font-size:140px;line-height:1;filter:drop-shadow(0 20px 28px rgba(0,0,0,.15))}
 
-/* ── Responsive ── */
-/* Tablet/iPad: 2-col, copy LEFT, image RIGHT */
+/* K. SAVE badge — gradient green */
+.hp-hero-saving-badge{position:absolute;top:8px;right:8px;left:auto;z-index:5;display:inline-flex;align-items:center;
+  background:linear-gradient(135deg,#34C759,#28A745);color:#fff;font-size:11px;font-weight:700;letter-spacing:.4px;
+  padding:5px 11px;border-radius:980px;
+  box-shadow:0 1px 0 rgba(255,255,255,.25) inset,0 6px 14px rgba(52,199,89,.45)}
+
+/* L. Slideshow dots — glass pill on aurora */
+.hs-dots{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;
+  padding:6px 10px;background:rgba(255,255,255,.5);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.6);border-radius:980px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.hs-dot{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.2);border:none;cursor:pointer;padding:0;
+  transition:background .2s ease,width .25s ease;flex-shrink:0}
+.hs-dot.hs-dot-on{background:var(--blue);width:18px;border-radius:3px}
+[data-theme="dark"] .hs-dots{background:rgba(0,0,0,.4);border-color:rgba(255,255,255,.15)}
+[data-theme="dark"] .hs-dot{background:rgba(255,255,255,.35)}
+[data-theme="dark"] .hs-dot.hs-dot-on{background:#fff}
+
+/* Slideshow arrows — frosted glass circles */
+.hs-arrow{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.65);color:var(--text);font-size:20px;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;z-index:10;opacity:0;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);transition:opacity .15s ease,background .15s ease,transform .15s ease}
+.hp-hero-media:hover .hs-arrow{opacity:1}
+.hs-prev{left:6px}
+.hs-next{right:6px}
+.hs-arrow:hover{background:rgba(255,255,255,.85);transform:translateY(-50%) scale(1.08)}
+[data-theme="dark"] .hs-arrow{background:rgba(0,0,0,.5);border-color:rgba(255,255,255,.15);color:#fff}
+[data-theme="dark"] .hs-arrow:hover{background:rgba(0,0,0,.7)}
+
+/* M. Dock-style trust stats (frosted pill below window) */
+.hp-dock{position:relative;z-index:2;margin:32px auto 0;display:flex;align-items:center;gap:0;flex-wrap:wrap;justify-content:center;
+  max-width:fit-content;padding:10px 8px;
+  background:rgba(255,255,255,.55);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);
+  border:1px solid rgba(255,255,255,.6);border-radius:980px;
+  box-shadow:0 12px 32px -4px rgba(30,20,80,.14),0 4px 12px -2px rgba(30,20,80,.06),0 1px 0 rgba(255,255,255,.5) inset}
+.hp-dock-item{display:flex;align-items:baseline;gap:6px;padding:4px 16px;position:relative}
+.hp-dock-item:not(:last-child)::after{content:'';position:absolute;right:0;top:50%;width:1px;height:16px;transform:translateY(-50%);background:rgba(0,0,0,.1)}
+.hp-dock-item b{font-size:14px;font-weight:800;color:var(--text);letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.hp-dock-item span{font-size:10px;text-transform:uppercase;font-weight:600;color:var(--text3);letter-spacing:.4px}
+[data-theme="dark"] .hp-dock{background:rgba(28,28,30,.55);border-color:rgba(255,255,255,.1)}
+[data-theme="dark"] .hp-dock-item b{color:#fff}
+[data-theme="dark"] .hp-dock-item:not(:last-child)::after{background:rgba(255,255,255,.12)}
+
+/* N. Responsive */
 @media (min-width:720px){
-  .hero.hp-hero{padding:90px 2rem 80px}
-  .hp-hero-inner{flex-direction:row;align-items:center;text-align:left;gap:56px}
-  .hp-hero-media{max-width:420px;flex-shrink:0;order:2}
-  .hp-hero-copy{align-items:flex-start;flex:1;order:1}
+  .hero.hp-hero{padding:90px 1.5rem 80px}
+  .hp-window-body{flex-direction:row;text-align:left;gap:48px;padding:56px 56px;align-items:center}
+  .hp-hero-copy{align-items:flex-start;flex:1;order:1;max-width:540px}
+  .hp-hero-media{max-width:440px;flex-shrink:0;order:2}
   .hp-hero-prices{justify-content:flex-start}
-  .hp-hero-stats{justify-content:flex-start;max-width:none}
-  .hp-hero-cta{flex-direction:row;max-width:none;flex-wrap:wrap}
-  .hp-hero-cta .hp-hero-btn-buy{flex:0 1 auto;padding:15px 28px}
+  .hp-hero-cta{flex-direction:row;max-width:none;align-items:center;justify-content:flex-start;flex-wrap:wrap}
+  .hp-hero-cta .hp-hero-btn-buy{flex:0 1 auto;padding:14px 30px}
 }
-/* Desktop */
 @media (min-width:1100px){
-  .hero.hp-hero{padding:110px 2.5rem 90px}
-  .hp-hero-inner{gap:80px}
+  .hero.hp-hero{padding:110px 2rem 96px}
+  .hp-window-body{padding:72px 80px;gap:72px}
   .hp-hero-media{max-width:520px}
 }
-/* Tiny phones */
-@media (max-width:480px){
-  .hp-hero-stats{flex-direction:column;align-items:center;gap:8px}
-  .hp-hero-stats > div{border-left:none;padding:0}
+@media (max-width:599px){
+  .hp-window-body{padding:36px 20px;gap:28px}
+  .hp-dock{flex-wrap:wrap;gap:0;padding:10px 4px;border-radius:20px}
+  .hp-dock-item{flex:1 1 calc(50% - 4px);justify-content:center;padding:6px}
+  .hp-dock-item:not(:last-child)::after{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .hp-aurora,.hp-hero-img,.hp-window{animation:none}
 }
 
 /* ═══════════════ FLASH DEALS REEL — FB/TikTok ad style ═══════════════ */

@@ -62,7 +62,26 @@
         }'
         @mouseenter="pause()" @mouseleave="resume()">
         <div class="hero-mesh"></div>
-        <div class="hp-hero-inner">
+
+        {{-- ── Aurora wallpaper background (animated) ── --}}
+        <div class="hp-aurora" aria-hidden="true"></div>
+        <div class="hp-aurora-grain" aria-hidden="true"></div>
+
+        {{-- ── macOS-style frosted glass window ── --}}
+        <div class="hp-window">
+
+            {{-- Title bar with traffic lights --}}
+            <div class="hp-window-bar">
+                <div class="hp-window-dots" aria-hidden="true">
+                    <span class="hp-dot hp-dot-r"></span>
+                    <span class="hp-dot hp-dot-y"></span>
+                    <span class="hp-dot hp-dot-g"></span>
+                </div>
+                <div class="hp-window-title">SR MAC SHOP — <span data-en="Featured" data-km="ផ្ដល់ជូនពិសេស" data-zh="精选">Featured</span></div>
+            </div>
+
+            {{-- Window body: copy LEFT, media RIGHT ── --}}
+            <div class="hp-window-body">
 
             {{-- ── Copy side — reactive to active slide (LEFT desktop / TOP mobile) ── --}}
             <div class="hp-hero-copy">
@@ -127,13 +146,6 @@
                     </div>
                 @endif
 
-                {{-- Trust stats (always shown) --}}
-                <div class="hp-hero-stats">
-                    <div><b>500+</b> <span data-en="Customers" data-km="អតិថិជន" data-zh="客户">Customers</span></div>
-                    <div><b>100%</b> <span data-en="Authentic" data-km="ពិតប្រាកដ" data-zh="正品">Authentic</span></div>
-                    <div><b>2yr</b> <span data-en="Warranty" data-km="ការធានា" data-zh="保修">Warranty</span></div>
-                    <div><b>24/7</b> <span data-en="Support" data-km="គាំទ្រ" data-zh="支持">Support</span></div>
-                </div>
             </div>
 
             {{-- ── Media / Slideshow side (RIGHT desktop / BOTTOM mobile) ── --}}
@@ -176,7 +188,17 @@
             </div>
             @endif
 
+            </div> {{-- /.hp-window-body --}}
+        </div> {{-- /.hp-window --}}
+
+        {{-- ── Dock-style trust stats (frosted pill below window) ── --}}
+        <div class="hp-dock">
+            <div class="hp-dock-item"><b>500+</b> <span data-en="Customers" data-km="អតិថិជន" data-zh="客户">Customers</span></div>
+            <div class="hp-dock-item"><b>100%</b> <span data-en="Authentic" data-km="ពិតប្រាកដ" data-zh="正品">Authentic</span></div>
+            <div class="hp-dock-item"><b>2yr</b> <span data-en="Warranty" data-km="ការធានា" data-zh="保修">Warranty</span></div>
+            <div class="hp-dock-item"><b>24/7</b> <span data-en="Support" data-km="គាំទ្រ" data-zh="支持">Support</span></div>
         </div>
+
     </div>
 
     {{-- ⚡ FLASH DEALS — swipeable reel (FB/TikTok style) --}}
