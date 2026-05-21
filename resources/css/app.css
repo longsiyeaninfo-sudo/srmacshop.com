@@ -141,61 +141,112 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 .hero-stats > div:first-child{border-left:none}
 
 /* ═══════════════ HOME — SALES HERO (mobile-first) ═══════════════ */
-.hp-hero{padding:80px 1.25rem 56px}
-.hp-hero-inner{position:relative;z-index:1;max-width:1100px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:28px;text-align:center}
-.hp-hero-media{position:relative;width:100%;max-width:340px;aspect-ratio:1/1;border-radius:24px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);overflow:hidden;backdrop-filter:blur(10px)}
-/* ── Slideshow: stacked slides crossfade via opacity ── */
+/* ═══════════════ HP HERO — Apple.com style (light/minimal, theme-responsive) ═══════════════ */
+/* Override base .hero dark background */
+.hero.hp-hero{background:var(--card);border-bottom:1px solid var(--hairline);min-height:unset;padding:80px 1.25rem 64px}
+.hero.hp-hero .hero-mesh{display:none}                           /* hide dark mesh in light mode */
+[data-theme="dark"] .hero.hp-hero{background:var(--bg)}
+[data-theme="dark"] .hero.hp-hero .hero-mesh{display:block}      /* keep gradient only in dark mode */
+
+.hp-hero-inner{position:relative;z-index:1;max-width:1140px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:36px;text-align:center}
+
+/* Media: transparent — product floats directly on white, no card/border */
+.hp-hero-media{position:relative;width:100%;max-width:320px;aspect-ratio:1/1;overflow:hidden;background:transparent;border:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+/* ── Slideshow slides ── */
 .hs-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center}
 .hs-slide.hs-active{opacity:1}
-.hp-hero-img{width:100%;height:100%;object-fit:contain;padding:18px}
+.hp-hero-img{width:100%;height:100%;object-fit:contain;padding:12px}
 .hp-hero-emoji{font-size:140px;line-height:1}
-.hp-hero-saving-badge{position:absolute;top:14px;left:14px;background:#ff3b30;color:#fff;font-size:12px;font-weight:800;letter-spacing:.5px;padding:6px 12px;border-radius:980px;box-shadow:0 6px 18px rgba(255,59,48,.45);z-index:10}
-/* Dot indicators */
-.hs-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:10}
-.hs-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3);border:none;cursor:pointer;padding:0;transition:background .2s ease,transform .2s ease,width .25s ease;flex-shrink:0}
-.hs-dot.hs-dot-on{background:#fff;width:20px;border-radius:4px}
-/* Arrow buttons (show on media hover, desktop) */
-.hs-arrow{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:22px;font-weight:300;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;opacity:0;transition:opacity .2s ease,background .15s ease}
-.hp-hero-media:hover .hs-arrow{opacity:1}
-.hs-prev{left:8px}
-.hs-next{right:8px}
-.hs-arrow:hover{background:rgba(0,0,0,.55)}
-.hp-hero-copy{display:flex;flex-direction:column;align-items:center;gap:14px;max-width:520px}
-.hp-hero-pretext{display:inline-flex;align-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#fff;padding:6px 14px;border-radius:980px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;backdrop-filter:blur(10px)}
-.hp-hero-h{font-size:clamp(1.75rem,5.5vw,2.6rem);font-weight:700;line-height:1.05;letter-spacing:-.03em;color:#fff;margin:0}
-.hp-hero-spec{font-size:14px;color:rgba(255,255,255,.65);line-height:1.5;margin:0;letter-spacing:-.005em}
-.hp-hero-prices{display:flex;align-items:baseline;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:4px}
-.hp-hero-price{font-size:clamp(2.5rem,8vw,3.5rem);font-weight:800;letter-spacing:-.04em;color:#fff;line-height:1;font-variant-numeric:tabular-nums}
-.hp-hero-strike{font-size:18px;color:rgba(255,255,255,.45);text-decoration:line-through;font-weight:500;font-variant-numeric:tabular-nums}
-.hp-hero-countdown{display:inline-flex;align-items:center;gap:8px;background:rgba(255,59,48,.15);border:1px solid rgba(255,59,48,.35);color:#ff6b62;padding:8px 14px;border-radius:var(--radius);font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.005em}
-.hp-hero-cdtimer{font-weight:800;color:#fff;min-width:8ch;text-align:left}
-.hp-hero-cta{display:flex;flex-direction:column;gap:10px;width:100%;max-width:340px;margin-top:6px}
-.hp-hero-btn-buy{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 24px;border-radius:var(--radius-pill);background:linear-gradient(180deg,#ff9522,#f97316);color:#fff;font-size:15px;font-weight:700;text-decoration:none;letter-spacing:-.005em;box-shadow:0 1px 0 rgba(255,255,255,.22) inset,0 8px 24px rgba(249,115,22,.42);transition:transform .2s var(--ease),box-shadow .2s var(--ease)}
-.hp-hero-btn-buy:hover{transform:translateY(-2px);box-shadow:0 1px 0 rgba(255,255,255,.25) inset,0 12px 30px rgba(249,115,22,.55)}
-.hp-hero-btn-ghost{display:inline-flex;align-items:center;justify-content:center;padding:12px;color:rgba(255,255,255,.7);font-size:13px;font-weight:500;text-decoration:none;transition:color .2s var(--ease)}
-.hp-hero-btn-ghost:hover{color:#fff}
-.hp-hero-stats{display:flex;gap:0;flex-wrap:wrap;justify-content:center;margin-top:14px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08);width:100%;max-width:560px;font-size:11px;color:rgba(255,255,255,.55);letter-spacing:.3px}
-.hp-hero-stats > div{padding:0 14px;border-left:1px solid rgba(255,255,255,.08);display:flex;align-items:baseline;gap:5px;text-transform:uppercase;font-weight:600}
-.hp-hero-stats > div:first-child{border-left:none}
-.hp-hero-stats b{color:#fff;font-size:14px;font-weight:800;letter-spacing:-.01em}
 
-/* Tablet / iPad: 2-column layout */
-@media (min-width: 720px){
-  .hp-hero{padding:90px 2rem 72px}
-  .hp-hero-inner{flex-direction:row;align-items:center;text-align:left;gap:48px}
-  .hp-hero-media{max-width:380px;flex-shrink:0}
-  .hp-hero-copy{align-items:flex-start;flex:1}
+/* SAVE badge: green pill (Apple-style savings, not alarm-red) */
+.hp-hero-saving-badge{position:absolute;top:14px;right:14px;left:auto;background:var(--green);color:#fff;font-size:11px;font-weight:700;letter-spacing:.4px;padding:5px 11px;border-radius:980px;box-shadow:0 3px 10px rgba(52,199,89,.35);z-index:10}
+
+/* Dot indicators: dark on white */
+.hs-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10}
+.hs-dot{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.18);border:none;cursor:pointer;padding:0;transition:background .2s ease,width .25s ease;flex-shrink:0}
+.hs-dot.hs-dot-on{background:var(--blue);width:18px;border-radius:3px}
+[data-theme="dark"] .hs-dot{background:rgba(255,255,255,.3)}
+[data-theme="dark"] .hs-dot.hs-dot-on{background:#fff}
+
+/* Arrow buttons: subtle dark on white */
+.hs-arrow{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.06);border:1px solid rgba(0,0,0,.1);color:var(--text);font-size:20px;font-weight:300;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;opacity:0;transition:opacity .15s ease,background .15s ease}
+.hp-hero-media:hover .hs-arrow{opacity:1}
+.hs-prev{left:6px}
+.hs-next{right:6px}
+.hs-arrow:hover{background:rgba(0,0,0,.12)}
+[data-theme="dark"] .hs-arrow{background:rgba(0,0,0,.4);border-color:rgba(255,255,255,.18);color:#fff}
+[data-theme="dark"] .hs-arrow:hover{background:rgba(0,0,0,.6)}
+
+/* Copy */
+.hp-hero-copy{display:flex;flex-direction:column;align-items:center;gap:14px;max-width:540px}
+
+/* Pretext chip: subtle light gray (not frosted dark pill) */
+.hp-hero-pretext{display:inline-flex;align-items:center;background:var(--bg3);border:1px solid var(--hairline);color:var(--text2);padding:5px 14px;border-radius:980px;font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;backdrop-filter:none}
+[data-theme="dark"] .hp-hero-pretext{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.65)}
+
+/* Headline */
+.hp-hero-h{font-size:clamp(1.85rem,5.5vw,2.8rem);font-weight:700;line-height:1.05;letter-spacing:-.03em;color:var(--text);margin:0}
+[data-theme="dark"] .hp-hero-h{color:#fff}
+
+/* Spec */
+.hp-hero-spec{font-size:15px;color:var(--text2);line-height:1.5;margin:0;letter-spacing:-.005em}
+[data-theme="dark"] .hp-hero-spec{color:rgba(255,255,255,.6)}
+
+/* Prices */
+.hp-hero-prices{display:flex;align-items:baseline;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:2px}
+.hp-hero-price{font-size:clamp(2.2rem,7vw,3.2rem);font-weight:800;letter-spacing:-.04em;color:var(--text);line-height:1;font-variant-numeric:tabular-nums}
+[data-theme="dark"] .hp-hero-price{color:#fff}
+.hp-hero-strike{font-size:17px;color:var(--text3);text-decoration:line-through;font-weight:500;font-variant-numeric:tabular-nums}
+[data-theme="dark"] .hp-hero-strike{color:rgba(255,255,255,.4)}
+
+/* Countdown: green tint in light, red tint in dark */
+.hp-hero-countdown{display:inline-flex;align-items:center;gap:8px;background:rgba(52,199,89,.08);border:1px solid rgba(52,199,89,.25);color:#1a7a3c;padding:7px 14px;border-radius:var(--radius);font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.005em}
+.hp-hero-cdtimer{font-weight:800;color:var(--text);min-width:8ch;text-align:left}
+[data-theme="dark"] .hp-hero-countdown{background:rgba(255,59,48,.15);border-color:rgba(255,59,48,.35);color:#ff6b62}
+[data-theme="dark"] .hp-hero-cdtimer{color:#fff}
+
+/* CTAs */
+.hp-hero-cta{display:flex;flex-direction:column;gap:10px;width:100%;max-width:340px;margin-top:6px}
+/* Primary: Apple Blue pill */
+.hp-hero-btn-buy{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:15px 24px;border-radius:var(--radius-pill);background:var(--blue);color:#fff;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:-.01em;box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 6px 20px rgba(0,122,255,.28);transition:transform .2s var(--ease),box-shadow .2s var(--ease),background .15s var(--ease)}
+.hp-hero-btn-buy:hover{background:var(--blue-h);transform:translateY(-1px);box-shadow:0 1px 0 rgba(255,255,255,.22) inset,0 10px 28px rgba(0,122,255,.42)}
+/* Ghost: blue text link */
+.hp-hero-btn-ghost{display:inline-flex;align-items:center;justify-content:center;padding:10px;color:var(--blue);font-size:13px;font-weight:500;text-decoration:none;transition:color .15s var(--ease)}
+.hp-hero-btn-ghost:hover{color:var(--blue-h)}
+[data-theme="dark"] .hp-hero-btn-ghost{color:#0a84ff}
+[data-theme="dark"] .hp-hero-btn-ghost:hover{color:#409cff}
+
+/* Trust stats */
+.hp-hero-stats{display:flex;gap:0;flex-wrap:wrap;justify-content:center;margin-top:10px;padding-top:16px;border-top:1px solid var(--hairline);width:100%;max-width:560px;font-size:11px;color:var(--text3);letter-spacing:.3px}
+.hp-hero-stats > div{padding:0 14px;border-left:1px solid var(--hairline);display:flex;align-items:baseline;gap:5px;text-transform:uppercase;font-weight:600}
+.hp-hero-stats > div:first-child{border-left:none}
+.hp-hero-stats b{color:var(--text);font-size:14px;font-weight:800;letter-spacing:-.01em}
+[data-theme="dark"] .hp-hero-stats{border-top-color:rgba(255,255,255,.08);color:rgba(255,255,255,.45)}
+[data-theme="dark"] .hp-hero-stats > div{border-left-color:rgba(255,255,255,.08)}
+[data-theme="dark"] .hp-hero-stats b{color:#fff}
+
+/* ── Responsive ── */
+/* Tablet/iPad: 2-col, copy LEFT, image RIGHT */
+@media (min-width:720px){
+  .hero.hp-hero{padding:90px 2rem 80px}
+  .hp-hero-inner{flex-direction:row;align-items:center;text-align:left;gap:56px}
+  .hp-hero-media{max-width:420px;flex-shrink:0;order:2}
+  .hp-hero-copy{align-items:flex-start;flex:1;order:1}
   .hp-hero-prices{justify-content:flex-start}
   .hp-hero-stats{justify-content:flex-start;max-width:none}
   .hp-hero-cta{flex-direction:row;max-width:none;flex-wrap:wrap}
-  .hp-hero-cta .hp-hero-btn-buy{flex:0 1 auto;padding:16px 28px}
+  .hp-hero-cta .hp-hero-btn-buy{flex:0 1 auto;padding:15px 28px}
 }
-
-/* Desktop: more breathing room */
-@media (min-width: 1100px){
-  .hp-hero{padding:100px 2.5rem 80px}
+/* Desktop */
+@media (min-width:1100px){
+  .hero.hp-hero{padding:110px 2.5rem 90px}
   .hp-hero-inner{gap:80px}
-  .hp-hero-media{max-width:440px}
+  .hp-hero-media{max-width:520px}
+}
+/* Tiny phones */
+@media (max-width:480px){
+  .hp-hero-stats{flex-direction:column;align-items:center;gap:8px}
+  .hp-hero-stats > div{border-left:none;padding:0}
 }
 
 /* ═══════════════ FLASH DEALS REEL — FB/TikTok ad style ═══════════════ */

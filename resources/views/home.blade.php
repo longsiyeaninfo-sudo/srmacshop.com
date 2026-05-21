@@ -64,47 +64,7 @@
         <div class="hero-mesh"></div>
         <div class="hp-hero-inner">
 
-            {{-- ── Media / Slideshow side ── --}}
-            @if($heroSlides->isNotEmpty())
-            <div class="hp-hero-media"
-                 @touchstart.passive="_ts = $event.touches[0].clientX"
-                 @touchend.passive="const d = $event.changedTouches[0].clientX - _ts; if (Math.abs(d) > 50) { d < 0 ? next() : prev(); }">
-
-                {{-- Slides (absolutely stacked, crossfade via opacity) --}}
-                @foreach($heroSlides as $i => $s)
-                @php $sImg = $s->getFirstMediaUrl('gallery'); @endphp
-                <div class="hs-slide {{ $i === 0 ? 'hs-active' : '' }}"
-                     :class="{ 'hs-active': active === {{ $i }} }">
-                    @if($sImg)
-                        <img src="{{ $sImg }}" alt="{{ $s->name }}" class="hp-hero-img"
-                             {{ $i === 0 ? 'loading="eager"' : 'loading="lazy"' }}>
-                    @else
-                        <div class="hp-hero-emoji">{{ $s->emoji ?: '💻' }}</div>
-                    @endif
-                </div>
-                @endforeach
-
-                {{-- SAVE badge — reactive to current slide --}}
-                <div class="hp-hero-saving-badge" x-show="cur.saving" x-text="cur.saving"
-                     style="{{ $slide0 && $slide0['saving'] ? '' : 'display:none' }}"></div>
-
-                {{-- Dot indicators + arrows (only when >1 slide) --}}
-                @if($heroSlides->count() > 1)
-                <div class="hs-dots">
-                    @foreach($heroSlides as $i => $s)
-                    <button class="hs-dot {{ $i === 0 ? 'hs-dot-on' : '' }}"
-                            :class="{ 'hs-dot-on': active === {{ $i }} }"
-                            @click.stop="go({{ $i }})" aria-label="Slide {{ $i + 1 }}"></button>
-                    @endforeach
-                </div>
-                <button class="hs-arrow hs-prev" @click.stop="prev()" aria-label="Previous">‹</button>
-                <button class="hs-arrow hs-next" @click.stop="next()" aria-label="Next">›</button>
-                @endif
-
-            </div>
-            @endif
-
-            {{-- ── Copy side — reactive to active slide ── --}}
+            {{-- ── Copy side — reactive to active slide (LEFT desktop / TOP mobile) ── --}}
             <div class="hp-hero-copy">
 
                 @if($heroSlides->isNotEmpty())
@@ -175,6 +135,46 @@
                     <div><b>24/7</b> <span data-en="Support" data-km="គាំទ្រ" data-zh="支持">Support</span></div>
                 </div>
             </div>
+
+            {{-- ── Media / Slideshow side (RIGHT desktop / BOTTOM mobile) ── --}}
+            @if($heroSlides->isNotEmpty())
+            <div class="hp-hero-media"
+                 @touchstart.passive="_ts = $event.touches[0].clientX"
+                 @touchend.passive="const d = $event.changedTouches[0].clientX - _ts; if (Math.abs(d) > 50) { d < 0 ? next() : prev(); }">
+
+                {{-- Slides (absolutely stacked, crossfade via opacity) --}}
+                @foreach($heroSlides as $i => $s)
+                @php $sImg = $s->getFirstMediaUrl('gallery'); @endphp
+                <div class="hs-slide {{ $i === 0 ? 'hs-active' : '' }}"
+                     :class="{ 'hs-active': active === {{ $i }} }">
+                    @if($sImg)
+                        <img src="{{ $sImg }}" alt="{{ $s->name }}" class="hp-hero-img"
+                             {{ $i === 0 ? 'loading="eager"' : 'loading="lazy"' }}>
+                    @else
+                        <div class="hp-hero-emoji">{{ $s->emoji ?: '💻' }}</div>
+                    @endif
+                </div>
+                @endforeach
+
+                {{-- SAVE badge — reactive to current slide --}}
+                <div class="hp-hero-saving-badge" x-show="cur.saving" x-text="cur.saving"
+                     style="{{ $slide0 && $slide0['saving'] ? '' : 'display:none' }}"></div>
+
+                {{-- Dot indicators + arrows (only when >1 slide) --}}
+                @if($heroSlides->count() > 1)
+                <div class="hs-dots">
+                    @foreach($heroSlides as $i => $s)
+                    <button class="hs-dot {{ $i === 0 ? 'hs-dot-on' : '' }}"
+                            :class="{ 'hs-dot-on': active === {{ $i }} }"
+                            @click.stop="go({{ $i }})" aria-label="Slide {{ $i + 1 }}"></button>
+                    @endforeach
+                </div>
+                <button class="hs-arrow hs-prev" @click.stop="prev()" aria-label="Previous">‹</button>
+                <button class="hs-arrow hs-next" @click.stop="next()" aria-label="Next">›</button>
+                @endif
+
+            </div>
+            @endif
 
         </div>
     </div>
