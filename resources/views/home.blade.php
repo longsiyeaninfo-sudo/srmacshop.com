@@ -195,6 +195,55 @@
         </div>
     </section>
 
+    {{-- ✈️ TELEGRAM CHANNEL — banner + embed --}}
+    @if($promo['telegram_section_enabled'] ?? true)
+    @php
+        $tgChannel = ltrim($promo['telegram_channel'] ?? '@srmacshop', '@');
+        $tgSubs    = (int) ($promo['telegram_subscribers'] ?? 1200);
+        $tgSubsFmt = $tgSubs >= 1000 ? number_format($tgSubs) : $tgSubs;
+    @endphp
+    <section class="tg-section reveal">
+        <div class="tg-inner">
+            <div class="tg-banner">
+                <div class="tg-banner-left">
+                    <svg class="tg-banner-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19l-9.5 6.01-4.1-1.31c-.88-.27-.89-.86.19-1.28L19.27 4.7c.73-.27 1.43.18 1.15 1.28l-3 14.13c-.19.89-.73 1.11-1.48.69L12.46 17l-1.96 1.91c-.23.23-.42.42-.85.42z"/>
+                    </svg>
+                    <div>
+                        <div class="tg-banner-eyebrow" data-en="Telegram" data-km="តេឡេក្រាម" data-zh="Telegram">Telegram</div>
+                        <h2 class="tg-banner-h"
+                            data-en="Join {{ $tgSubsFmt }}+ MacBook fans on Telegram"
+                            data-km="ចូលរួមជាមួយអ្នកគាំទ្រ MacBook {{ $tgSubsFmt }}+ នៅ Telegram"
+                            data-zh="加入 {{ $tgSubsFmt }}+ 位 MacBook 粉丝的 Telegram 频道">Join {{ $tgSubsFmt }}+ MacBook fans on Telegram</h2>
+                        <p class="tg-banner-sub"
+                            data-en="Daily deals, new arrivals, and direct chat with us."
+                            data-km="ការផ្តល់ជូនប្រចាំថ្ងៃ និងជជែកដោយផ្ទាល់ជាមួយយើង។"
+                            data-zh="每日特惠、新品上架、直接与我们聊天。">Daily deals, new arrivals, and direct chat with us.</p>
+                    </div>
+                </div>
+                <a href="https://t.me/{{ $tgChannel }}" target="_blank" rel="noopener" class="tg-banner-cta">
+                    <span data-en="Subscribe →" data-km="តាមដាន →" data-zh="订阅 →">Subscribe →</span>
+                </a>
+            </div>
+
+            {{-- Embed: Telegram channel preview --}}
+            <div class="tg-embed" x-data="{ failed: false }">
+                <iframe
+                    src="https://t.me/s/{{ $tgChannel }}?embed=1"
+                    loading="lazy"
+                    title="SR MAC SHOP Telegram channel"
+                    x-on:load="failed = false"
+                    x-on:error="failed = true"></iframe>
+                <div class="tg-embed-fallback" x-show="failed" x-cloak>
+                    <p data-en="Open in Telegram to see our latest posts." data-km="បើកនៅ Telegram ដើម្បីមើលការប្រកាសថ្មីៗ។" data-zh="在 Telegram 中打开查看最新动态。">Open in Telegram to see our latest posts.</p>
+                    <a href="https://t.me/{{ $tgChannel }}" target="_blank" rel="noopener" class="btn btn-blue"
+                        data-en="Open Telegram →" data-km="បើក Telegram →" data-zh="打开 Telegram →">Open Telegram →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    @endif
+
     {{-- TESTIMONIALS --}}
     <x-testimonials-section variant="light" />
 
