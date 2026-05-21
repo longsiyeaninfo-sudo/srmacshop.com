@@ -631,10 +631,45 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 }
 
 .mob-menu-btn{display:none;background:var(--bg3);border:none;border-radius:var(--rs);width:34px;height:34px;font-size:16px;cursor:pointer;color:var(--text);align-items:center;justify-content:center}
-.mob-menu{background:var(--card);border-top:1px solid var(--border2);padding:8px 0;box-shadow:0 8px 24px rgba(0,0,0,.12)}
-.mob-menu a{display:block;padding:11px 1.5rem;font-size:14px;font-weight:500;color:var(--text);border-bottom:1px solid var(--border2);transition:background .1s}
-.mob-menu a:last-child{border-bottom:none}
-.mob-menu a:hover,.mob-menu a.on{background:var(--blue-l);color:var(--blue)}
+
+/* Legacy mob-menu — kept as no-op to prevent layout shift if cached */
+.mob-menu{display:none!important}
+
+/* ═══════════════ MOBILE SLIDE-IN PANEL (Nav Phase 4) ═══════════════ */
+.cn-panel-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.36);backdrop-filter:blur(6px) saturate(120%);-webkit-backdrop-filter:blur(6px) saturate(120%)}
+.cn-panel{position:fixed;top:0;right:0;bottom:0;z-index:210;width:min(86%,340px);background:var(--card);box-shadow:-12px 0 40px rgba(0,0,0,.2);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .35s var(--ease)}
+.cn-panel.open{transform:translateX(0)}
+.cn-panel-header{display:flex;align-items:center;justify-content:space-between;padding:var(--space-4) var(--space-5);border-bottom:1px solid var(--hairline);flex-shrink:0}
+.cn-panel-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-weight:700;font-size:15px;letter-spacing:-.01em}
+.cn-panel-logo .cn-logo-img{width:28px;height:28px;border-radius:50%}
+.cn-panel-close{background:var(--bg3);border:none;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:background .15s var(--ease)}
+.cn-panel-close:hover{background:var(--border)}
+.cn-panel-body{flex:1;overflow-y:auto;padding:var(--space-4) var(--space-5) var(--space-8);-webkit-overflow-scrolling:touch}
+
+.cn-panel-search{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid transparent;border-radius:var(--radius-pill);padding:10px 16px;margin-bottom:var(--space-5);box-shadow:inset 0 0 0 1px var(--hairline);transition:box-shadow .2s var(--ease)}
+.cn-panel-search:focus-within{box-shadow:0 0 0 3px rgba(0,122,255,.18),inset 0 0 0 1px var(--blue)}
+.cn-panel-search input{border:none;background:transparent;font-size:14px;color:var(--text);outline:none;flex:1;font-family:var(--font);letter-spacing:-.01em}
+.cn-panel-search input::placeholder{color:var(--text3)}
+.cn-panel-search-icon{font-size:14px;opacity:.65}
+
+.cn-panel-section{margin-bottom:var(--space-5)}
+.cn-panel-section:last-child{margin-bottom:0}
+.cn-panel-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:var(--space-2)}
+
+.cn-panel-cats{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.cn-panel-cat{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--bg);border:1px solid var(--hairline);border-radius:var(--radius);text-decoration:none;color:var(--text);font-size:13px;font-weight:500;transition:background .15s var(--ease),border-color .15s var(--ease)}
+.cn-panel-cat:hover,.cn-panel-cat:active{background:var(--blue-l);border-color:var(--blue);color:var(--blue)}
+.cn-panel-cat-count{font-size:11px;color:var(--text3);font-weight:600}
+.cn-panel-cat:hover .cn-panel-cat-count{color:var(--blue)}
+
+.cn-panel-link{display:flex;align-items:center;gap:12px;padding:12px 14px;font-size:14px;font-weight:500;color:var(--text);text-decoration:none;border-radius:var(--radius);transition:background .15s var(--ease);width:100%;background:transparent;border:none;font-family:var(--font);text-align:left;cursor:pointer}
+.cn-panel-link:hover,.cn-panel-link:active{background:var(--bg)}
+.cn-panel-link.on{color:var(--blue);background:var(--blue-l);font-weight:600}
+
+/* Panel hidden completely on desktop — desktop has the inline nav */
+@media (min-width: 769px){
+  .cn-panel-overlay,.cn-panel{display:none!important}
+}
 
 /* ── WHATSAPP FLOAT ── */
 /* Stacked floating contact pills (Telegram + WhatsApp) */

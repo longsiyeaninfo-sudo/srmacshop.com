@@ -60,16 +60,104 @@
             </div>
         </div>
 
-        {{-- Mobile dropdown (legacy — will be replaced by slide-in panel in Phase 4) --}}
-        <div class="mob-menu" x-show="mobileOpen" x-transition @click.outside="mobileOpen = false">
-            <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'on' : '' }}" data-en="Home" data-km="ដើម" data-zh="首页">Home</a>
-            <a href="{{ route('shop') }}" class="{{ request()->routeIs('shop') || request()->routeIs('product') ? 'on' : '' }}" data-en="Shop" data-km="ហាង" data-zh="商店">Shop</a>
-            <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'on' : '' }}" data-en="About" data-km="អំពីយើង" data-zh="关于">About</a>
-            <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'on' : '' }}" data-en="Contact" data-km="ទំនាក់ទំនង" data-zh="联系">Contact</a>
-            <a href="{{ route('track-order') }}" class="{{ request()->routeIs('track-order') ? 'on' : '' }}" data-en="Track Order" data-km="តាមដានការបញ្ជាទិញ" data-zh="追踪订单">Track Order</a>
-            <a href="https://wa.me/85598334755" target="_blank" rel="noopener" style="color:#25D366;font-weight:700">💬 WhatsApp Us</a>
-        </div>
     </nav>
+
+    {{-- ═════ Mobile slide-in side panel (Phase 4) ═════ --}}
+    <div class="cn-panel-overlay" x-show="mobileOpen" x-transition.opacity @click="mobileOpen = false" x-cloak></div>
+    <aside class="cn-panel" :class="{ open: mobileOpen }" x-cloak @keydown.escape.window="mobileOpen = false">
+        <header class="cn-panel-header">
+            <a href="{{ route('home') }}" class="cn-panel-logo" @click="mobileOpen = false">
+                <img src="{{ asset('img/srmac-logo.svg') }}" alt="" class="cn-logo-img">
+                <span>SR MAC SHOP</span>
+            </a>
+            <button type="button" class="cn-panel-close" @click="mobileOpen = false" aria-label="Close">✕</button>
+        </header>
+
+        <div class="cn-panel-body">
+            {{-- Search shortcut --}}
+            <form action="{{ route('shop') }}" method="GET" class="cn-panel-search" @click="mobileOpen = false">
+                <span class="cn-panel-search-icon">🔍</span>
+                <input type="text" name="q" placeholder="Search MacBooks..."
+                    data-en="Search MacBooks..." data-km="ស្វែងរក MacBook..." data-zh="搜索 MacBook...">
+            </form>
+
+            {{-- Categories --}}
+            @if($navCategories->count())
+                <div class="cn-panel-section">
+                    <h4 class="cn-panel-title" data-en="Browse by category" data-km="មើលតាមប្រភេទ" data-zh="按类别浏览">Browse by category</h4>
+                    <div class="cn-panel-cats">
+                        @foreach($navCategories as $cat)
+                            <a href="{{ route('shop') }}?category={{ $cat->slug }}" class="cn-panel-cat" @click="mobileOpen = false">
+                                <span class="cn-panel-cat-name">{{ $cat->name }}</span>
+                                <span class="cn-panel-cat-count">{{ $cat->products_count }}</span>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            {{-- Quick links --}}
+            <div class="cn-panel-section">
+                <h4 class="cn-panel-title" data-en="Quick links" data-km="តំណភ្ជាប់រហ័ស" data-zh="快速链接">Quick links</h4>
+                <a href="{{ route('home') }}" class="cn-panel-link {{ request()->routeIs('home') ? 'on' : '' }}" @click="mobileOpen = false">
+                    🏠 <span data-en="Home" data-km="ដើម" data-zh="首页">Home</span>
+                </a>
+                <a href="{{ route('shop') }}" class="cn-panel-link {{ request()->routeIs('shop') || request()->routeIs('product') ? 'on' : '' }}" @click="mobileOpen = false">
+                    🛍 <span data-en="Shop" data-km="ហាង" data-zh="商店">Shop</span>
+                </a>
+                <a href="{{ route('about') }}" class="cn-panel-link {{ request()->routeIs('about') ? 'on' : '' }}" @click="mobileOpen = false">
+                    🍎 <span data-en="About" data-km="អំពីយើង" data-zh="关于">About</span>
+                </a>
+                <a href="{{ route('contact') }}" class="cn-panel-link {{ request()->routeIs('contact') ? 'on' : '' }}" @click="mobileOpen = false">
+                    📞 <span data-en="Contact" data-km="ទំនាក់ទំនង" data-zh="联系">Contact</span>
+                </a>
+                <a href="{{ route('track-order') }}" class="cn-panel-link {{ request()->routeIs('track-order') ? 'on' : '' }}" @click="mobileOpen = false">
+                    📦 <span data-en="Track Order" data-km="តាមដានការបញ្ជាទិញ" data-zh="追踪订单">Track Order</span>
+                </a>
+            </div>
+
+            {{-- Language --}}
+            <div class="cn-panel-section">
+                <h4 class="cn-panel-title" data-en="Language" data-km="ភាសា" data-zh="语言">Language</h4>
+                <div class="lang-tog" role="group" aria-label="Language">
+                    <button class="lang-flag" type="button" @click="$store.lang.set('en')"
+                        :class="$store.lang.current === 'en' ? 'on' : ''" aria-label="English">
+                        <iconify-icon icon="circle-flags:gb" width="22" height="22" aria-hidden="true"></iconify-icon>
+                    </button>
+                    <button class="lang-flag" type="button" @click="$store.lang.set('km')"
+                        :class="$store.lang.current === 'km' ? 'on' : ''" aria-label="Khmer">
+                        <iconify-icon icon="circle-flags:kh" width="22" height="22" aria-hidden="true"></iconify-icon>
+                    </button>
+                    <button class="lang-flag" type="button" @click="$store.lang.set('zh')"
+                        :class="$store.lang.current === 'zh' ? 'on' : ''" aria-label="Chinese">
+                        <iconify-icon icon="circle-flags:cn" width="22" height="22" aria-hidden="true"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+
+            {{-- Theme --}}
+            <div class="cn-panel-section">
+                <button type="button" class="cn-panel-link" @click="$store.theme.toggle()">
+                    <span x-text="$store.theme.current === 'light' ? '🌙' : '☀️'">🌙</span>
+                    <span x-text="$store.theme.current === 'light' ? 'Dark mode' : 'Light mode'">Dark mode</span>
+                </button>
+            </div>
+
+            {{-- Connect --}}
+            <div class="cn-panel-section">
+                <h4 class="cn-panel-title" data-en="Connect" data-km="ភ្ជាប់" data-zh="联系">Connect</h4>
+                <a href="https://t.me/srmacshop" target="_blank" rel="noopener" class="cn-panel-link" @click="mobileOpen = false">
+                    ✈️ <span>Telegram</span>
+                </a>
+                <a href="https://wa.me/85598334755" target="_blank" rel="noopener" class="cn-panel-link" @click="mobileOpen = false">
+                    💬 <span>WhatsApp</span>
+                </a>
+                <a href="mailto:hello@srmacshop.com" class="cn-panel-link" @click="mobileOpen = false">
+                    ✉️ <span>Email</span>
+                </a>
+            </div>
+        </div>
+    </aside>
 
     {{-- ═════ Mobile bottom tab bar (≤ 768px) — Phase 3 ═════ --}}
     <nav class="cn-tabbar" aria-label="Primary mobile">
