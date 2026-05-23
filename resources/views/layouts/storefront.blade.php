@@ -71,6 +71,14 @@
         @yield('content')
     </main>
 
+    @php
+        $footStoreInfo = \App\Models\Setting::get('store.info', []);
+        $footFacebook  = $footStoreInfo['facebook']  ?? 'https://facebook.com/srmacshop';
+        $footInstagram = $footStoreInfo['instagram'] ?? null;
+        $footTikTok    = $footStoreInfo['tiktok']    ?? null;
+        $footTelegram  = $footStoreInfo['telegram_url']
+            ?? ('https://t.me/' . ltrim($footStoreInfo['telegram_channel'] ?? '@srmacshop', '@'));
+    @endphp
     <footer class="footer">
         <div class="foot-inner">
             <div>
@@ -79,10 +87,24 @@
                     <span><span class="foot-logo-sr">SR</span> MAC SHOP</span>
                 </div>
                 <div style="font-size:11px;color:var(--text3)">www.srmacshop.com</div>
-                <div class="foot-desc" data-en="Cambodia's most trusted MacBook specialist since 2018." data-km="អ្នកជំនាញ MacBook ដែលគួរទុកចិត្ត នៅកម្ពុជា ចាប់ពី ២០១៨។">Cambodia's most trusted MacBook specialist since 2018.</div>
+                <div class="foot-desc"
+                     data-en="Cambodia's most trusted Apple specialist — iPhones, iPads &amp; MacBooks since 2018."
+                     data-km="អ្នកជំនាញ Apple ដែលគួរទុកចិត្តបំផុតនៅកម្ពុជា — iPhone, iPad និង MacBook ចាប់ពី ២០១៨។"
+                     data-zh="柬埔寨最值得信赖的 Apple 专家 — iPhone、iPad 和 MacBook，自 2018 年起。">
+                    Cambodia's most trusted Apple specialist — iPhones, iPads &amp; MacBooks since 2018.
+                </div>
                 <div class="foot-social">
                     <a href="https://wa.me/85598334755" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp">💬</a>
-                    <a href="https://t.me/srmacshop" target="_blank" rel="noopener" aria-label="Telegram" title="Telegram">✈️</a>
+                    <a href="{{ $footTelegram }}" target="_blank" rel="noopener" aria-label="Telegram" title="Telegram">✈️</a>
+                    @if($footFacebook)
+                        <a href="{{ $footFacebook }}" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">📘</a>
+                    @endif
+                    @if($footTikTok)
+                        <a href="{{ $footTikTok }}" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok">🎵</a>
+                    @endif
+                    @if($footInstagram)
+                        <a href="{{ $footInstagram }}" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram">📸</a>
+                    @endif
                     <a href="mailto:hello@srmacshop.com" aria-label="Email" title="Email">✉️</a>
                     <a href="tel:+85598334755" aria-label="Phone" title="Call us">📞</a>
                 </div>
@@ -90,6 +112,9 @@
             <div class="foot-col">
                 <h4 data-en="Shop" data-km="ទិញ" data-zh="商店">Shop</h4>
                 <ul>
+                    <li><a href="{{ route('shop') }}?category=smartphones" data-en="Smartphones" data-km="ទូរស័ព្ទស្មាតហ្វូន" data-zh="智能手机">Smartphones</a></li>
+                    <li><a href="{{ route('shop') }}?category=tablets-ipad" data-en="Tablets / iPad" data-km="Tablet / iPad" data-zh="平板电脑 / iPad">Tablets / iPad</a></li>
+                    <li><a href="{{ route('shop') }}?category=computers" data-en="Computers" data-km="កុំព្យូទ័រ" data-zh="电脑">Computers</a></li>
                     <li><a href="{{ route('shop') }}?category=macbook-air">MacBook Air</a></li>
                     <li><a href="{{ route('shop') }}?category=macbook-pro">MacBook Pro</a></li>
                     <li><a href="{{ route('shop') }}?category=accessories" data-en="Accessories" data-km="គ្រឿងបន្ថែម" data-zh="配件">Accessories</a></li>

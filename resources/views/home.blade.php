@@ -1,249 +1,290 @@
 @extends('layouts.storefront')
 
-@section('title', 'SR MAC SHOP — Think Different. Buy Smarter.')
-@section('description', 'Buy authentic MacBooks in Cambodia with official Apple warranty. MacBook Air, MacBook Pro with M3/M4 chips. Same-day delivery in Phnom Penh. Best prices guaranteed.')
+@section('title', 'SR MAC SHOP — Smartphones, iPads & Apple Devices in Cambodia')
+@section('description', "Cambodia's most trusted Apple specialist. Smartphones, iPads, MacBooks with official warranty. Same-day delivery in Phnom Penh. Best prices guaranteed.")
 
 @section('content')
-    {{-- HERO — macOS Sonoma Window (frosted glass + aurora wallpaper) --}}
-    @php
-        $hp = $headline ?? null;
-        $hpPriceCents  = ($promo['headline_price'] ?? null) ?: ($hp->price ?? 0);
-        $hpOrigCents   = $hp->original_price ?? null;
-        $hpEndsAt      = $promo['headline_ends_at'] ?? optional($hp?->sale_ends_at)->toIso8601String();
-
-        // Pre-compute slide data for Alpine JSON
-        $heroSlideData = [];
-        foreach ($heroSlides ?? [] as $i => $s) {
-            $isHead    = ($i === 0);
-            $pCents    = $isHead ? $hpPriceCents : $s->price;
-            $oCents    = $isHead ? $hpOrigCents  : ($s->original_price ?? null);
-            $endsAt    = $isHead ? ($hpEndsAt ?? '') : (optional($s->sale_ends_at)->toIso8601String() ?? '');
-            $savingCts = ($oCents && $oCents > $pCents) ? $oCents - $pCents : 0;
-            $heroSlideData[] = [
-                'name'      => $s->name,
-                'spec'      => $s->spec ?? '',
-                'price'     => '$' . number_format($pCents / 100, 0),
-                'orig'      => ($oCents && $oCents > $pCents) ? '$' . number_format($oCents / 100, 0) : '',
-                'saving'    => $savingCts > 0 ? 'SAVE $' . number_format($savingCts / 100, 0) : '',
-                'endsAt'    => $endsAt,
-                'url'       => route('product', $s->slug),
-                'pretextEn' => $isHead ? ($promo['headline_text']    ?? "🔥 Today's Deal")          : '⚡ Flash Deal',
-                'pretextKm' => $isHead ? ($promo['headline_text_km'] ?? "🔥 ការផ្តល់ជូនថ្ងៃនេះ") : '⚡ ការផ្តល់ជូនរហ័ស',
-                'pretextZh' => $isHead ? ($promo['headline_text_zh'] ?? "🔥 今日特惠")               : '⚡ 限时特惠',
-            ];
-        }
-        $heroSlidesJson = json_encode($heroSlideData, JSON_HEX_TAG | JSON_HEX_APOS);
-        $slide0 = $heroSlideData[0] ?? null;
-    @endphp
-
-    <div class="hero hp-hero"
-        x-data='{
-            slides: {{ $heroSlidesJson }},
-            active: 0,
-            _t: null,
-            paused: false,
-            _ts: 0,
-            get cur() { return this.slides[this.active] || {} },
-            next() { this.active = (this.active + 1) % this.slides.length; this._reset(); },
-            prev() { this.active = (this.active - 1 + this.slides.length) % this.slides.length; this._reset(); },
-            go(n) { this.active = n; this._reset(); },
-            pause() { this.paused = true; },
-            resume() { this.paused = false; },
-            _reset() { clearInterval(this._t); this._start(); },
-            _start() { if (this.slides.length > 1) this._t = setInterval(() => { if (!this.paused) this.next(); }, 4500); },
-            init() {
-                this._start();
-                this.$nextTick(() => { const ls = window.Alpine?.store("lang"); if (ls) ls.apply(ls.current); });
-                this.$watch("active", () => {
-                    this.$nextTick(() => { const ls = window.Alpine?.store("lang"); if (ls) ls.apply(ls.current); });
-                });
-            }
-        }'
-        @mouseenter="pause()" @mouseleave="resume()">
+    {{-- ─────────────────────────────────────────────────────── ①  HERO  ─── --}}
+    <div class="hero hero-mobile">
         <div class="hero-mesh"></div>
-
-        {{-- Aurora wallpaper background (animated) --}}
-        <div class="hp-aurora" aria-hidden="true"></div>
-        <div class="hp-aurora-grain" aria-hidden="true"></div>
-
-        {{-- macOS-style frosted glass window --}}
-        <div class="hp-window">
-
-            {{-- Title bar with traffic lights --}}
-            <div class="hp-window-bar">
-                <div class="hp-window-dots" aria-hidden="true">
-                    <span class="hp-dot hp-dot-r"></span>
-                    <span class="hp-dot hp-dot-y"></span>
-                    <span class="hp-dot hp-dot-g"></span>
-                </div>
-                <div class="hp-window-title">SR MAC SHOP — <span data-en="Featured" data-km="ផ្ដល់ជូនពិសេស" data-zh="精选">Featured</span></div>
+        <div class="hero-orb orb1"></div>
+        <div class="hero-orb orb2"></div>
+        <div class="hero-content">
+            <div class="hero-pill"
+                 data-en="📱 New: iPhone &amp; iPad Now Available"
+                 data-km="📱 ថ្មី៖ iPhone និង iPad មានហើយ"
+                 data-zh="📱 新品：iPhone 和 iPad 现已上市">
+                📱 New: iPhone &amp; iPad Now Available
             </div>
 
-            {{-- Window body: copy LEFT, media RIGHT --}}
-            <div class="hp-window-body">
+            <h1>
+                <span class="grad"
+                      data-en="The Future of Mobile."
+                      data-km="អនាគតនៃទូរស័ព្ទ។"
+                      data-zh="移动的未来。">The Future of Mobile.</span><br>
+                <span data-en="In Your Hand."
+                      data-km="នៅក្នុងដៃរបស់អ្នក។"
+                      data-zh="尽在掌中。">In Your Hand.</span>
+            </h1>
 
-                {{-- ── Copy side ── --}}
-                <div class="hp-hero-copy">
-                    @if(!empty($heroSlideData))
-                        {{-- Pretext badge (multilingual) --}}
-                        <div class="hp-hero-pretext"
-                            :data-en="cur.pretextEn" :data-km="cur.pretextKm" :data-zh="cur.pretextZh"
-                            data-en="{{ $slide0['pretextEn'] ?? "🔥 Today's Deal" }}"
-                            data-km="{{ $slide0['pretextKm'] ?? "🔥 ការផ្តល់ជូនថ្ងៃនេះ" }}"
-                            data-zh="{{ $slide0['pretextZh'] ?? "🔥 今日特惠" }}">{{ $slide0['pretextEn'] ?? "🔥 Today's Deal" }}</div>
+            <p class="hero-sub"
+               data-en="Latest iPhones, iPads, and tablets from Apple — with official warranty, same-day delivery in Phnom Penh, and Cambodia's best after-sales support."
+               data-km="iPhone, iPad និង tablet ថ្មីបំផុតពី Apple — ជាមួយការធានាផ្លូវការ ដឹកជញ្ជូនក្នុងថ្ងៃនៅភ្នំពេញ និងការគាំទ្រក្រោយការលក់ដ៏ល្អបំផុតនៅកម្ពុជា។"
+               data-zh="最新的 iPhone、iPad 和平板电脑 — 享有官方保修、金边当日送达，以及柬埔寨最佳售后服务。">
+                Latest iPhones, iPads, and tablets from Apple — with official warranty, same-day delivery in Phnom Penh, and Cambodia's best after-sales support.
+            </p>
 
-                        {{-- Product name + spec --}}
-                        <h1 class="hp-hero-h" x-text="cur.name">{{ $slide0['name'] ?? '' }}</h1>
-                        <p class="hp-hero-spec" x-show="cur.spec" x-text="cur.spec"
-                           style="{{ $slide0 && $slide0['spec'] ? '' : 'display:none' }}">{{ $slide0['spec'] ?? '' }}</p>
+            <div class="hero-btns">
+                <a href="{{ route('shop') }}?category=smartphones" class="btn btn-blue"
+                   data-en="Shop Smartphones →"
+                   data-km="ទិញទូរស័ព្ទ →"
+                   data-zh="选购智能手机 →">Shop Smartphones →</a>
+                <a href="{{ route('shop') }}?category=tablets-ipad" class="btn"
+                   style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)"
+                   data-en="Shop iPads →"
+                   data-km="ទិញ iPad →"
+                   data-zh="选购 iPad →">Shop iPads →</a>
+            </div>
 
-                        {{-- Prices --}}
-                        <div class="hp-hero-prices">
-                            <span class="hp-hero-price" x-text="cur.price">{{ $slide0['price'] ?? '' }}</span>
-                            <span class="hp-hero-strike" x-show="cur.orig" x-text="cur.orig"
-                                  style="{{ $slide0 && $slide0['orig'] ? '' : 'display:none' }}">{{ $slide0['orig'] ?? '' }}</span>
-                        </div>
-
-                        {{-- Countdown --}}
-                        <div class="hp-hero-countdown" :data-countdown="cur.endsAt" x-show="cur.endsAt"
-                             style="{{ $slide0 && $slide0['endsAt'] ? '' : 'display:none' }}"
-                             data-countdown="{{ $slide0['endsAt'] ?? '' }}">
-                            <span data-en="Ends in" data-km="បញ្ចប់ក្នុង" data-zh="结束于">Ends in</span>
-                            <span class="hp-hero-cdtimer">…</span>
-                        </div>
-
-                        {{-- CTA buttons --}}
-                        <div class="hp-hero-cta">
-                            <a :href="cur.url" href="{{ $slide0['url'] ?? route('shop') }}" class="hp-hero-btn-buy"
-                               data-en="🛒 Order Now →" data-km="🛒 បញ្ជាទិញឥឡូវ →" data-zh="🛒 立即订购 →">
-                                🛒 Order Now →
-                            </a>
-                            <a href="{{ route('shop') }}" class="hp-hero-btn-ghost"
-                               data-en="See all MacBooks" data-km="មើល MacBook ទាំងអស់" data-zh="查看所有 MacBook">
-                                See all MacBooks
-                            </a>
-                        </div>
-
-                    @else
-                        {{-- Fallback: no products configured --}}
-                        <div class="hp-hero-pretext"
-                            data-en="🍎 Premium MacBooks" data-km="🍎 MacBook ពិតប្រាកដ" data-zh="🍎 优质 MacBook">
-                            🍎 Premium MacBooks</div>
-                        <h1 class="hp-hero-h"
-                            data-en="Think Different. Buy Smarter."
-                            data-km="គិតខុសគេ ទិញឆ្លាតជាង។"
-                            data-zh="非同凡想。智慧购物。">Think Different. Buy Smarter.</h1>
-                        <p class="hp-hero-spec"
-                            data-en="Authentic Apple MacBooks. Same-day delivery in Phnom Penh."
-                            data-km="MacBook Apple ពិតប្រាកដ ដឹកជញ្ជូនបានក្នុងថ្ងៃ នៅភ្នំពេញ។"
-                            data-zh="正品 Apple MacBook。金边当日送达。">Authentic Apple MacBooks. Same-day delivery in Phnom Penh.</p>
-                        <div class="hp-hero-cta">
-                            <a href="{{ route('shop') }}" class="hp-hero-btn-buy"
-                               data-en="🛒 Shop Now →" data-km="🛒 ទិញឥឡូវ →" data-zh="🛒 立即选购 →">🛒 Shop Now →</a>
-                        </div>
-                    @endif
+            <div class="hero-stats">
+                <div>
+                    <div class="hstat-n">500+</div>
+                    <div class="hstat-l" data-en="Happy Customers" data-km="អតិថិជន" data-zh="满意客户">Happy Customers</div>
                 </div>
-
-                {{-- ── Media / Slideshow side ── --}}
-                @if(!empty($heroSlideData))
-                <div class="hp-hero-media"
-                     @touchstart.passive="_ts = $event.touches[0].clientX"
-                     @touchend.passive="const d = $event.changedTouches[0].clientX - _ts; if (Math.abs(d) > 50) { d < 0 ? next() : prev(); }">
-
-                    @foreach($heroSlides as $i => $s)
-                    @php $sImg = $s->getFirstMediaUrl('gallery'); @endphp
-                    <div class="hs-slide {{ $i === 0 ? 'hs-active' : '' }}"
-                         :class="{ 'hs-active': active === {{ $i }} }">
-                        @if($sImg)
-                            <img src="{{ $sImg }}" alt="{{ $s->name }}" class="hp-hero-img"
-                                 {{ $i === 0 ? 'loading="eager"' : 'loading="lazy"' }}>
-                        @else
-                            <div class="hp-hero-emoji">{{ $s->emoji ?: '💻' }}</div>
-                        @endif
-                    </div>
-                    @endforeach
-
-                    {{-- SAVE badge --}}
-                    <div class="hp-hero-saving-badge" x-show="cur.saving" x-text="cur.saving"
-                         style="{{ $slide0 && $slide0['saving'] ? '' : 'display:none' }}"></div>
-
-                    {{-- Dots + arrows (only when >1 slide) --}}
-                    @if(count($heroSlideData) > 1)
-                    <div class="hs-dots">
-                        @foreach($heroSlideData as $i => $s)
-                        <button class="hs-dot {{ $i === 0 ? 'hs-dot-on' : '' }}"
-                                :class="{ 'hs-dot-on': active === {{ $i }} }"
-                                @click.stop="go({{ $i }})" aria-label="Slide {{ $i + 1 }}"></button>
-                        @endforeach
-                    </div>
-                    <button class="hs-arrow hs-prev" @click.stop="prev()" aria-label="Previous">‹</button>
-                    <button class="hs-arrow hs-next" @click.stop="next()" aria-label="Next">›</button>
-                    @endif
+                <div>
+                    <div class="hstat-n">100%</div>
+                    <div class="hstat-l" data-en="Authentic" data-km="ពិតប្រាកដ" data-zh="正品">Authentic</div>
                 </div>
-                @endif
+                <div>
+                    <div class="hstat-n">2yr</div>
+                    <div class="hstat-l" data-en="Warranty" data-km="ការធានា" data-zh="保修">Warranty</div>
+                </div>
+                <div>
+                    <div class="hstat-n">24/7</div>
+                    <div class="hstat-l" data-en="Support" data-km="គាំទ្រ" data-zh="支持">Support</div>
+                </div>
+            </div>
 
-            </div> {{-- /.hp-window-body --}}
-        </div> {{-- /.hp-window --}}
-
-        {{-- Dock-style trust stats (frosted pill below window) --}}
-        <div class="hp-dock">
-            <div class="hp-dock-item"><b>500+</b> <span data-en="Customers" data-km="អតិថិជន" data-zh="客户">Customers</span></div>
-            <div class="hp-dock-item"><b>100%</b> <span data-en="Authentic" data-km="ពិតប្រាកដ" data-zh="正品">Authentic</span></div>
-            <div class="hp-dock-item"><b>2yr</b> <span data-en="Warranty" data-km="ការធានា" data-zh="保修">Warranty</span></div>
-            <div class="hp-dock-item"><b>24/7</b> <span data-en="Support" data-km="គាំទ្រ" data-zh="支持">Support</span></div>
+            {{-- Spotlight pills --}}
+            <div class="hero-spotlight-row">
+                <a href="{{ route('shop') }}?category=smartphones" class="hero-spot-pill">
+                    <span class="hero-spot-icon" aria-hidden="true">📱</span>
+                    <div>
+                        <div class="hero-spot-t" data-en="iPhone" data-km="iPhone" data-zh="iPhone">iPhone</div>
+                        <div class="hero-spot-s" data-en="Latest models" data-km="ម៉ូដែលថ្មីបំផុត" data-zh="最新型号">Latest models</div>
+                    </div>
+                </a>
+                <a href="{{ route('shop') }}?category=tablets-ipad" class="hero-spot-pill">
+                    <span class="hero-spot-icon" aria-hidden="true">📲</span>
+                    <div>
+                        <div class="hero-spot-t" data-en="iPad" data-km="iPad" data-zh="iPad">iPad</div>
+                        <div class="hero-spot-s" data-en="Pro · Air · Mini" data-km="Pro · Air · Mini" data-zh="Pro · Air · Mini">Pro · Air · Mini</div>
+                    </div>
+                </a>
+                <a href="{{ route('shop') }}?category=macbook-pro" class="hero-spot-pill">
+                    <span class="hero-spot-icon" aria-hidden="true">💻</span>
+                    <div>
+                        <div class="hero-spot-t" data-en="MacBook" data-km="MacBook" data-zh="MacBook">MacBook</div>
+                        <div class="hero-spot-s" data-en="Air &amp; Pro" data-km="Air និង Pro" data-zh="Air 和 Pro">Air &amp; Pro</div>
+                    </div>
+                </a>
+                <a href="{{ route('contact') }}" class="hero-spot-pill">
+                    <span class="hero-spot-icon" aria-hidden="true">💬</span>
+                    <div>
+                        <div class="hero-spot-t" data-en="WhatsApp" data-km="WhatsApp" data-zh="WhatsApp">WhatsApp</div>
+                        <div class="hero-spot-s">+855 98 33 47 55</div>
+                    </div>
+                </a>
+            </div>
         </div>
-
     </div>
 
-    {{-- FEATURED PRODUCTS --}}
-    <section class="shop-section" style="background:var(--bg2)">
+    {{-- ─────────────────────────────────────────────  ②  SMARTPHONES  ─── --}}
+    <x-category-spotlight
+        slug="smartphones"
+        :products="$smartphones"
+        eyebrow-en="📱 Smartphones"
+        eyebrow-km="📱 ទូរស័ព្ទស្មាតហ្វូន"
+        eyebrow-zh="📱 智能手机"
+        title-en="iPhone — Power in your pocket"
+        title-km="iPhone — ថាមពលនៅក្នុងហោប៉ៅ"
+        title-zh="iPhone — 口袋中的强大力量"
+        tagline-en="Latest iPhone 15 series, iPhone 14, and refurbished classics with full warranty."
+        tagline-km="iPhone 15 series, iPhone 14 និង iPhone ដែលបានជួសជុលឡើងវិញ ជាមួយការធានាពេញលេញ។"
+        tagline-zh="最新 iPhone 15 系列、iPhone 14 及翻新经典款，享受完整保修。"
+        cta-en="Shop iPhones →"
+        cta-km="ទិញ iPhone →"
+        cta-zh="选购 iPhone →"
+        emoji-placeholder="📱"
+        background="var(--bg2)"
+    />
+
+    {{-- ─────────────────────────────────────────  ③  TABLETS / iPad  ─── --}}
+    <x-category-spotlight
+        slug="tablets-ipad"
+        :products="$tablets"
+        eyebrow-en="📲 Tablets &amp; iPad"
+        eyebrow-km="📲 Tablet និង iPad"
+        eyebrow-zh="📲 平板电脑和 iPad"
+        title-en="iPad — Your canvas, your stage"
+        title-km="iPad — ផ្ទាំងគំនូរ និងឆាករបស់អ្នក"
+        title-zh="iPad — 您的画布，您的舞台"
+        tagline-en="iPad Pro, iPad Air, iPad Mini with full Apple Pencil &amp; Magic Keyboard support."
+        tagline-km="iPad Pro, iPad Air, iPad Mini ជាមួយការគាំទ្រ Apple Pencil និង Magic Keyboard ពេញលេញ។"
+        tagline-zh="iPad Pro、iPad Air、iPad Mini，完整支持 Apple Pencil 和妙控键盘。"
+        cta-en="Shop iPads →"
+        cta-km="ទិញ iPad →"
+        cta-zh="选购 iPad →"
+        emoji-placeholder="📲"
+        background="var(--bg)"
+    />
+
+    {{-- ─────────────────────────────  ④  COMPUTER SALES (FB / TikTok)  ─── --}}
+    @if($promoCards->isNotEmpty())
+        <section class="shop-section promo-feed" style="background:var(--bg2)">
+            <div class="inner">
+                <div class="sec-eyebrow"
+                     data-en="🖥️ Computer Sales · Social Feed"
+                     data-km="🖥️ ការលក់កុំព្យូទ័រ · ផ្សាយសង្គម"
+                     data-zh="🖥️ 电脑促销 · 社交动态">
+                    🖥️ Computer Sales · Social Feed
+                </div>
+                <h2 class="sec-h"
+                    data-en="See what's trending on Facebook &amp; TikTok"
+                    data-km="មើលអ្វីដែលកំពុងពេញនិយមនៅលើ Facebook និង TikTok"
+                    data-zh="看看 Facebook 和 TikTok 上的热门内容">
+                    See what's trending on Facebook &amp; TikTok
+                </h2>
+                <p class="cat-spot-tagline"
+                   data-en="Latest computer deals and announcements from our social channels — tap any card to see the full post."
+                   data-km="ការផ្តល់ជូននិងការប្រកាសកុំព្យូទ័រថ្មីបំផុតពីបណ្តាញសង្គមរបស់យើង — ចុចលើកាតណាមួយដើម្បីមើលប្រកាសពេញលេញ។"
+                   data-zh="来自我们社交频道的最新电脑优惠和公告 — 点击任何卡片查看完整帖子。">
+                    Latest computer deals and announcements from our social channels — tap any card to see the full post.
+                </p>
+
+                <div class="promo-feed-grid">
+                    @foreach($promoCards as $card)
+                        <x-social-promo-card :card="$card" />
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    {{-- ──────────────────────────────────────────────  ⑤  TELEGRAM CTA  ─── --}}
+    <div id="telegram-cta">
+        <x-telegram-cta :store-info="$storeInfo" />
+    </div>
+
+    {{-- ────────────────────────────────────────  ⑥  MACBOOK HIGHLIGHTS  ─── --}}
+    @php $macbookList = $macbooks->isNotEmpty() ? $macbooks : $featured; @endphp
+    @if($macbookList->isNotEmpty())
+    <section class="shop-section" style="background:var(--bg)">
         <div class="inner">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:8px">
                 <div>
-                    <div class="sec-eyebrow" data-en="🔥 Best Sellers" data-km="🔥 លក់ដាច់បំផុត">🔥 Best Sellers</div>
-                    <h2 class="sec-h" data-en="Top MacBooks in Cambodia 2025" data-km="MacBook ល្អបំផុត នៅកម្ពុជា ២០២៥">Top MacBooks in Cambodia 2025</h2>
+                    <div class="sec-eyebrow"
+                         data-en="💻 MacBook Highlights"
+                         data-km="💻 MacBook ល្អៗ"
+                         data-zh="💻 MacBook 精选">
+                        💻 MacBook Highlights
+                    </div>
+                    <h2 class="sec-h"
+                        data-en="Top MacBooks in Cambodia"
+                        data-km="MacBook ល្អបំផុតនៅកម្ពុជា"
+                        data-zh="柬埔寨顶级 MacBook">
+                        Top MacBooks in Cambodia
+                    </h2>
                 </div>
                 <div style="display:flex;gap:8px;flex-wrap:wrap">
                     <span style="background:#E3F5E9;color:var(--green);font-size:11px;font-weight:700;padding:4px 12px;border-radius:980px">✓ Official Warranty</span>
                     <span style="background:var(--blue-l);color:var(--blue);font-size:11px;font-weight:700;padding:4px 12px;border-radius:980px">🚀 Same-Day Delivery</span>
                 </div>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;margin-top:20px">
-                @foreach($featured as $product)
+            <div class="pgrid" style="margin-top:20px">
+                @foreach($macbookList as $product)
                     <x-product-card :product="$product" />
                 @endforeach
             </div>
             <div style="text-align:center;margin-top:1.5rem">
-                <a href="{{ route('shop') }}" class="btn btn-blue" data-en="View All Products →" data-km="មើលទាំងអស់ →">View All Products →</a>
+                <a href="{{ route('shop') }}?category=macbook-pro" class="btn btn-blue"
+                   data-en="View All MacBooks →"
+                   data-km="មើល MacBook ទាំងអស់ →"
+                   data-zh="查看所有 MacBook →">
+                    View All MacBooks →
+                </a>
             </div>
         </div>
     </section>
+    @endif
 
-    {{-- WHY US --}}
-    <section class="shop-section" style="background:var(--bg)">
+    {{-- ───────────────────────────────────────────────────────  ⑦  WHY US  ─── --}}
+    <section class="shop-section" style="background:var(--bg2)">
         <div class="inner">
-            <div class="sec-eyebrow" data-en="Why SR MAC SHOP" data-km="ហេតុអ្វីជ្រើស SR MAC SHOP">Why SR MAC SHOP</div>
-            <h2 class="sec-h" data-en="Shop With Confidence" data-km="ទិញដោយទំនុកចិត្ត">Shop With Confidence</h2>
+            <div class="sec-eyebrow"
+                 data-en="Why SR MAC SHOP"
+                 data-km="ហេតុអ្វីជ្រើស SR MAC SHOP"
+                 data-zh="为何选择 SR MAC SHOP">
+                Why SR MAC SHOP
+            </div>
+            <h2 class="sec-h"
+                data-en="Shop With Confidence"
+                data-km="ទិញដោយទំនុកចិត្ត"
+                data-zh="放心购物">
+                Shop With Confidence
+            </h2>
             <div class="why-grid">
                 <div class="wcard">
                     <div class="wcard-icon">✅</div>
-                    <div class="wcard-t" data-en="100% Authentic" data-km="ពិតប្រាកដ ១០០%">100% Authentic</div>
-                    <div class="wcard-s" data-en="Official Apple warranty with every MacBook." data-km="ការធានា Apple ផ្លូវការជាមួយ MacBook គ្រប់គ្រឿង។">Official Apple warranty with every MacBook.</div>
+                    <div class="wcard-t"
+                         data-en="100% Authentic"
+                         data-km="ពិតប្រាកដ ១០០%"
+                         data-zh="100% 正品">100% Authentic</div>
+                    <div class="wcard-s"
+                         data-en="Official Apple warranty with every device — iPhones, iPads, and MacBooks."
+                         data-km="ការធានា Apple ផ្លូវការជាមួយឧបករណ៍គ្រប់គ្រឿង — iPhone, iPad និង MacBook។"
+                         data-zh="每台设备均享 Apple 官方保修 — iPhone、iPad 和 MacBook。">
+                        Official Apple warranty with every device — iPhones, iPads, and MacBooks.
+                    </div>
                 </div>
                 <div class="wcard">
                     <div class="wcard-icon">🚀</div>
-                    <div class="wcard-t" data-en="Same-Day Delivery" data-km="ដឹកជញ្ជូនក្នុងថ្ងៃ">Same-Day Delivery</div>
-                    <div class="wcard-s" data-en="Order before 2PM, delivered same day in Phnom Penh." data-km="បញ្ជាទិញមុន ម៉ោង ២ ទទួលបានថ្ងៃនេះ។">Order before 2PM, delivered same day in Phnom Penh.</div>
+                    <div class="wcard-t"
+                         data-en="Same-Day Delivery"
+                         data-km="ដឹកជញ្ជូនក្នុងថ្ងៃ"
+                         data-zh="当日送达">Same-Day Delivery</div>
+                    <div class="wcard-s"
+                         data-en="Order before 2PM, delivered same day in Phnom Penh."
+                         data-km="បញ្ជាទិញមុនម៉ោង ២ ទទួលបានថ្ងៃនេះ។"
+                         data-zh="下午 2 点前下单，金边当日送达。">
+                        Order before 2PM, delivered same day in Phnom Penh.
+                    </div>
                 </div>
                 <div class="wcard">
                     <div class="wcard-icon">💰</div>
-                    <div class="wcard-t" data-en="Best Price Guarantee" data-km="ធានាតម្លៃល្អបំផុត">Best Price Guarantee</div>
-                    <div class="wcard-s" data-en="We beat any lower price — guaranteed." data-km="យើងប្រកួតតម្លៃ — ធានា។">We beat any lower price — guaranteed.</div>
+                    <div class="wcard-t"
+                         data-en="Best Price Guarantee"
+                         data-km="ធានាតម្លៃល្អបំផុត"
+                         data-zh="最优价格保证">Best Price Guarantee</div>
+                    <div class="wcard-s"
+                         data-en="We beat any lower price — guaranteed."
+                         data-km="យើងប្រកួតតម្លៃ — ធានា។"
+                         data-zh="保证最优价格，发现更低价我们再让利。">
+                        We beat any lower price — guaranteed.
+                    </div>
                 </div>
                 <div class="wcard">
                     <div class="wcard-icon">🔧</div>
-                    <div class="wcard-t" data-en="After-Sales Support" data-km="គាំទ្រក្រោយការលក់">After-Sales Support</div>
-                    <div class="wcard-s" data-en="Free setup, data transfer &amp; 24/7 WhatsApp support." data-km="ដំឡើងឥតគិតថ្លៃ ផ្ទេរទិន្នន័យ &amp; WhatsApp ២៤/៧។">Free setup, data transfer &amp; 24/7 WhatsApp support.</div>
+                    <div class="wcard-t"
+                         data-en="After-Sales Support"
+                         data-km="គាំទ្រក្រោយការលក់"
+                         data-zh="售后支持">After-Sales Support</div>
+                    <div class="wcard-s"
+                         data-en="Free setup, data transfer &amp; 24/7 WhatsApp support."
+                         data-km="ដំឡើងឥតគិតថ្លៃ ផ្ទេរទិន្នន័យ &amp; WhatsApp ២៤/៧។"
+                         data-zh="免费设置、数据迁移和 24/7 WhatsApp 支持。">
+                        Free setup, data transfer &amp; 24/7 WhatsApp support.
+                    </div>
                 </div>
             </div>
         </div>

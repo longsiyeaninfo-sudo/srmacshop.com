@@ -40,6 +40,12 @@ class StoreInfo extends Page
     #[Validate('nullable|string|max:255')]
     public string $telegram_channel = '';
 
+    #[Validate('nullable|url|max:255')]
+    public string $telegram_url = '';
+
+    #[Validate('nullable|url|max:255')]
+    public string $tiktok = '';
+
     public function mount(): void
     {
         $info = Setting::get('store.info', []);
@@ -51,6 +57,8 @@ class StoreInfo extends Page
         $this->facebook         = $info['facebook']         ?? '';
         $this->instagram        = $info['instagram']        ?? '';
         $this->telegram_channel = $info['telegram_channel'] ?? '';
+        $this->telegram_url     = $info['telegram_url']     ?? '';
+        $this->tiktok           = $info['tiktok']           ?? '';
     }
 
     public function save(): void
@@ -66,6 +74,8 @@ class StoreInfo extends Page
             'facebook'         => $this->facebook,
             'instagram'        => $this->instagram,
             'telegram_channel' => $this->telegram_channel,
+            'telegram_url'     => $this->telegram_url,
+            'tiktok'           => $this->tiktok,
         ]);
 
         Notification::make()->title('Store info saved')->success()->send();

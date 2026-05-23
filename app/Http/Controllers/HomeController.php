@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HomePromoCard;
 use App\Models\Product;
 use App\Models\Setting;
 
@@ -9,10 +10,10 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // Always default to empty array — defensive against Setting::get() returning null
+        // Always default to empty array — defensive against Setting::get() returning null.
         $promo = Setting::get('home_promo', []) ?: [];
 
-        // Best Sellers: 8 active products, badged first
+        // Best Sellers: 8 active products, badged first.
         $featured = Product::query()
             ->where('is_active', true)
             ->where('stock', '>', 0)
@@ -22,7 +23,7 @@ class HomeController extends Controller
             ->take(8)
             ->get();
 
-        // Headline deal — explicit pick OR fallback to highest-discount product
+        // Headline deal — explicit pick OR fallback to highest-discount product.
         $headline = null;
         if (! empty($promo['headline_product_id'])) {
             $headline = Product::with('media', 'category')->find($promo['headline_product_id']);
@@ -40,7 +41,7 @@ class HomeController extends Controller
             $headline = $featured->first();
         }
 
-        // Flash Deals reel — products flagged is_flash_deal=true, fallback to badge='sale'
+        // Flash Deals reel — products flagged is_flash_deal=true, fallback to badge='sale'.
         $flashDeals = Product::query()
             ->where('is_active', true)
             ->where('stock', '>', 0)
@@ -58,18 +59,45 @@ class HomeController extends Controller
                 ->get();
         }
 
-        // Hero slides: headline first, then up to 2 flash deals (excluding headline)
+        // Hero slides: headline first, then up to 2 flash deals (excluding headline).
         $heroSlides = collect($headline ? [$headline] : [])
             ->concat($flashDeals->where('id', '!=', $headline?->id)->take(2))
             ->values();
 
-        // Explicit array — safer than compact() on PHP 8.4 (which throws on undefined vars)
+        // ── NEW: category-specific spotlights (smartphones, tablets, macbooks). ──
+        $loadProducts = fn (string $slug, int $take = 4) => Product::query()
+            ->where('is_active', true)
+            ->whereHas('category', fn ($q) => $q->where('slug', $slug))
+            ->with('media', 'category')
+            ->orderByRaw("CASE WHEN badge IN ('new','hot','sale') THEN 0 ELSE 1 END")
+            ->orderBy('sort_order')
+            ->take($take)
+            ->get();
+
+        $smartphones = $loadProducts('smartphones');
+        $tablets     = $loadProducts('tablets-ipad');
+        $macbooks    = $loadProducts('macbook-air', 2)
+            ->concat($loadProducts('macbook-pro', 2))
+            ->values();
+
+        // Admin-curated FB / TikTok promo cards.
+        $promoCards = HomePromoCard::active()->get();
+
+        // Store info bag (Facebook / TikTok / Telegram URLs etc.).
+        $storeInfo = Setting::get('store.info', []) ?: [];
+
+        // Explicit array — safer than compact() on PHP 8.4 (which throws on undefined vars).
         return view('home', [
-            'featured'   => $featured   ?? collect(),
-            'headline'   => $headline   ?? null,
-            'flashDeals' => $flashDeals ?? collect(),
-            'promo'      => $promo      ?? [],
-            'heroSlides' => $heroSlides ?? collect(),
+            'featured'    => $featured    ?? collect(),
+            'headline'    => $headline    ?? null,
+            'flashDeals'  => $flashDeals  ?? collect(),
+            'promo'       => $promo       ?? [],
+            'heroSlides'  => $heroSlides  ?? collect(),
+            'smartphones' => $smartphones ?? collect(),
+            'tablets'     => $tablets     ?? collect(),
+            'macbooks'    => $macbooks    ?? collect(),
+            'promoCards'  => $promoCards  ?? collect(),
+            'storeInfo'   => $storeInfo   ?? [],
         ]);
     }
 }

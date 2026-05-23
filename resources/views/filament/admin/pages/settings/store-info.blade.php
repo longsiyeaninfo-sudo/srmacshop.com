@@ -56,8 +56,19 @@
                 @error('instagram') <div class="st-err">{{ $message }}</div> @enderror
             </div>
             <div class="st-f">
-                <label>Telegram channel</label>
+                <label>Telegram channel handle</label>
                 <input type="text" class="st-input" wire:model="telegram_channel" placeholder="@srmacshop">
+            </div>
+            <div class="st-f">
+                <label>Telegram channel URL (full)</label>
+                <input type="url" class="st-input" wire:model="telegram_url" placeholder="https://t.me/srmacshop">
+                @error('telegram_url') <div class="st-err">{{ $message }}</div> @enderror
+                <div class="st-hint" style="font-size:11px;color:var(--text2);margin-top:4px">Used for the homepage "Join our Channel" CTA button.</div>
+            </div>
+            <div class="st-f">
+                <label>TikTok URL</label>
+                <input type="url" class="st-input" wire:model="tiktok" placeholder="https://www.tiktok.com/@srmacshop">
+                @error('tiktok') <div class="st-err">{{ $message }}</div> @enderror
             </div>
         </div>
 

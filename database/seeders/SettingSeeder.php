@@ -9,23 +9,32 @@ class SettingSeeder extends Seeder
 {
     public function run(): void
     {
+        // Flat key/value entries (legacy, used elsewhere).
         $settings = [
-         'shop_phone' => '+855 98 33 47 55',
-      'shop_whatsapp' => '+855 98 33 47 55',
-            'shop_telegram' => 'srmacshop',
-          'shop_address' => 'Borey Pibhu Thmey Kambol III, Sangkat Kambol, Phnom Penh',
-            'shop_address_km' => 'បុរីពិភពថ្មីកំបូល III ភូមិថ្មដា សង្កាត់កំបូល ខណ្ឌកំបូល ភ្នំពេញ',
-        'shop_hours_en' => 'Mon–Sun: 8AM – 8PM',
-            'shop_hours_km' => 'ច័ន្ទ–អាទិត្យ: ៨ – ២០ម៉ោង',
-       'shop_lat' => '11.55949976721228',
-            'shop_lng' => '104.89155303686857',
-        'shop_founded' => '2018',
-            'shop_tagline_en' => 'Think Different. Buy Smarter.',
-        'shop_tagline_km' => 'គិតខុសគេ។ ទិញឆ្លាតជាង។',
+            'shop_phone'        => '+855 98 33 47 55',
+            'shop_whatsapp'     => '+855 98 33 47 55',
+            'shop_telegram'     => 'srmacshop',
+            'shop_address'      => 'Borey Pibhu Thmey Kambol III, Sangkat Kambol, Phnom Penh',
+            'shop_address_km'   => 'បុរីពិភពថ្មីកំបូល III ភូមិថ្មដា សង្កាត់កំបូល ខណ្ឌកំបូល ភ្នំពេញ',
+            'shop_hours_en'     => 'Mon–Sun: 8AM – 8PM',
+            'shop_hours_km'     => 'ច័ន្ទ–អាទិត្យ: ៨ – ២០ម៉ោង',
+            'shop_lat'          => '11.55949976721228',
+            'shop_lng'          => '104.89155303686857',
+            'shop_founded'      => '2018',
+            'shop_tagline_en'   => 'Think Different. Buy Smarter.',
+            'shop_tagline_km'   => 'គិតខុសគេ។ ទិញឆ្លាតជាង។',
         ];
 
-     foreach ($settings as $key => $value) {
-            Setting::put($key, $value);
+        foreach ($settings as $key => $value) {
+            Setting::set($key, $value);
         }
+
+        // Nested store.info bag used by the StoreInfo Filament page and homepage.
+        // Merge into existing so admin-edited values are preserved.
+        $existing = Setting::get('store.info', []);
+        Setting::set('store.info', array_merge($existing, [
+            'tiktok'       => $existing['tiktok']       ?? 'https://www.tiktok.com/@srmacshop',
+            'telegram_url' => $existing['telegram_url'] ?? 'https://t.me/srmacshop',
+        ]));
     }
 }
