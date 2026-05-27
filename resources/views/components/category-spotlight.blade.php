@@ -17,7 +17,7 @@
     'emojiPlaceholder' => '📱',
 ])
 
-<section class="shop-section cat-spotlight" style="background: {{ $background }}">
+<section style="background: {{ $background }}">
     <div class="inner">
         <div class="cat-spot-head">
             <div>

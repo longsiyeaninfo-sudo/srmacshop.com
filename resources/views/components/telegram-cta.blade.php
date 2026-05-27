@@ -8,7 +8,7 @@
     }
 @endphp
 
-<section class="tg-cta">
+<section>
     <div class="tg-cta-inner">
         <div class="tg-cta-paper-plane" aria-hidden="true">✈️</div>
 

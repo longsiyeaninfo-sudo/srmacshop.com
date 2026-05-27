@@ -99,46 +99,6 @@
         </div>
     </div>
 
-    {{-- ─────────────────────────────────────────────  ②  SMARTPHONES  ─── --}}
-    <x-category-spotlight
-        slug="smartphones"
-        :products="$smartphones"
-        eyebrow-en="📱 Smartphones"
-        eyebrow-km="📱 ទូរស័ព្ទស្មាតហ្វូន"
-        eyebrow-zh="📱 智能手机"
-        title-en="iPhone — Power in your pocket"
-        title-km="iPhone — ថាមពលនៅក្នុងហោប៉ៅ"
-        title-zh="iPhone — 口袋中的强大力量"
-        tagline-en="Latest iPhone 15 series, iPhone 14, and refurbished classics with full warranty."
-        tagline-km="iPhone 15 series, iPhone 14 និង iPhone ដែលបានជួសជុលឡើងវិញ ជាមួយការធានាពេញលេញ។"
-        tagline-zh="最新 iPhone 15 系列、iPhone 14 及翻新经典款，享受完整保修。"
-        cta-en="Shop iPhones →"
-        cta-km="ទិញ iPhone →"
-        cta-zh="选购 iPhone →"
-        emoji-placeholder="📱"
-        background="var(--bg2)"
-    />
-
-    {{-- ─────────────────────────────────────────  ③  TABLETS / iPad  ─── --}}
-    <x-category-spotlight
-        slug="tablets-ipad"
-        :products="$tablets"
-        eyebrow-en="📲 Tablets &amp; iPad"
-        eyebrow-km="📲 Tablet និង iPad"
-        eyebrow-zh="📲 平板电脑和 iPad"
-        title-en="iPad — Your canvas, your stage"
-        title-km="iPad — ផ្ទាំងគំនូរ និងឆាករបស់អ្នក"
-        title-zh="iPad — 您的画布，您的舞台"
-        tagline-en="iPad Pro, iPad Air, iPad Mini with full Apple Pencil &amp; Magic Keyboard support."
-        tagline-km="iPad Pro, iPad Air, iPad Mini ជាមួយការគាំទ្រ Apple Pencil និង Magic Keyboard ពេញលេញ។"
-        tagline-zh="iPad Pro、iPad Air、iPad Mini，完整支持 Apple Pencil 和妙控键盘。"
-        cta-en="Shop iPads →"
-        cta-km="ទិញ iPad →"
-        cta-zh="选购 iPad →"
-        emoji-placeholder="📲"
-        background="var(--bg)"
-    />
-
     {{-- ─────────────────────────────  ④  COMPUTER SALES (FB / TikTok)  ─── --}}
     @if($promoCards->isNotEmpty())
         <section class="shop-section promo-feed" style="background:var(--bg2)">
@@ -170,11 +130,6 @@
             </div>
         </section>
     @endif
-
-    {{-- ──────────────────────────────────────────────  ⑤  TELEGRAM CTA  ─── --}}
-    <div id="telegram-cta">
-        <x-telegram-cta :store-info="$storeInfo" />
-    </div>
 
     {{-- ────────────────────────────────────────  ⑥  MACBOOK HIGHLIGHTS  ─── --}}
     @php $macbookList = $macbooks->isNotEmpty() ? $macbooks : $featured; @endphp
