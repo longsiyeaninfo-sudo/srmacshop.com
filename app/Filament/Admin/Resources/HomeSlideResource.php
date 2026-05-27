@@ -40,21 +40,36 @@ class HomeSlideResource extends Resource
                         ->maxSize(4096)
                         ->required()
                         ->helperText('16:9 landscape works best (e.g. 1600×900). Max 4 MB.'),
-                    Forms\Components\TextInput::make('link_url')
-                        ->label('Link URL (optional)')
-                        ->url()
-                        ->maxLength(500)
-                        ->placeholder('https://srmacshop.com/shop/iphone-15-pro')
-                        ->helperText('Where users go when they click the slide. Leave blank to just zoom the photo.'),
                 ])
                 ->columns(1),
 
-            Forms\Components\Section::make('Title (optional)')
-                ->description('Caption overlay shown on the slide. Leave blank for clean image-only slides.')
+            Forms\Components\Section::make('Link this slide to a product')
+                ->description('When linked, the slide caption auto-shows the product title + price, and clicking the Shop button opens that product page.')
+                ->schema([
+                    Forms\Components\Select::make('product_id')
+                        ->label('Product')
+                        ->relationship('product', 'name', fn ($query) => $query->where('is_active', true)->orderBy('name'))
+                        ->searchable()
+                        ->preload()
+                        ->nullable()
+                        ->placeholder('— No product (image-only slide) —')
+                        ->helperText('Optional. Leave blank for an image-only slide with no price or shop button.'),
+                    Forms\Components\TextInput::make('link_url')
+                        ->label('Custom link URL (overrides product link)')
+                        ->url()
+                        ->maxLength(500)
+                        ->placeholder('https://example.com/special-page')
+                        ->helperText('Optional. Use only if you want the Shop button to go somewhere other than the linked product page.'),
+                ])
+                ->columns(1),
+
+            Forms\Components\Section::make('Caption title (optional)')
+                ->description('Custom title shown on the slide. Leave blank to use the linked product\'s name automatically.')
                 ->schema([
                     Forms\Components\TextInput::make('title_en')
                         ->label('English')
-                        ->maxLength(120),
+                        ->maxLength(120)
+                        ->placeholder('(uses product name if blank)'),
                     Forms\Components\TextInput::make('title_km')
                         ->label('ខ្មែរ (Khmer)')
                         ->maxLength(160),
@@ -91,11 +106,11 @@ class HomeSlideResource extends Resource
                     ->searchable()
                     ->limit(40)
                     ->placeholder('(no title)'),
-                Tables\Columns\TextColumn::make('link_url')
-                    ->label('Link')
+                Tables\Columns\TextColumn::make('product.name')
+                    ->label('Linked product')
+                    ->searchable()
                     ->limit(30)
-                    ->placeholder('(none)')
-                    ->toggleable(),
+                    ->placeholder('—'),
                 Tables\Columns\TextColumn::make('sort_order')
                     ->sortable()
                     ->label('#'),

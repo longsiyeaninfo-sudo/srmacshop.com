@@ -6,15 +6,21 @@
 @section('content')
     {{-- ─────────────────────────────────────────────  ①  PHOTO SLIDESHOW  ─── --}}
     @php
+        $formatPrice = fn ($cents) => $cents ? '$' . number_format($cents / 100, 0) : null;
         if ($homeSlides->isNotEmpty()) {
-            $slideData = $homeSlides->map(fn ($s) => [
-                'name'  => $s->title_en ?: '',
-                'titleEn' => $s->title_en,
-                'titleKm' => $s->title_km ?: $s->title_en,
-                'titleZh' => $s->title_zh ?: $s->title_en,
-                'img'   => $s->imageUrl(),
-                'url'   => $s->link_url,
-            ])->values();
+            $slideData = $homeSlides->map(function ($s) use ($formatPrice) {
+                $title = $s->resolvedTitle();
+                return [
+                    'name'    => $title ?: 'Slide',
+                    'titleEn' => $title,
+                    'titleKm' => $s->title_km ?: $title,
+                    'titleZh' => $s->title_zh ?: $title,
+                    'img'     => $s->imageUrl(),
+                    'url'     => $s->resolvedUrl(),
+                    'price'   => $formatPrice($s->resolvedPriceCents()),
+                    'orig'    => $formatPrice($s->resolvedOriginalPriceCents()),
+                ];
+            })->values();
         } else {
             $slideData = $slideshowProducts->map(fn ($p) => [
                 'name'    => $p->name,
@@ -23,6 +29,9 @@
                 'titleZh' => $p->name,
                 'img'     => $p->getFirstMediaUrl('gallery'),
                 'url'     => route('product', $p->slug),
+                'price'   => $formatPrice($p->price ?? null),
+                'orig'    => ($p->original_price && $p->price && $p->original_price > $p->price)
+                    ? $formatPrice($p->original_price) : null,
             ])->values();
         }
     @endphp
@@ -53,17 +62,38 @@
                      @mouseenter="pause()" @mouseleave="resume()"
                      @touchstart="onStart($event)" @touchend="onEnd($event)">
                     <template x-for="(s, i) in slides" :key="i">
-                        <button type="button" class="hp-ss-slide" :class="{ 'is-on': active === i }"
-                                @click="openZoom()" :aria-label="`Zoom slide ${i+1}`" tabindex="-1">
-                            <img :src="s.img" :alt="s.name" class="hp-ss-img">
-                            <template x-if="s.titleEn">
-                                <div class="hp-ss-caption"
-                                     :data-en="s.titleEn"
-                                     :data-km="s.titleKm"
-                                     :data-zh="s.titleZh"
-                                     x-text="s.titleEn"></div>
+                        <div class="hp-ss-slide" :class="{ 'is-on': active === i }">
+                            <button type="button" class="hp-ss-img-btn"
+                                    @click="openZoom()" :aria-label="`Zoom slide ${i+1}`" tabindex="-1">
+                                <img :src="s.img" :alt="s.name" class="hp-ss-img">
+                            </button>
+                            <template x-if="s.titleEn || s.price">
+                                <div class="hp-ss-caption">
+                                    <div class="hp-ss-info">
+                                        <template x-if="s.titleEn">
+                                            <div class="hp-ss-title"
+                                                 :data-en="s.titleEn"
+                                                 :data-km="s.titleKm"
+                                                 :data-zh="s.titleZh"
+                                                 x-text="s.titleEn"></div>
+                                        </template>
+                                        <template x-if="s.price">
+                                            <div class="hp-ss-price-row">
+                                                <span class="hp-ss-price" x-text="s.price"></span>
+                                                <template x-if="s.orig">
+                                                    <span class="hp-ss-orig" x-text="s.orig"></span>
+                                                </template>
+                                            </div>
+                                        </template>
+                                    </div>
+                                    <template x-if="s.url">
+                                        <a :href="s.url" class="hp-ss-btn"
+                                           data-en="Shop →" data-km="ទិញ →" data-zh="选购 →"
+                                           @click.stop>Shop →</a>
+                                    </template>
+                                </div>
                             </template>
-                        </button>
+                        </div>
                     </template>
                     <template x-if="slides.length > 1">
                         <button type="button" class="hp-ss-arrow hp-ss-prev" @click.stop="prev()" aria-label="Previous">‹</button>

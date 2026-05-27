@@ -82,7 +82,10 @@ class HomeController extends Controller
             ->values();
 
         // Homepage slideshow — admin-curated slides first, fall back to product photos.
-        $homeSlides = HomeSlide::active()->take(24)->get();
+        $homeSlides = HomeSlide::active()
+            ->with(['product' => fn ($q) => $q->with('media')])
+            ->take(24)
+            ->get();
 
         $slideshowProducts = collect();
         if ($homeSlides->isEmpty()) {
