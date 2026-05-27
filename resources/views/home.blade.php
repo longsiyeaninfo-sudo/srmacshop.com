@@ -4,7 +4,81 @@
 @section('description', "Cambodia's most trusted Apple specialist. Smartphones, iPads, MacBooks with official warranty. Same-day delivery in Phnom Penh. Best prices guaranteed.")
 
 @section('content')
-    {{-- ─────────────────────────────────────────────────────── ①  HERO  ─── --}}
+    {{-- ─────────────────────────────────────────────  ①  PHOTO SLIDESHOW  ─── --}}
+    @if($slideshowProducts->isNotEmpty())
+        @php
+            $slideData = $slideshowProducts->map(fn ($p) => [
+                'name' => $p->name,
+                'img'  => $p->getFirstMediaUrl('gallery'),
+            ])->values();
+        @endphp
+        <section class="shop-section hp-slideshow-section" style="background:var(--bg)"
+                 x-data='{
+                    slides: @json($slideData),
+                    active: 0,
+                    _t: null,
+                    zoom: { open: false, img: "", alt: "" },
+                    next(){ this.active = (this.active + 1) % this.slides.length },
+                    prev(){ this.active = (this.active - 1 + this.slides.length) % this.slides.length },
+                    go(n){ this.active = n },
+                    _start(){ if(this.slides.length > 1 && !this._t) this._t = setInterval(() => this.next(), 4500) },
+                    pause(){ clearInterval(this._t); this._t = null },
+                    resume(){ if(!this.zoom.open) this._start() },
+                    _tx: 0,
+                    onStart(e){ this._tx = e.changedTouches[0].clientX },
+                    onEnd(e){ const dx = e.changedTouches[0].clientX - this._tx; if(Math.abs(dx) > 50){ dx < 0 ? this.next() : this.prev() } },
+                    openZoom(s){ this.zoom = { open: true, img: s.img, alt: s.name }; this.pause(); document.body.style.overflow = "hidden" },
+                    closeZoom(){ this.zoom.open = false; document.body.style.overflow = ""; this.resume() }
+                 }'
+                 x-init="_start()"
+                 @keydown.escape.window="if(zoom.open) closeZoom()">
+            <div class="inner">
+                <div class="sec-eyebrow"
+                     data-en="✨ Featured"
+                     data-km="✨ ផលិតផលលេចធ្លោ"
+                     data-zh="✨ 精选">✨ Featured</div>
+                <h2 class="sec-h"
+                    data-en="Today's spotlight — tap any photo to zoom"
+                    data-km="ការផ្តោតថ្ងៃនេះ — ប៉ះរូបណាមួយដើម្បីពង្រីក"
+                    data-zh="今日焦点 — 点击图片放大">Today's spotlight — tap any photo to zoom</h2>
+
+                <div class="hp-slideshow"
+                     @mouseenter="pause()" @mouseleave="resume()"
+                     @touchstart="onStart($event)" @touchend="onEnd($event)">
+                    <template x-for="(s, i) in slides" :key="i">
+                        <button type="button" class="hs-slide" :class="{ 'hs-active': active === i }"
+                                @click="openZoom(s)" :aria-label="`Zoom ${s.name}`" tabindex="-1">
+                            <img :src="s.img" :alt="s.name" class="hp-slideshow-img">
+                        </button>
+                    </template>
+                    <template x-if="slides.length > 1">
+                        <button type="button" class="hs-arrow hs-prev" @click.stop="prev()" aria-label="Previous">‹</button>
+                    </template>
+                    <template x-if="slides.length > 1">
+                        <button type="button" class="hs-arrow hs-next" @click.stop="next()" aria-label="Next">›</button>
+                    </template>
+                    <template x-if="slides.length > 1">
+                        <div class="hs-dots">
+                            <template x-for="(s, i) in slides" :key="i">
+                                <button type="button" class="hs-dot" :class="{ 'hs-dot-on': active === i }"
+                                        @click.stop="go(i)" :aria-label="`Slide ${i+1}`"></button>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            {{-- Zoom lightbox --}}
+            <div class="hp-lightbox" x-show="zoom.open" x-cloak
+                 @click.self="closeZoom()"
+                 x-transition.opacity>
+                <button type="button" class="hp-lightbox-close" @click="closeZoom()" aria-label="Close">×</button>
+                <img :src="zoom.img" :alt="zoom.alt" class="hp-lightbox-img">
+            </div>
+        </section>
+    @endif
+
+    {{-- ─────────────────────────────────────────────────────── ②  HERO  ─── --}}
     <div class="hero hero-mobile">
         <div class="hero-mesh"></div>
         <div class="hero-orb orb1"></div>
@@ -98,80 +172,6 @@
             </div>
         </div>
     </div>
-
-    {{-- ─────────────────────────────────────────────  ②  PHOTO SLIDESHOW  ─── --}}
-    @if($slideshowProducts->isNotEmpty())
-        @php
-            $slideData = $slideshowProducts->map(fn ($p) => [
-                'name' => $p->name,
-                'img'  => $p->getFirstMediaUrl('gallery'),
-            ])->values();
-        @endphp
-        <section class="shop-section" style="background:var(--bg)"
-                 x-data='{
-                    slides: @json($slideData),
-                    active: 0,
-                    _t: null,
-                    zoom: { open: false, img: "", alt: "" },
-                    next(){ this.active = (this.active + 1) % this.slides.length },
-                    prev(){ this.active = (this.active - 1 + this.slides.length) % this.slides.length },
-                    go(n){ this.active = n },
-                    _start(){ if(this.slides.length > 1 && !this._t) this._t = setInterval(() => this.next(), 4500) },
-                    pause(){ clearInterval(this._t); this._t = null },
-                    resume(){ if(!this.zoom.open) this._start() },
-                    _tx: 0,
-                    onStart(e){ this._tx = e.changedTouches[0].clientX },
-                    onEnd(e){ const dx = e.changedTouches[0].clientX - this._tx; if(Math.abs(dx) > 50){ dx < 0 ? this.next() : this.prev() } },
-                    openZoom(s){ this.zoom = { open: true, img: s.img, alt: s.name }; this.pause(); document.body.style.overflow = "hidden" },
-                    closeZoom(){ this.zoom.open = false; document.body.style.overflow = ""; this.resume() }
-                 }'
-                 x-init="_start()"
-                 @keydown.escape.window="if(zoom.open) closeZoom()">
-            <div class="inner">
-                <div class="sec-eyebrow"
-                     data-en="✨ Featured"
-                     data-km="✨ ផលិតផលលេចធ្លោ"
-                     data-zh="✨ 精选">✨ Featured</div>
-                <h2 class="sec-h"
-                    data-en="Today's spotlight — tap any photo to zoom"
-                    data-km="ការផ្តោតថ្ងៃនេះ — ប៉ះរូបណាមួយដើម្បីពង្រីក"
-                    data-zh="今日焦点 — 点击图片放大">Today's spotlight — tap any photo to zoom</h2>
-
-                <div class="hp-slideshow"
-                     @mouseenter="pause()" @mouseleave="resume()"
-                     @touchstart="onStart($event)" @touchend="onEnd($event)">
-                    <template x-for="(s, i) in slides" :key="i">
-                        <button type="button" class="hs-slide" :class="{ 'hs-active': active === i }"
-                                @click="openZoom(s)" :aria-label="`Zoom ${s.name}`" tabindex="-1">
-                            <img :src="s.img" :alt="s.name" class="hp-slideshow-img">
-                        </button>
-                    </template>
-                    <template x-if="slides.length > 1">
-                        <button type="button" class="hs-arrow hs-prev" @click.stop="prev()" aria-label="Previous">‹</button>
-                    </template>
-                    <template x-if="slides.length > 1">
-                        <button type="button" class="hs-arrow hs-next" @click.stop="next()" aria-label="Next">›</button>
-                    </template>
-                    <template x-if="slides.length > 1">
-                        <div class="hs-dots">
-                            <template x-for="(s, i) in slides" :key="i">
-                                <button type="button" class="hs-dot" :class="{ 'hs-dot-on': active === i }"
-                                        @click.stop="go(i)" :aria-label="`Slide ${i+1}`"></button>
-                            </template>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            {{-- Zoom lightbox --}}
-            <div class="hp-lightbox" x-show="zoom.open" x-cloak
-                 @click.self="closeZoom()"
-                 x-transition.opacity>
-                <button type="button" class="hp-lightbox-close" @click="closeZoom()" aria-label="Close">×</button>
-                <img :src="zoom.img" :alt="zoom.alt" class="hp-lightbox-img">
-            </div>
-        </section>
-    @endif
 
     {{-- ─────────────────────────────────────────────  ③  SMARTPHONES  ─── --}}
     @if($smartphones->isNotEmpty())
