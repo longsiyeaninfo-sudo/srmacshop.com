@@ -121,12 +121,6 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 
 /* ── HERO ── */
 .hero{min-height:88vh;background:#0a0a0a;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding:5rem 1.5rem 4rem}
-.hero-mesh{position:absolute;inset:0;background:
-  radial-gradient(ellipse 65% 45% at 15% 25%, rgba(10,132,255,.14) 0%, transparent 55%),
-  radial-gradient(ellipse 55% 40% at 85% 75%, rgba(175,82,222,.08) 0%, transparent 55%),
-  radial-gradient(ellipse 100% 80% at 50% 30%, #0e1726 0%, #0a0a0a 65%);
-  animation:heroBreath 18s ease-in-out infinite}
-@keyframes heroBreath{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 .hero-orb{display:none}
 .hero-content{position:relative;z-index:1;max-width:780px}
 .hero-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(10px);color:rgba(255,255,255,.85);padding:6px 16px;border-radius:980px;font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:1.75rem}
@@ -144,9 +138,7 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 /* ═══════════════ HP HERO — macOS Sonoma Window (premium frosted glass) ═══════════════ */
 /* A. Hero base — pastel aurora gradient */
 .hero.hp-hero{position:relative;background:linear-gradient(180deg,#F5F3FF 0%,#FDF2F8 40%,#EFF6FF 80%,#ECFEFF 100%);min-height:unset;padding:80px 1rem 64px;overflow:hidden;border-bottom:1px solid var(--hairline)}
-.hero.hp-hero .hero-mesh{display:none}
 [data-theme="dark"] .hero.hp-hero{background:linear-gradient(180deg,#0a0613 0%,#15091f 40%,#0a0a2a 80%,#091a24 100%)}
-[data-theme="dark"] .hero.hp-hero .hero-mesh{display:none}
 
 /* B. Aurora — animated radial gradients (Sonoma wallpaper) */
 .hp-aurora{position:absolute;inset:-15%;z-index:0;pointer-events:none;background:
@@ -1008,11 +1000,6 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 
 /* ── ① Mobile/iPad hero variant ── */
 .hero.hero-mobile{background:radial-gradient(ellipse at top, #1e1b4b 0%, #0a0a0a 60%)}
-.hero.hero-mobile .hero-mesh{
-  background:
-    radial-gradient(circle at 30% 20%, rgba(124,58,237,.22), transparent 50%),
-    radial-gradient(circle at 70% 70%, rgba(56,189,248,.18), transparent 55%);
-}
 .hero.hero-mobile h1 .grad{
   background:linear-gradient(135deg,#A78BFA 0%,#60A5FA 50%,#5EEAD4 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
