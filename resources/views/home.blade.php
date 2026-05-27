@@ -99,7 +99,137 @@
         </div>
     </div>
 
-    {{-- ─────────────────────────────  ④  COMPUTER SALES (FB / TikTok)  ─── --}}
+    {{-- ─────────────────────────────────────────────  ②  PHOTO SLIDESHOW  ─── --}}
+    @if($heroSlides->isNotEmpty())
+        @php
+            $slideData = $heroSlides->map(function ($p) {
+                $img = method_exists($p, 'getFirstMediaUrl') ? $p->getFirstMediaUrl('gallery') : '';
+                return [
+                    'name'  => $p->name,
+                    'spec'  => $p->spec ?? '',
+                    'img'   => $img,
+                    'emoji' => $p->emoji ?? '📱',
+                    'url'   => route('product', $p->slug),
+                ];
+            })->values();
+        @endphp
+        <section class="shop-section" style="background:var(--bg)">
+            <div class="inner">
+                <div class="sec-eyebrow"
+                     data-en="✨ Featured"
+                     data-km="✨ ផលិតផលលេចធ្លោ"
+                     data-zh="✨ 精选">✨ Featured</div>
+                <h2 class="sec-h"
+                    data-en="Today's spotlight"
+                    data-km="ការផ្តោតថ្ងៃនេះ"
+                    data-zh="今日焦点">Today's spotlight</h2>
+
+                <div class="hp-slideshow"
+                     x-data='{
+                        slides: @json($slideData),
+                        active: 0,
+                        _t: null,
+                        next(){ this.active = (this.active + 1) % this.slides.length },
+                        prev(){ this.active = (this.active - 1 + this.slides.length) % this.slides.length },
+                        go(n){ this.active = n },
+                        _start(){ if(this.slides.length > 1 && !this._t) this._t = setInterval(() => this.next(), 4500) },
+                        pause(){ clearInterval(this._t); this._t = null },
+                        resume(){ this._start() },
+                        _tx: 0,
+                        onStart(e){ this._tx = e.changedTouches[0].clientX },
+                        onEnd(e){ const dx = e.changedTouches[0].clientX - this._tx; if(Math.abs(dx) > 50){ dx < 0 ? this.next() : this.prev() } }
+                     }'
+                     x-init="_start()"
+                     @mouseenter="pause()" @mouseleave="resume()"
+                     @touchstart="onStart($event)" @touchend="onEnd($event)">
+                    <template x-for="(s, i) in slides" :key="i">
+                        <a :href="s.url" class="hs-slide" :class="{ 'hs-active': active === i }">
+                            <template x-if="s.img">
+                                <img :src="s.img" :alt="s.name" class="hp-slideshow-img">
+                            </template>
+                            <template x-if="!s.img">
+                                <span class="hp-slideshow-emoji" x-text="s.emoji"></span>
+                            </template>
+                        </a>
+                    </template>
+                    <template x-if="slides.length > 1">
+                        <button type="button" class="hs-arrow hs-prev" @click.prevent="prev()" aria-label="Previous">‹</button>
+                    </template>
+                    <template x-if="slides.length > 1">
+                        <button type="button" class="hs-arrow hs-next" @click.prevent="next()" aria-label="Next">›</button>
+                    </template>
+                    <template x-if="slides.length > 1">
+                        <div class="hs-dots">
+                            <template x-for="(s, i) in slides" :key="i">
+                                <button type="button" class="hs-dot" :class="{ 'hs-dot-on': active === i }"
+                                        @click="go(i)" :aria-label="`Slide ${i+1}`"></button>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+    @endif
+
+    {{-- ─────────────────────────────────────────────  ③  SMARTPHONES  ─── --}}
+    @if($smartphones->isNotEmpty())
+    <section class="shop-section" style="background:var(--bg2)">
+        <div class="inner">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:8px">
+                <div>
+                    <div class="sec-eyebrow"
+                         data-en="📱 Smartphones"
+                         data-km="📱 ទូរស័ព្ទស្មាតហ្វូន"
+                         data-zh="📱 智能手机">📱 Smartphones</div>
+                    <h2 class="sec-h"
+                        data-en="iPhone — Power in your pocket"
+                        data-km="iPhone — ថាមពលនៅក្នុងហោប៉ៅ"
+                        data-zh="iPhone — 口袋中的强大力量">iPhone — Power in your pocket</h2>
+                </div>
+                <a href="{{ route('shop') }}?category=smartphones" class="btn btn-blue"
+                   data-en="View All iPhones →"
+                   data-km="មើល iPhone ទាំងអស់ →"
+                   data-zh="查看所有 iPhone →">View All iPhones →</a>
+            </div>
+            <div class="pgrid" style="margin-top:20px">
+                @foreach($smartphones as $product)
+                    <x-product-card :product="$product" />
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- ─────────────────────────────────────────  ④  TABLETS / iPad  ─── --}}
+    @if($tablets->isNotEmpty())
+    <section class="shop-section" style="background:var(--bg)">
+        <div class="inner">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:8px">
+                <div>
+                    <div class="sec-eyebrow"
+                         data-en="📲 Tablets &amp; iPad"
+                         data-km="📲 Tablet និង iPad"
+                         data-zh="📲 平板电脑和 iPad">📲 Tablets &amp; iPad</div>
+                    <h2 class="sec-h"
+                        data-en="iPad — Your canvas, your stage"
+                        data-km="iPad — ផ្ទាំងគំនូរ និងឆាករបស់អ្នក"
+                        data-zh="iPad — 您的画布，您的舞台">iPad — Your canvas, your stage</h2>
+                </div>
+                <a href="{{ route('shop') }}?category=tablets-ipad" class="btn btn-blue"
+                   data-en="View All iPads →"
+                   data-km="មើល iPad ទាំងអស់ →"
+                   data-zh="查看所有 iPad →">View All iPads →</a>
+            </div>
+            <div class="pgrid" style="margin-top:20px">
+                @foreach($tablets as $product)
+                    <x-product-card :product="$product" />
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- ─────────────────────────────  ⑤  COMPUTER SALES (FB / TikTok)  ─── --}}
     @if($promoCards->isNotEmpty())
         <section class="shop-section promo-feed" style="background:var(--bg2)">
             <div class="inner">
