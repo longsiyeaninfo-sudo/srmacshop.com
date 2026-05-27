@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\HomePromoCard;
+use App\Models\HomeSlide;
 use App\Models\Product;
 use App\Models\Setting;
 
@@ -80,23 +81,28 @@ class HomeController extends Controller
             ->concat($loadProducts('macbook-pro', 2))
             ->values();
 
-        // Photo slideshow — prefer smartphones + iPads, fall back to any active product with a gallery image.
-        $slideshowQuery = fn ($categoryFilter = null) => Product::query()
-            ->where('is_active', true)
-            ->with('media', 'category')
-            ->when($categoryFilter, fn ($q) => $q->whereHas('category', $categoryFilter))
-            ->orderByRaw("CASE WHEN badge IN ('new','hot','sale') THEN 0 ELSE 1 END")
-            ->orderBy('sort_order')
-            ->take(24)
-            ->get()
-            ->filter(fn ($p) => $p->getFirstMediaUrl('gallery') !== '')
-            ->values();
+        // Homepage slideshow — admin-curated slides first, fall back to product photos.
+        $homeSlides = HomeSlide::active()->take(24)->get();
 
-        $slideshowProducts = $slideshowQuery(
-            fn ($q) => $q->whereIn('slug', ['smartphones', 'tablets-ipad'])
-        );
-        if ($slideshowProducts->isEmpty()) {
-            $slideshowProducts = $slideshowQuery();
+        $slideshowProducts = collect();
+        if ($homeSlides->isEmpty()) {
+            $slideshowQuery = fn ($categoryFilter = null) => Product::query()
+                ->where('is_active', true)
+                ->with('media', 'category')
+                ->when($categoryFilter, fn ($q) => $q->whereHas('category', $categoryFilter))
+                ->orderByRaw("CASE WHEN badge IN ('new','hot','sale') THEN 0 ELSE 1 END")
+                ->orderBy('sort_order')
+                ->take(24)
+                ->get()
+                ->filter(fn ($p) => $p->getFirstMediaUrl('gallery') !== '')
+                ->values();
+
+            $slideshowProducts = $slideshowQuery(
+                fn ($q) => $q->whereIn('slug', ['smartphones', 'tablets-ipad'])
+            );
+            if ($slideshowProducts->isEmpty()) {
+                $slideshowProducts = $slideshowQuery();
+            }
         }
 
         // Admin-curated FB / TikTok promo cards.
@@ -116,6 +122,7 @@ class HomeController extends Controller
             'tablets'     => $tablets     ?? collect(),
             'macbooks'    => $macbooks    ?? collect(),
             'slideshowProducts' => $slideshowProducts ?? collect(),
+            'homeSlides'        => $homeSlides        ?? collect(),
             'promoCards'  => $promoCards  ?? collect(),
             'storeInfo'   => $storeInfo   ?? [],
         ]);

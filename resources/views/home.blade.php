@@ -5,67 +5,84 @@
 
 @section('content')
     {{-- ─────────────────────────────────────────────  ①  PHOTO SLIDESHOW  ─── --}}
-    @if($slideshowProducts->isNotEmpty())
-        @php
-            $slideData = $slideshowProducts->map(fn ($p) => [
-                'name' => $p->name,
-                'img'  => $p->getFirstMediaUrl('gallery'),
+    @php
+        if ($homeSlides->isNotEmpty()) {
+            $slideData = $homeSlides->map(fn ($s) => [
+                'name'  => $s->title_en ?: '',
+                'titleEn' => $s->title_en,
+                'titleKm' => $s->title_km ?: $s->title_en,
+                'titleZh' => $s->title_zh ?: $s->title_en,
+                'img'   => $s->imageUrl(),
+                'url'   => $s->link_url,
             ])->values();
-        @endphp
+        } else {
+            $slideData = $slideshowProducts->map(fn ($p) => [
+                'name'    => $p->name,
+                'titleEn' => $p->name,
+                'titleKm' => $p->name,
+                'titleZh' => $p->name,
+                'img'     => $p->getFirstMediaUrl('gallery'),
+                'url'     => route('product', $p->slug),
+            ])->values();
+        }
+    @endphp
+    @if($slideData->isNotEmpty())
         <section class="shop-section hp-slideshow-section" style="background:var(--bg)"
                  x-data='{
                     slides: @json($slideData),
                     active: 0,
                     _t: null,
                     zoom: { open: false, img: "", alt: "" },
-                    next(){ this.active = (this.active + 1) % this.slides.length },
-                    prev(){ this.active = (this.active - 1 + this.slides.length) % this.slides.length },
-                    go(n){ this.active = n },
+                    next(){ this.active = (this.active + 1) % this.slides.length; this.scrollThumb() },
+                    prev(){ this.active = (this.active - 1 + this.slides.length) % this.slides.length; this.scrollThumb() },
+                    go(n){ this.active = n; this.scrollThumb() },
                     _start(){ if(this.slides.length > 1 && !this._t) this._t = setInterval(() => this.next(), 4500) },
                     pause(){ clearInterval(this._t); this._t = null },
                     resume(){ if(!this.zoom.open) this._start() },
                     _tx: 0,
                     onStart(e){ this._tx = e.changedTouches[0].clientX },
                     onEnd(e){ const dx = e.changedTouches[0].clientX - this._tx; if(Math.abs(dx) > 50){ dx < 0 ? this.next() : this.prev() } },
-                    openZoom(s){ this.zoom = { open: true, img: s.img, alt: s.name }; this.pause(); document.body.style.overflow = "hidden" },
-                    closeZoom(){ this.zoom.open = false; document.body.style.overflow = ""; this.resume() }
+                    openZoom(){ const s = this.slides[this.active]; this.zoom = { open: true, img: s.img, alt: s.name }; this.pause(); document.body.style.overflow = "hidden" },
+                    closeZoom(){ this.zoom.open = false; document.body.style.overflow = ""; this.resume() },
+                    scrollThumb(){ this.$nextTick(() => { const el = this.$refs.thumbs && this.$refs.thumbs.querySelector(".hp-ss-thumb.is-on"); if(el && el.scrollIntoView) el.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" }) }) }
                  }'
                  x-init="_start()"
                  @keydown.escape.window="if(zoom.open) closeZoom()">
             <div class="inner">
-                <div class="sec-eyebrow"
-                     data-en="✨ Featured"
-                     data-km="✨ ផលិតផលលេចធ្លោ"
-                     data-zh="✨ 精选">✨ Featured</div>
-                <h2 class="sec-h"
-                    data-en="Today's spotlight — tap any photo to zoom"
-                    data-km="ការផ្តោតថ្ងៃនេះ — ប៉ះរូបណាមួយដើម្បីពង្រីក"
-                    data-zh="今日焦点 — 点击图片放大">Today's spotlight — tap any photo to zoom</h2>
-
-                <div class="hp-slideshow"
+                <div class="hp-ss-main"
                      @mouseenter="pause()" @mouseleave="resume()"
                      @touchstart="onStart($event)" @touchend="onEnd($event)">
                     <template x-for="(s, i) in slides" :key="i">
-                        <button type="button" class="hs-slide" :class="{ 'hs-active': active === i }"
-                                @click="openZoom(s)" :aria-label="`Zoom ${s.name}`" tabindex="-1">
-                            <img :src="s.img" :alt="s.name" class="hp-slideshow-img">
+                        <button type="button" class="hp-ss-slide" :class="{ 'is-on': active === i }"
+                                @click="openZoom()" :aria-label="`Zoom slide ${i+1}`" tabindex="-1">
+                            <img :src="s.img" :alt="s.name" class="hp-ss-img">
+                            <template x-if="s.titleEn">
+                                <div class="hp-ss-caption"
+                                     :data-en="s.titleEn"
+                                     :data-km="s.titleKm"
+                                     :data-zh="s.titleZh"
+                                     x-text="s.titleEn"></div>
+                            </template>
                         </button>
                     </template>
                     <template x-if="slides.length > 1">
-                        <button type="button" class="hs-arrow hs-prev" @click.stop="prev()" aria-label="Previous">‹</button>
+                        <button type="button" class="hp-ss-arrow hp-ss-prev" @click.stop="prev()" aria-label="Previous">‹</button>
                     </template>
                     <template x-if="slides.length > 1">
-                        <button type="button" class="hs-arrow hs-next" @click.stop="next()" aria-label="Next">›</button>
-                    </template>
-                    <template x-if="slides.length > 1">
-                        <div class="hs-dots">
-                            <template x-for="(s, i) in slides" :key="i">
-                                <button type="button" class="hs-dot" :class="{ 'hs-dot-on': active === i }"
-                                        @click.stop="go(i)" :aria-label="`Slide ${i+1}`"></button>
-                            </template>
-                        </div>
+                        <button type="button" class="hp-ss-arrow hp-ss-next" @click.stop="next()" aria-label="Next">›</button>
                     </template>
                 </div>
+
+                <template x-if="slides.length > 1">
+                    <div class="hp-ss-thumbs" x-ref="thumbs">
+                        <template x-for="(s, i) in slides" :key="i">
+                            <button type="button" class="hp-ss-thumb" :class="{ 'is-on': active === i }"
+                                    @click="go(i)" :aria-label="`Slide ${i+1}`">
+                                <img :src="s.img" :alt="s.name">
+                            </button>
+                        </template>
+                    </div>
+                </template>
             </div>
 
             {{-- Zoom lightbox --}}
