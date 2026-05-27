@@ -127,7 +127,7 @@
 
     {{-- ─────────────────────────────────────────────────────── ②  HERO  ─── --}}
     <div class="hero hero-mobile">
-        <div class="hero-mesh"></div>
+        <div></div>
         <div class="hero-orb orb1"></div>
         <div class="hero-orb orb2"></div>
         <div class="hero-content">
