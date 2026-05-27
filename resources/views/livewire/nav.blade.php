@@ -71,23 +71,45 @@
                 {{-- Mobile search icon (opens full-screen overlay) --}}
                 <button type="button" class="cn-search-btn" @click="searchOpen = true; $nextTick(() => $refs.searchInp.focus())" aria-label="Search">🔍</button>
 
-                {{-- Language switcher (3 flags) --}}
-                <div class="lang-tog" role="group" aria-label="Language">
-                    <button class="lang-flag" type="button" @click="$store.lang.set('en')"
-                        :class="$store.lang.current === 'en' ? 'on' : ''"
-                        :aria-pressed="$store.lang.current === 'en'" aria-label="English" title="English">
-                        <iconify-icon icon="circle-flags:gb" width="22" height="22" aria-hidden="true"></iconify-icon>
+                {{-- Language switcher — click dropdown --}}
+                <div class="lang-tog" x-data="{ open: false }"
+                     @click.outside="open = false" @keydown.escape.window="open = false">
+                    <button type="button" class="lang-tog-btn" @click="open = !open"
+                            :aria-expanded="open" aria-label="Language" aria-haspopup="listbox">
+                        <iconify-icon
+                            :icon="$store.lang.current === 'en' ? 'circle-flags:gb' : ($store.lang.current === 'km' ? 'circle-flags:kh' : 'circle-flags:cn')"
+                            width="22" height="22" aria-hidden="true"></iconify-icon>
+                        <svg class="lang-tog-caret" :class="{ 'is-open': open }" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+                            <path d="M2 4 L5 7 L8 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                     </button>
-                    <button class="lang-flag" type="button" @click="$store.lang.set('km')"
-                        :class="$store.lang.current === 'km' ? 'on' : ''"
-                        :aria-pressed="$store.lang.current === 'km'" aria-label="Khmer" title="ភាសាខ្មែរ">
-                        <iconify-icon icon="circle-flags:kh" width="22" height="22" aria-hidden="true"></iconify-icon>
-                    </button>
-                    <button class="lang-flag" type="button" @click="$store.lang.set('zh')"
-                        :class="$store.lang.current === 'zh' ? 'on' : ''"
-                        :aria-pressed="$store.lang.current === 'zh'" aria-label="Chinese" title="中文">
-                        <iconify-icon icon="circle-flags:cn" width="22" height="22" aria-hidden="true"></iconify-icon>
-                    </button>
+                    <div class="lang-tog-menu" x-show="open" x-cloak
+                         x-transition:enter="lang-tog-trans-enter"
+                         x-transition:enter-start="lang-tog-trans-enter-start"
+                         x-transition:enter-end="lang-tog-trans-enter-end"
+                         role="listbox">
+                        <button type="button" class="lang-tog-item"
+                                :class="{ 'is-on': $store.lang.current === 'en' }"
+                                @click="$store.lang.set('en'); open = false" role="option">
+                            <iconify-icon icon="circle-flags:gb" width="20" height="20" aria-hidden="true"></iconify-icon>
+                            <span>English</span>
+                            <span class="lang-tog-check" aria-hidden="true">✓</span>
+                        </button>
+                        <button type="button" class="lang-tog-item"
+                                :class="{ 'is-on': $store.lang.current === 'km' }"
+                                @click="$store.lang.set('km'); open = false" role="option">
+                            <iconify-icon icon="circle-flags:kh" width="20" height="20" aria-hidden="true"></iconify-icon>
+                            <span>ភាសាខ្មែរ</span>
+                            <span class="lang-tog-check" aria-hidden="true">✓</span>
+                        </button>
+                        <button type="button" class="lang-tog-item"
+                                :class="{ 'is-on': $store.lang.current === 'zh' }"
+                                @click="$store.lang.set('zh'); open = false" role="option">
+                            <iconify-icon icon="circle-flags:cn" width="20" height="20" aria-hidden="true"></iconify-icon>
+                            <span>中文</span>
+                            <span class="lang-tog-check" aria-hidden="true">✓</span>
+                        </button>
+                    </div>
                 </div>
 
                 {{-- Dark Mode Toggle --}}
@@ -174,19 +196,42 @@
             {{-- Language --}}
             <div class="cn-panel-section">
                 <h4 class="cn-panel-title" data-en="Language" data-km="ភាសា" data-zh="语言">Language</h4>
-                <div class="lang-tog" role="group" aria-label="Language">
-                    <button class="lang-flag" type="button" @click="$store.lang.set('en')"
-                        :class="$store.lang.current === 'en' ? 'on' : ''" aria-label="English">
-                        <iconify-icon icon="circle-flags:gb" width="22" height="22" aria-hidden="true"></iconify-icon>
+                <div class="lang-tog" x-data="{ open: false }"
+                     @click.outside="open = false" @keydown.escape.window="open = false">
+                    <button type="button" class="lang-tog-btn" @click="open = !open"
+                            :aria-expanded="open" aria-label="Language" aria-haspopup="listbox">
+                        <iconify-icon
+                            :icon="$store.lang.current === 'en' ? 'circle-flags:gb' : ($store.lang.current === 'km' ? 'circle-flags:kh' : 'circle-flags:cn')"
+                            width="22" height="22" aria-hidden="true"></iconify-icon>
+                        <span class="lang-tog-label"
+                              x-text="$store.lang.current === 'en' ? 'English' : ($store.lang.current === 'km' ? 'ភាសាខ្មែរ' : '中文')"></span>
+                        <svg class="lang-tog-caret" :class="{ 'is-open': open }" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+                            <path d="M2 4 L5 7 L8 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                     </button>
-                    <button class="lang-flag" type="button" @click="$store.lang.set('km')"
-                        :class="$store.lang.current === 'km' ? 'on' : ''" aria-label="Khmer">
-                        <iconify-icon icon="circle-flags:kh" width="22" height="22" aria-hidden="true"></iconify-icon>
-                    </button>
-                    <button class="lang-flag" type="button" @click="$store.lang.set('zh')"
-                        :class="$store.lang.current === 'zh' ? 'on' : ''" aria-label="Chinese">
-                        <iconify-icon icon="circle-flags:cn" width="22" height="22" aria-hidden="true"></iconify-icon>
-                    </button>
+                    <div class="lang-tog-menu" x-show="open" x-cloak role="listbox">
+                        <button type="button" class="lang-tog-item"
+                                :class="{ 'is-on': $store.lang.current === 'en' }"
+                                @click="$store.lang.set('en'); open = false" role="option">
+                            <iconify-icon icon="circle-flags:gb" width="20" height="20" aria-hidden="true"></iconify-icon>
+                            <span>English</span>
+                            <span class="lang-tog-check" aria-hidden="true">✓</span>
+                        </button>
+                        <button type="button" class="lang-tog-item"
+                                :class="{ 'is-on': $store.lang.current === 'km' }"
+                                @click="$store.lang.set('km'); open = false" role="option">
+                            <iconify-icon icon="circle-flags:kh" width="20" height="20" aria-hidden="true"></iconify-icon>
+                            <span>ភាសាខ្មែរ</span>
+                            <span class="lang-tog-check" aria-hidden="true">✓</span>
+                        </button>
+                        <button type="button" class="lang-tog-item"
+                                :class="{ 'is-on': $store.lang.current === 'zh' }"
+                                @click="$store.lang.set('zh'); open = false" role="option">
+                            <iconify-icon icon="circle-flags:cn" width="20" height="20" aria-hidden="true"></iconify-icon>
+                            <span>中文</span>
+                            <span class="lang-tog-check" aria-hidden="true">✓</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
