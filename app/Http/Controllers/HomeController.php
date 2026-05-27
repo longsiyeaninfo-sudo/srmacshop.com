@@ -80,17 +80,24 @@ class HomeController extends Controller
             ->concat($loadProducts('macbook-pro', 2))
             ->values();
 
-        // Photo slideshow — all active smartphones + iPads (first gallery image each).
-        $slideshowProducts = Product::query()
+        // Photo slideshow — prefer smartphones + iPads, fall back to any active product with a gallery image.
+        $slideshowQuery = fn ($categoryFilter = null) => Product::query()
             ->where('is_active', true)
-            ->whereHas('category', fn ($q) => $q->whereIn('slug', ['smartphones', 'tablets-ipad']))
             ->with('media', 'category')
+            ->when($categoryFilter, fn ($q) => $q->whereHas('category', $categoryFilter))
             ->orderByRaw("CASE WHEN badge IN ('new','hot','sale') THEN 0 ELSE 1 END")
             ->orderBy('sort_order')
             ->take(24)
             ->get()
             ->filter(fn ($p) => $p->getFirstMediaUrl('gallery') !== '')
             ->values();
+
+        $slideshowProducts = $slideshowQuery(
+            fn ($q) => $q->whereIn('slug', ['smartphones', 'tablets-ipad'])
+        );
+        if ($slideshowProducts->isEmpty()) {
+            $slideshowProducts = $slideshowQuery();
+        }
 
         // Admin-curated FB / TikTok promo cards.
         $promoCards = HomePromoCard::active()->get();
