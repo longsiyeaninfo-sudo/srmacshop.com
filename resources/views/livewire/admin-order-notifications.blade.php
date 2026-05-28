@@ -1,4 +1,45 @@
 <div class="aon-wrap" x-data="{ open: @entangle('open') }" @click.outside="open = false" @keydown.escape.window="open = false" wire:poll.30s>
+<style>
+.aon-wrap{position:relative;display:flex;align-items:center}
+.aon-bell{position:relative;width:36px;height:36px;border-radius:8px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6b7280;transition:background .15s,color .15s}
+.aon-bell:hover{background:rgba(0,0,0,.06);color:#111827}
+.dark .aon-bell:hover{background:rgba(255,255,255,.08);color:#f9fafb}
+.dark .aon-bell{color:#9ca3af}
+.aon-badge{position:absolute;top:4px;right:4px;min-width:16px;height:16px;border-radius:980px;background:#ef4444;color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 3px;line-height:1;border:2px solid white}
+.dark .aon-badge{border-color:#1f2937}
+.aon-dropdown{position:absolute;top:calc(100% + 8px);right:0;width:320px;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.08);border:1px solid rgba(0,0,0,.08);z-index:9999;overflow:hidden}
+.dark .aon-dropdown{background:#1f2937;border-color:rgba(255,255,255,.1);box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.aon-trans-in{animation:aonIn .15s ease}
+.aon-trans-out{animation:aonIn .1s ease reverse}
+@keyframes aonIn{from{opacity:0;transform:translateY(-6px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.aon-head{display:flex;align-items:center;gap:8px;padding:12px 14px 10px;border-bottom:1px solid rgba(0,0,0,.06)}
+.dark .aon-head{border-color:rgba(255,255,255,.08)}
+.aon-head-title{font-size:13px;font-weight:700;color:#111827;flex:1}
+.dark .aon-head-title{color:#f9fafb}
+.aon-head-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:980px;background:rgba(245,158,11,.15);color:#d97706}
+.aon-head-link{font-size:11.5px;font-weight:600;color:#6366f1;text-decoration:none;white-space:nowrap}
+.aon-head-link:hover{text-decoration:underline}
+.aon-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;text-decoration:none;transition:background .1s;border-bottom:1px solid rgba(0,0,0,.04)}
+.dark .aon-item{border-color:rgba(255,255,255,.05)}
+.aon-item:last-child{border-bottom:none}
+.aon-item:hover{background:rgba(0,0,0,.03)}
+.dark .aon-item:hover{background:rgba(255,255,255,.04)}
+.aon-item-pending{background:rgba(245,158,11,.06)}
+.dark .aon-item-pending{background:rgba(245,158,11,.08)}
+.aon-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.aon-item-body{flex:1;min-width:0}
+.aon-item-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
+.aon-item-num{font-size:12.5px;font-weight:700;color:#111827;font-family:ui-monospace,'SF Mono',monospace}
+.dark .aon-item-num{color:#f9fafb}
+.aon-item-amt{font-size:13px;font-weight:800;color:#111827}
+.dark .aon-item-amt{color:#f9fafb}
+.aon-item-bot{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
+.aon-item-name{font-size:12px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.aon-item-time{font-size:10.5px;color:#9ca3af;white-space:nowrap;flex-shrink:0}
+.aon-item-status{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.aon-empty{padding:24px;text-align:center;font-size:13px;color:#9ca3af}
+[x-cloak]{display:none!important}
+</style>
 
     {{-- Bell button --}}
     <button type="button" class="aon-bell" @click="open = !open" :aria-expanded="open" aria-label="Order notifications">
@@ -57,51 +98,3 @@
         @endforelse
     </div>
 </div>
-
-<style>
-.aon-wrap{position:relative;display:flex;align-items:center}
-.aon-bell{position:relative;width:36px;height:36px;border-radius:8px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#6b7280;transition:background .15s,color .15s}
-.aon-bell:hover{background:rgba(0,0,0,.06);color:#111827}
-.dark .aon-bell:hover{background:rgba(255,255,255,.08);color:#f9fafb}
-.dark .aon-bell{color:#9ca3af}
-.aon-badge{position:absolute;top:4px;right:4px;min-width:16px;height:16px;border-radius:980px;background:#ef4444;color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 3px;line-height:1;border:2px solid white}
-.dark .aon-badge{border-color:#1f2937}
-
-.aon-dropdown{position:absolute;top:calc(100% + 8px);right:0;width:320px;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.08);border:1px solid rgba(0,0,0,.08);z-index:9999;overflow:hidden}
-.dark .aon-dropdown{background:#1f2937;border-color:rgba(255,255,255,.1);box-shadow:0 8px 32px rgba(0,0,0,.4)}
-
-.aon-trans-in{animation:aonIn .15s ease}
-.aon-trans-out{animation:aonIn .1s ease reverse}
-@keyframes aonIn{from{opacity:0;transform:translateY(-6px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-
-.aon-head{display:flex;align-items:center;gap:8px;padding:12px 14px 10px;border-bottom:1px solid rgba(0,0,0,.06)}
-.dark .aon-head{border-color:rgba(255,255,255,.08)}
-.aon-head-title{font-size:13px;font-weight:700;color:#111827;flex:1}
-.dark .aon-head-title{color:#f9fafb}
-.aon-head-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:980px;background:rgba(245,158,11,.15);color:#d97706}
-.aon-head-link{font-size:11.5px;font-weight:600;color:#6366f1;text-decoration:none;white-space:nowrap}
-.aon-head-link:hover{text-decoration:underline}
-
-.aon-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;text-decoration:none;transition:background .1s;border-bottom:1px solid rgba(0,0,0,.04)}
-.dark .aon-item{border-color:rgba(255,255,255,.05)}
-.aon-item:last-child{border-bottom:none}
-.aon-item:hover{background:rgba(0,0,0,.03)}
-.dark .aon-item:hover{background:rgba(255,255,255,.04)}
-.aon-item-pending{background:rgba(245,158,11,.06)}
-.dark .aon-item-pending{background:rgba(245,158,11,.08)}
-
-.aon-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
-.aon-item-body{flex:1;min-width:0}
-.aon-item-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
-.aon-item-num{font-size:12.5px;font-weight:700;color:#111827;font-family:ui-monospace,'SF Mono',monospace}
-.dark .aon-item-num{color:#f9fafb}
-.aon-item-amt{font-size:13px;font-weight:800;color:#111827}
-.dark .aon-item-amt{color:#f9fafb}
-.aon-item-bot{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
-.aon-item-name{font-size:12px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
-.aon-item-time{font-size:10.5px;color:#9ca3af;white-space:nowrap;flex-shrink:0}
-.aon-item-status{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
-
-.aon-empty{padding:24px;text-align:center;font-size:13px;color:#9ca3af}
-[x-cloak]{display:none!important}
-</style>
