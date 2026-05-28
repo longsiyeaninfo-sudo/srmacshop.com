@@ -2,8 +2,10 @@
     <nav id="cust-nav">
         <div class="cn-inner">
             <a href="{{ route('home') }}" class="cn-logo">
-                <img src="{{ asset('img/srmac-logo.svg') }}" alt="" class="cn-logo-img">
-                <span class="cn-logo-text"><span>SR</span> MAC SHOP</span>
+                <img src="{{ $logoUrl }}" alt="{{ $logoPrefix }} {{ $logoText }}" class="cn-logo-img">
+                @if($showLogoText)
+                <span class="cn-logo-text"><span>{{ $logoPrefix }}</span> {{ $logoText }}</span>
+                @endif
             </a>
 
             {{-- Inline search (desktop) --}}
@@ -144,8 +146,8 @@
     <aside class="cn-panel" :class="{ open: mobileOpen }" x-cloak @keydown.escape.window="mobileOpen = false">
         <header class="cn-panel-header">
             <a href="{{ route('home') }}" class="cn-panel-logo" @click="mobileOpen = false">
-                <img src="{{ asset('img/srmac-logo.svg') }}" alt="" class="cn-logo-img">
-                <span>SR MAC SHOP</span>
+                <img src="{{ $logoUrl }}" alt="{{ $logoPrefix }} {{ $logoText }}" class="cn-logo-img">
+                <span>{{ $logoPrefix }} {{ $logoText }}</span>
             </a>
             <button type="button" class="cn-panel-close" @click="mobileOpen = false" aria-label="Close">✕</button>
         </header>
