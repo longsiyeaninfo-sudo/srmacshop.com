@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class HomeSlideResource extends Resource
 {
@@ -172,12 +173,11 @@ class HomeSlideResource extends Resource
 
                 // Custom image indicator
                 Tables\Columns\IconColumn::make('image_path')
-                    ->label('Custom img')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-photo')
-                    ->falseIcon('heroicon-o-arrow-path')
-                    ->trueColor('success')
-                    ->falseColor('gray')
+                    ->label('Img source')
+                    ->icon(fn (HomeSlide $r) => $r->image_path
+                        ? 'heroicon-o-photo'
+                        : 'heroicon-o-cube')
+                    ->color(fn (HomeSlide $r) => $r->image_path ? 'success' : 'gray')
                     ->tooltip(fn (HomeSlide $r) => $r->image_path ? 'Custom upload' : 'Using product photo'),
 
                 Tables\Columns\TextColumn::make('sort_order')
@@ -211,6 +211,11 @@ class HomeSlideResource extends Resource
             ->emptyStateHeading('No slides yet')
             ->emptyStateDescription('Create your first slide — pick a product and it\'s ready in seconds.')
             ->emptyStateIcon('heroicon-o-photo');
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with(['product.media']);
     }
 
     public static function getPages(): array
