@@ -32,16 +32,22 @@ class HomeSlide extends Model
     public function scopeActive(Builder $q): Builder
     {
         return $q->where('is_active', true)
-            ->whereNotNull('image_path')
+            ->where(function ($q) {
+                // Custom upload OR linked product (which supplies its own gallery image)
+                $q->whereNotNull('image_path')
+                  ->orWhereNotNull('product_id');
+            })
             ->orderBy('sort_order')
             ->orderBy('id');
     }
 
     public function imageUrl(): ?string
     {
-        return $this->image_path
-            ? Storage::disk('public')->url($this->image_path)
-            : null;
+        if ($this->image_path) {
+            return Storage::disk('public')->url($this->image_path);
+        }
+        // No custom image — fall back to the linked product's first gallery photo
+        return $this->product?->getFirstMediaUrl('gallery') ?: null;
     }
 
     public function resolvedTitle(): ?string
