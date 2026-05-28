@@ -6,6 +6,19 @@
 @section('content')
     {{-- ─────────────────────────────────────────────  ①  PHOTO SLIDESHOW  ─── --}}
     @php
+        // Admin-controlled slideshow display config.
+        $ss           = $slideshowConfig ?? [];
+        $ssEnabled    = (bool) ($ss['enabled'] ?? true);
+        $ssAutoplay   = (bool) ($ss['autoplay'] ?? true);
+        $ssIntervalMs = (int) round(((float) ($ss['interval'] ?? 4.5)) * 1000);
+        $ssThumbs     = (bool) ($ss['show_thumbnails'] ?? true);
+        $ssEyebrowEn  = trim($ss['eyebrow_en'] ?? '');
+        $ssEyebrowKm  = trim($ss['eyebrow_km'] ?? '');
+        $ssEyebrowZh  = trim($ss['eyebrow_zh'] ?? '');
+        $ssHeadingEn  = trim($ss['heading_en'] ?? '');
+        $ssHeadingKm  = trim($ss['heading_km'] ?? '');
+        $ssHeadingZh  = trim($ss['heading_zh'] ?? '');
+
         $formatPrice = fn ($cents) => $cents ? '$' . number_format($cents / 100, 0) : null;
         if ($homeSlides->isNotEmpty()) {
             $slideData = $homeSlides->map(function ($s) use ($formatPrice) {
@@ -35,7 +48,7 @@
             ])->values();
         }
     @endphp
-    @if($slideData->isNotEmpty())
+    @if($ssEnabled && $slideData->isNotEmpty())
         <section class="shop-section hp-slideshow-section" style="background:var(--bg)"
                  x-data='{
                     slides: @json($slideData),
@@ -45,7 +58,7 @@
                     next(){ this.active = (this.active + 1) % this.slides.length; this.scrollThumb() },
                     prev(){ this.active = (this.active - 1 + this.slides.length) % this.slides.length; this.scrollThumb() },
                     go(n){ this.active = n; this.scrollThumb() },
-                    _start(){ if(this.slides.length > 1 && !this._t) this._t = setInterval(() => this.next(), 4500) },
+                    _start(){ if({{ $ssAutoplay ? 'true' : 'false' }} && this.slides.length > 1 && !this._t) this._t = setInterval(() => this.next(), {{ $ssIntervalMs }}) },
                     pause(){ clearInterval(this._t); this._t = null },
                     resume(){ if(!this.zoom.open) this._start() },
                     _tx: 0,
@@ -58,6 +71,22 @@
                  x-init="_start()"
                  @keydown.escape.window="if(zoom.open) closeZoom()">
             <div class="inner">
+                @if($ssEyebrowEn || $ssHeadingEn)
+                    <div style="margin-bottom:16px;text-align:center">
+                        @if($ssEyebrowEn)
+                            <div class="sec-eyebrow"
+                                 data-en="{{ $ssEyebrowEn }}"
+                                 data-km="{{ $ssEyebrowKm ?: $ssEyebrowEn }}"
+                                 data-zh="{{ $ssEyebrowZh ?: $ssEyebrowEn }}">{{ $ssEyebrowEn }}</div>
+                        @endif
+                        @if($ssHeadingEn)
+                            <h2 class="sec-h"
+                                data-en="{{ $ssHeadingEn }}"
+                                data-km="{{ $ssHeadingKm ?: $ssHeadingEn }}"
+                                data-zh="{{ $ssHeadingZh ?: $ssHeadingEn }}">{{ $ssHeadingEn }}</h2>
+                        @endif
+                    </div>
+                @endif
                 <div class="hp-ss-main"
                      @mouseenter="pause()" @mouseleave="resume()"
                      @touchstart="onStart($event)" @touchend="onEnd($event)">
@@ -103,6 +132,7 @@
                     </template>
                 </div>
 
+                @if($ssThumbs)
                 <template x-if="slides.length > 1">
                     <div class="hp-ss-thumbs" x-ref="thumbs">
                         <template x-for="(s, i) in slides" :key="i">
@@ -113,6 +143,7 @@
                         </template>
                     </div>
                 </template>
+                @endif
             </div>
 
             {{-- Zoom lightbox --}}

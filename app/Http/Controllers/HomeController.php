@@ -81,10 +81,14 @@ class HomeController extends Controller
             ->concat($loadProducts('macbook-pro', 2))
             ->values();
 
+        // Slideshow display config (admin-controlled via Settings → Slideshow).
+        $ssConfig = Setting::get('site.slideshow', []) ?: [];
+        $ssMax    = max(1, min(24, (int) ($ssConfig['max_items'] ?? 8)));
+
         // Homepage slideshow — admin-curated slides first, fall back to product photos.
         $homeSlides = HomeSlide::active()
             ->with(['product' => fn ($q) => $q->with('media')])
-            ->take(24)
+            ->take($ssMax)
             ->get();
 
         $slideshowProducts = collect();
@@ -95,7 +99,7 @@ class HomeController extends Controller
                 ->when($categoryFilter, fn ($q) => $q->whereHas('category', $categoryFilter))
                 ->orderByRaw("CASE WHEN badge IN ('new','hot','sale') THEN 0 ELSE 1 END")
                 ->orderBy('sort_order')
-                ->take(24)
+                ->take($ssMax)
                 ->get()
                 ->filter(fn ($p) => $p->getFirstMediaUrl('gallery') !== '')
                 ->values();
@@ -126,6 +130,7 @@ class HomeController extends Controller
             'macbooks'    => $macbooks    ?? collect(),
             'slideshowProducts' => $slideshowProducts ?? collect(),
             'homeSlides'        => $homeSlides        ?? collect(),
+            'slideshowConfig'   => $ssConfig          ?? [],
             'promoCards'  => $promoCards  ?? collect(),
             'storeInfo'   => $storeInfo   ?? [],
         ]);
