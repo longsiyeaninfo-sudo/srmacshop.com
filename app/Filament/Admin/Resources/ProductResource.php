@@ -24,13 +24,15 @@ class ProductResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn ($state, callable $set, $record) =>
-                        $record?->exists ? null : $set('slug', Str::slug($state ?? ''))
+                    ->afterStateUpdated(fn ($state, callable $set) =>
+                        $set('slug', Str::slug($state ?? ''))
                     ),
                 Forms\Components\TextInput::make('slug')
                     ->required()
-                    ->unique(ignoreRecord: true),
+                    ->unique(ignoreRecord: true)
+                    ->helperText('Auto-filled from the name — edit if you want a custom URL.'),
                 Forms\Components\TextInput::make('spec')->columnSpanFull(),
+
                 Forms\Components\TextInput::make('price_dollars')
                     ->label('Price (USD)')
                     ->required()
@@ -45,8 +47,72 @@ class ProductResource extends Resource
                         $set('price', (int) round(((float) $state) * 100))
                     ),
                 Forms\Components\Hidden::make('price'),
-                Forms\Components\TextInput::make('emoji')->maxLength(8)->placeholder('💻'),
-                Forms\Components\Select::make('category_id')->relationship('category', 'name'),
+
+                Forms\Components\TextInput::make('discount_percent')
+                    ->label('Discount %')
+                    ->numeric()
+                    ->suffix('%')
+                    ->minValue(0)->maxValue(95)
+                    ->dehydrated(false)
+                    ->helperText('Optional. Enter a % → the sale price + original (strike-through) price fill in automatically.')
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                        $base = (float) $get('price_dollars');
+                        if ($state > 0 && $base > 0) {
+                            $sale = round($base * (1 - ((float) $state) / 100), 2);
+                            // The currently typed price becomes the "was" price
+                            $set('original_price_dollars', $base);
+                            $set('original_price', (int) round($base * 100));
+                            $set('price_dollars', $sale);
+                            $set('price', (int) round($sale * 100));
+                        }
+                    }),
+
+                Forms\Components\TextInput::make('original_price_dollars')
+                    ->label('Original price (USD)')
+                    ->numeric()
+                    ->prefix('$')
+                    ->dehydrated(false)
+                    ->helperText('Strike-through “was” price. Leave blank if not on sale. Auto-fills from Discount %.')
+                    ->afterStateHydrated(fn ($state, $record, callable $set) =>
+                        $set('original_price_dollars', $record && $record->original_price ? $record->original_price / 100 : null)
+                    )
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(fn ($state, callable $set) =>
+                        $set('original_price', $state ? (int) round(((float) $state) * 100) : null)
+                    ),
+                Forms\Components\Hidden::make('original_price'),
+
+                Forms\Components\TextInput::make('emoji')
+                    ->maxLength(8)
+                    ->placeholder('💻')
+                    ->helperText('Auto-suggested from the category — change it if you like.'),
+
+                Forms\Components\Select::make('category_id')
+                    ->relationship('category', 'name')
+                    ->live()
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        if (! $state) return;
+                        $cat = \App\Models\Category::find($state);
+                        if (! $cat) return;
+
+                        $key = Str::lower(($cat->slug ?? '') . ' ' . $cat->name);
+
+                        // Auto emoji
+                        $set('emoji', match (true) {
+                            str_contains($key, 'smartphone') || str_contains($key, 'phone') => '📱',
+                            str_contains($key, 'tablet')  || str_contains($key, 'ipad')     => '📱',
+                            str_contains($key, 'macbook') || str_contains($key, 'computer') || str_contains($key, 'laptop') => '💻',
+                            str_contains($key, 'accessor') => '🎧',
+                            str_contains($key, 'protect')  => '🛡️',
+                            default => '💻',
+                        });
+
+                        // Auto warranty
+                        $isApple = (bool) preg_match('/macbook|smartphone|phone|tablet|ipad|apple/', $key);
+                        $set('warranty', $isApple ? '2 Year Apple Official' : '1 Year Warranty');
+                    }),
+
                 Forms\Components\TextInput::make('stock')->numeric()->default(0)->required(),
                 Forms\Components\Select::make('badge')
                     ->options(['new' => '🆕 New', 'hot' => '🔥 Hot', 'sale' => '💰 Sale'])
