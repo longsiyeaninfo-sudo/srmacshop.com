@@ -32,9 +32,9 @@ class AdminPanelProvider extends PanelProvider
         ->id('admin')
           ->path('admin')
             ->brandName('SR MAC SHOP — Admin')
-            ->brandLogo(asset('img/srmac-logo.svg'))
+            ->brandLogo(fn () => \App\Models\Setting::logoUrl())
             ->brandLogoHeight('2.25rem')
-            ->favicon(asset('favicon.ico'))
+            ->favicon(fn () => \App\Models\Setting::logoUrl())
             ->login()
             ->colors([
                 'primary' => Color::Blue,

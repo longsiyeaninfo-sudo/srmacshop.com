@@ -24,7 +24,7 @@
 
     <link rel="canonical" href="{{ url()->current() }}">
     <link rel="sitemap" type="application/xml" href="{{ route('sitemap') }}">
-    <link rel="icon" type="image/svg+xml" href="{{ asset('img/srmac-logo.svg') }}">
+    <link rel="icon" href="{{ \App\Models\Setting::logoUrl() }}">
 
     {{-- iOS / Android browser chrome tinting --}}
     <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">

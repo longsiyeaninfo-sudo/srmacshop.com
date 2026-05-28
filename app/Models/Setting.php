@@ -31,6 +31,19 @@ class Setting extends Model
         Cache::forget('settings.all');
     }
 
+    /** Returns the current logo URL — uploaded custom logo, or fallback default SVG. */
+    public static function logoUrl(): string
+    {
+        $branding = static::get('site.branding', []) ?: [];
+        $path     = $branding['logo_path'] ?? null;
+
+        if ($path) {
+            return \Illuminate\Support\Facades\Storage::disk('public')->url($path);
+        }
+
+        return asset('img/srmac-logo.svg');
+    }
+
     protected static function booted(): void
     {
         static::saved(fn () => Cache::forget('settings.all'));

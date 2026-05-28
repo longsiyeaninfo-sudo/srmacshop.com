@@ -19,7 +19,7 @@
         .inv-paper { background: #fff; padding: 32px 36px; color: #000; font-family: 'Arial', sans-serif; font-size: 12px; line-height: 1.5; border-radius: 8px; box-shadow: 0 4px 24px rgba(0,0,0,.1); }
         .inv-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 2px solid #2563EB; }
         .inv-logo-wrap { display: flex; align-items: center; gap: 12px; }
-        .inv-logo-icon { width: 52px; height: 52px; background: linear-gradient(135deg, #1a3a8f, #2563EB); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11px; font-weight: 900; text-align: center; line-height: 1.2; }
+        .inv-logo-icon { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; flex-shrink: 0; display: block; }
         .inv-shop-name { font-size: 18px; font-weight: 900; color: #1a3a8f; letter-spacing: .5px; }
         .inv-shop-sub { font-size: 10px; color: #666; margin-top: 2px; }
         .inv-shop-addr { font-size: 10px; color: #444; margin-top: 4px; line-height: 1.5; }
@@ -74,7 +74,8 @@
         {{-- Header --}}
         <div class="inv-header">
             <div class="inv-logo-wrap">
-                <div class="inv-logo-icon">SR<br>MAC</div>
+                @php $invLogoUrl = \App\Models\Setting::logoUrl(); @endphp
+                <img src="{{ $invLogoUrl }}" alt="SR MAC SHOP" class="inv-logo-icon">
                 <div>
                     <div class="inv-shop-name">SR MAC SHOP</div>
                     <div class="inv-shop-sub">Cambodia's #1 MacBook Specialist</div>

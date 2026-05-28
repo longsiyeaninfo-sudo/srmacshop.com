@@ -176,7 +176,7 @@
             <div class="detail-right">
                 <div class="detail-contact-card">
                     <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-                        <img src="{{ asset('img/srmac-logo.svg') }}" alt="" style="width:44px;height:44px;border-radius:50%;flex-shrink:0">
+                        <img src="{{ \App\Models\Setting::logoUrl() }}" alt="{{ config('app.name') }}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0">
                         <div>
                             <div class="detail-shop-name">SR MAC SHOP</div>
                             <div class="detail-shop-sub">www.srmacshop.com · Phnom Penh</div>
