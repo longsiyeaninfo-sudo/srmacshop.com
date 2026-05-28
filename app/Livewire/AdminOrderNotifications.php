@@ -9,18 +9,7 @@ use Livewire\Component;
 
 class AdminOrderNotifications extends Component
 {
-    public bool $open = false;
-
-    public function toggle(): void
-    {
-        $this->open = ! $this->open;
-    }
-
-    public function close(): void
-    {
-        $this->open = false;
-    }
-
+    /** Refresh when Filament dispatches an order-related event. */
     #[On('order.updated')]
     public function refresh(): void {}
 
