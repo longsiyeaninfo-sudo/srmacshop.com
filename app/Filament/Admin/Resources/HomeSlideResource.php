@@ -62,6 +62,10 @@ class HomeSlideResource extends Resource
                             if (! $get('title_en')) {
                                 $set('title_en', $product->name);
                             }
+                            // Auto-fill the custom URL with the product's page link
+                            if (! $get('link_url')) {
+                                $set('link_url', route('product', $product->slug));
+                            }
                         })
                         ->placeholder('— No product (image-only slide) —')
                         ->helperText('Select a product → the title auto-fills and its gallery photo is used automatically. You can still upload a custom image below to override it.')
