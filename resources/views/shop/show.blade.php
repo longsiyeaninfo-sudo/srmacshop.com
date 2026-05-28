@@ -32,9 +32,18 @@
     if ($product->weight) $specs['Weight'] = $product->weight;
     if ($product->category) $specs['Category'] = $product->category->name;
     $priceFormatted = '$' . number_format($product->price / 100, 0);
-    $waMsg = urlencode("Hi SR MAC SHOP! I'm interested in: {$product->name} {$product->spec} ({$priceFormatted}). Please send me more info.");
-    $stockClass = $product->stock > 5 ? 'tok' : ($product->stock > 0 ? 'tlow' : 'tout');
-    $stockText = $product->stock > 5 ? 'In Stock' : ($product->stock > 0 ? "Only {$product->stock} left" : 'Out of Stock');
+    $shopName    = ($storeInfo['name'] ?? 'SR MAC SHOP');
+    $shopPhone   = ($storeInfo['phone'] ?? '+855 98 33 47 55');
+    $shopPhoneWa = preg_replace('/\D/', '', $shopPhone) ?: '85598334755';
+    $shopEmail   = ($storeInfo['email'] ?? '');
+    $shopAddress = ($storeInfo['address'] ?? 'Sangkat Kambol, Khan Kambol, Phnom Penh');
+    $shopTg      = $storeInfo['telegram_url']
+        ?? ('https://t.me/' . ltrim($storeInfo['telegram_channel'] ?? '@srmacshop', '@'));
+    $footerCfg   = \App\Models\Setting::get('site.footer', []) ?: [];
+    $waCustomMsg = $footerCfg['wa_message'] ?? "Hi {$shopName}! I'm interested in: {$product->name}.";
+    $waMsg       = urlencode("{$waCustomMsg} {$product->spec} ({$priceFormatted})");
+    $stockClass  = $product->stock > 5 ? 'tok' : ($product->stock > 0 ? 'tlow' : 'tout');
+    $stockText   = $product->stock > 5 ? 'In Stock' : ($product->stock > 0 ? "Only {$product->stock} left" : 'Out of Stock');
 @endphp
 
 <div id="cp-detail">
@@ -178,7 +187,7 @@
                     <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
                         <img src="{{ \App\Models\Setting::logoUrl() }}" alt="{{ config('app.name') }}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0">
                         <div>
-                            <div class="detail-shop-name">SR MAC SHOP</div>
+                            <div class="detail-shop-name">{{ $shopName }}</div>
                             <div class="detail-shop-sub">www.srmacshop.com · Phnom Penh</div>
                         </div>
                     </div>
@@ -194,10 +203,10 @@
 
                     <div class="detail-secondary-links">
                         <a class="detail-sec-link"
-                            href="https://wa.me/85598334755?text={{ $waMsg }}"
+                            href="https://wa.me/{{ $shopPhoneWa }}?text={{ $waMsg }}"
                             target="_blank" rel="noopener">💬 <span data-en="WhatsApp" data-km="WhatsApp">WhatsApp</span></a>
                         <a class="detail-sec-link"
-                            href="https://t.me/srmacshop"
+                            href="{{ $shopTg }}"
                             target="_blank" rel="noopener">✈️ <span data-en="Telegram" data-km="Telegram">Telegram</span></a>
                     </div>
 
@@ -205,14 +214,14 @@
                         <div class="detail-contact-ico">📍</div>
                         <div>
                             <div class="detail-contact-lbl">Location</div>
-                            <div class="detail-contact-val" data-en="Sangkat Kambol, Khan Kambol, Phnom Penh" data-km="សង្កាត់កំបូល ខណ្ឌកំបូល ភ្នំពេញ">Sangkat Kambol, Khan Kambol, Phnom Penh</div>
+                            <div class="detail-contact-val">{{ $shopAddress }}</div>
                         </div>
                     </div>
                     <div class="detail-contact-row">
                         <div class="detail-contact-ico">📞</div>
                         <div>
                             <div class="detail-contact-lbl">Phone</div>
-                            <div class="detail-contact-val">+855 98 33 47 55</div>
+                            <div class="detail-contact-val">{{ $shopPhone }}</div>
                         </div>
                     </div>
                     <div class="detail-contact-row">

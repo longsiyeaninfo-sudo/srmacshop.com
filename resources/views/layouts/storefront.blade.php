@@ -65,6 +65,30 @@
     @yield('head')
 </head>
 <body x-data>
+    {{-- ── Announcement bar (admin-controlled, top of every page) ── --}}
+    @php
+        $ann     = \App\Models\Setting::get('site.announcement', []) ?: [];
+        $annOn   = (bool)($ann['enabled'] ?? false);
+        $annText = $ann['text'] ?? '';
+    @endphp
+    @if($annOn && $annText)
+    @php $annId = substr(md5($annText), 0, 8); @endphp
+    <div class="site-announce"
+         style="background:{{ $ann['bg_color'] ?? '#FF2D55' }}"
+         x-data="{ show: !localStorage.getItem('ann_{{ $annId }}') }"
+         x-show="show" x-cloak>
+        <span class="site-announce-text">{{ $annText }}</span>
+        @if(!empty($ann['link_url']) && !empty($ann['link_text']))
+            <a href="{{ $ann['link_url'] }}" class="site-announce-cta"
+               target="_blank" rel="noopener">{{ $ann['link_text'] }}</a>
+        @endif
+        @if($ann['dismissible'] ?? true)
+            <button type="button" class="site-announce-close" aria-label="Dismiss"
+                    @click="show=false; localStorage.setItem('ann_{{ $annId }}', '1')">×</button>
+        @endif
+    </div>
+    @endif
+
     <livewire:nav />
 
     <main id="main-content">

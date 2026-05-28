@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Setting;
 
 class ProductController extends Controller
 {
@@ -20,6 +21,8 @@ class ProductController extends Controller
             ->take(4)
             ->get();
 
-        return view('shop.show', compact('product', 'related'));
+        $storeInfo = Setting::get('store.info', []) ?: [];
+
+        return view('shop.show', compact('product', 'related', 'storeInfo'));
     }
 }
