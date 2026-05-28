@@ -72,29 +72,51 @@
     </main>
 
     @php
-        $footStoreInfo = \App\Models\Setting::get('store.info', []);
-        $footFacebook  = $footStoreInfo['facebook']  ?? 'https://facebook.com/srmacshop';
+        // ── Store info (phone, email, social) ────────────────────────────────
+        $footStoreInfo = \App\Models\Setting::get('store.info', []) ?: [];
+        $footFacebook  = $footStoreInfo['facebook']  ?? null;
         $footInstagram = $footStoreInfo['instagram'] ?? null;
         $footTikTok    = $footStoreInfo['tiktok']    ?? null;
         $footTelegram  = $footStoreInfo['telegram_url']
             ?? ('https://t.me/' . ltrim($footStoreInfo['telegram_channel'] ?? '@srmacshop', '@'));
+        $footPhone     = $footStoreInfo['phone'] ?? '+855 98 33 47 55';
+        $footPhoneWa   = preg_replace('/\D/', '', $footPhone) ?: '85598334755'; // digits only for wa.me
+        $footEmail     = $footStoreInfo['email'] ?? 'hello@srmacshop.com';
+
+        // ── Branding (logo) ──────────────────────────────────────────────────
+        $footBranding   = \App\Models\Setting::get('site.branding', []) ?: [];
+        $footLogoPath   = $footBranding['logo_path'] ?? null;
+        $footLogoUrl    = $footLogoPath
+            ? \Illuminate\Support\Facades\Storage::disk('public')->url($footLogoPath)
+            : asset('img/srmac-logo.svg');
+        $footLogoPrefix = $footBranding['logo_prefix'] ?? 'SR';
+        $footLogoText   = $footBranding['logo_text']   ?? 'MAC SHOP';
+
+        // ── Footer-specific settings ─────────────────────────────────────────
+        $footCfg        = \App\Models\Setting::get('site.footer', []) ?: [];
+        $footDescEn     = $footCfg['description_en'] ?? "Cambodia's most trusted Apple specialist — iPhones, iPads &amp; MacBooks since 2018.";
+        $footCopyright  = $footCfg['copyright_text'] ?: ('© ' . date('Y') . ' ' . $footLogoPrefix . ' ' . $footLogoText . ' · ' . $footPhone . ' · www.srmacshop.com');
+        $footMadeWith   = $footCfg['made_with']   ?? 'Made with ❤️ in Phnom Penh';
+        $footShowWa     = (bool) ($footCfg['show_float_wa'] ?? true);
+        $footShowTg     = (bool) ($footCfg['show_float_tg'] ?? true);
+        $footWaMsg      = rawurlencode($footCfg['wa_message'] ?? "Hi SR MAC SHOP! I'd like to enquire about a product.");
     @endphp
     <footer class="footer">
         <div class="foot-inner">
             <div>
                 <div class="foot-logo">
-                    <img src="{{ asset('img/srmac-logo.svg') }}" alt="" class="foot-logo-img">
-                    <span><span class="foot-logo-sr">SR</span> MAC SHOP</span>
+                    <img src="{{ $footLogoUrl }}" alt="{{ $footLogoPrefix }} {{ $footLogoText }}" class="foot-logo-img">
+                    <span><span class="foot-logo-sr">{{ $footLogoPrefix }}</span> {{ $footLogoText }}</span>
                 </div>
                 <div style="font-size:11px;color:var(--text3)">www.srmacshop.com</div>
                 <div class="foot-desc"
-                     data-en="Cambodia's most trusted Apple specialist — iPhones, iPads &amp; MacBooks since 2018."
+                     data-en="{{ $footDescEn }}"
                      data-km="អ្នកជំនាញ Apple ដែលគួរទុកចិត្តបំផុតនៅកម្ពុជា — iPhone, iPad និង MacBook ចាប់ពី ២០១៨។"
                      data-zh="柬埔寨最值得信赖的 Apple 专家 — iPhone、iPad 和 MacBook，自 2018 年起。">
-                    Cambodia's most trusted Apple specialist — iPhones, iPads &amp; MacBooks since 2018.
+                    {{ $footDescEn }}
                 </div>
                 <div class="foot-social">
-                    <a href="https://wa.me/85598334755" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp">💬</a>
+                    <a href="https://wa.me/{{ $footPhoneWa }}" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp">💬</a>
                     <a href="{{ $footTelegram }}" target="_blank" rel="noopener" aria-label="Telegram" title="Telegram">✈️</a>
                     @if($footFacebook)
                         <a href="{{ $footFacebook }}" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">📘</a>
@@ -105,8 +127,12 @@
                     @if($footInstagram)
                         <a href="{{ $footInstagram }}" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram">📸</a>
                     @endif
-                    <a href="mailto:hello@srmacshop.com" aria-label="Email" title="Email">✉️</a>
-                    <a href="tel:+85598334755" aria-label="Phone" title="Call us">📞</a>
+                    @if($footEmail)
+                        <a href="mailto:{{ $footEmail }}" aria-label="Email" title="Email">✉️</a>
+                    @endif
+                    @if($footPhone)
+                        <a href="tel:{{ preg_replace('/\s+/', '', $footPhone) }}" aria-label="Phone" title="Call us">📞</a>
+                    @endif
                 </div>
             </div>
             <div class="foot-col">
@@ -139,28 +165,30 @@
             </div>
         </div>
         <div class="foot-bottom">
-            <span>© {{ date('Y') }} SR MAC SHOP · +855 98 33 47 55 · www.srmacshop.com</span>
-            <span data-en="Made with ❤️ in Phnom Penh" data-km="បង្កើតដោយ ❤️ នៅភ្នំពេញ">Made with ❤️ in Phnom Penh</span>
+            <span>{{ $footCopyright }}</span>
+            <span>{{ $footMadeWith }}</span>
         </div>
     </footer>
 
     {{-- Floating contact pills (stacked: Telegram on top, WhatsApp below) --}}
-    @php
-        $tgPromo = \App\Models\Setting::get('home_promo', []);
-        $tgChannelFloat = ltrim($tgPromo['telegram_channel'] ?? '@srmacshop', '@');
-    @endphp
+    @if($footShowTg || $footShowWa)
     <div class="float-stack">
-        <a href="https://t.me/{{ $tgChannelFloat }}"
+        @if($footShowTg)
+        <a href="{{ $footTelegram }}"
             class="float-pill float-tg" target="_blank" rel="noopener" aria-label="Telegram">
             <span class="float-icon" style="background:#229ED9">✈️</span>
             <span class="float-label" data-en="Telegram" data-km="តេឡេក្រាម" data-zh="Telegram">Telegram</span>
         </a>
-        <a href="https://wa.me/85598334755?text=Hi%20SR%20MAC%20SHOP!%20I%27d%20like%20to%20enquire%20about%20a%20MacBook."
+        @endif
+        @if($footShowWa)
+        <a href="https://wa.me/{{ $footPhoneWa }}?text={{ $footWaMsg }}"
             class="float-pill float-wa" target="_blank" rel="noopener" aria-label="WhatsApp">
             <span class="float-icon" style="background:#25D366">💬</span>
             <span class="float-label" data-en="WhatsApp Us" data-km="ទំនាក់ទំនង" data-zh="联系我们">WhatsApp Us</span>
         </a>
+        @endif
     </div>
+    @endif
 
     {{-- Mobile sticky "Today's Deal" CTA bar (home page only, phones only) --}}
     @if(request()->routeIs('home') && (\App\Models\Setting::get('home_promo.sticky_cta_enabled', true) ?? true))
