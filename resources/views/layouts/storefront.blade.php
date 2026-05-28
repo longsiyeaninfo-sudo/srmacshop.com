@@ -95,7 +95,7 @@
         // ── Footer-specific settings ─────────────────────────────────────────
         $footCfg        = \App\Models\Setting::get('site.footer', []) ?: [];
         $footDescEn     = $footCfg['description_en'] ?? "Cambodia's most trusted Apple specialist — iPhones, iPads &amp; MacBooks since 2018.";
-        $footCopyright  = $footCfg['copyright_text'] ?: ('© ' . date('Y') . ' ' . $footLogoPrefix . ' ' . $footLogoText . ' · ' . $footPhone . ' · www.srmacshop.com');
+        $footCopyright  = ($footCfg['copyright_text'] ?? '') ?: ('© ' . date('Y') . ' ' . $footLogoPrefix . ' ' . $footLogoText . ' · ' . $footPhone . ' · www.srmacshop.com');
         $footMadeWith   = $footCfg['made_with']   ?? 'Made with ❤️ in Phnom Penh';
         $footShowWa     = (bool) ($footCfg['show_float_wa'] ?? true);
         $footShowTg     = (bool) ($footCfg['show_float_tg'] ?? true);
