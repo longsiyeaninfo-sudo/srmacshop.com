@@ -41,7 +41,8 @@ class HomeSlideResource extends Resource
                         ->relationship(
                             'product',
                             'name',
-                            fn ($q) => $q->where('is_active', true)->orderBy('name')
+                            fn (\Illuminate\Database\Eloquent\Builder $query) =>
+                                $query->where('is_active', true)->orderBy('name')
                         )
                         ->getOptionLabelFromRecordUsing(
                             fn (Product $r) =>
