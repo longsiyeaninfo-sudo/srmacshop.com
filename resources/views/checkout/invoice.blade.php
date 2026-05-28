@@ -70,18 +70,26 @@
         </div>
     </div>
 
+    @php
+        $invInfo    = \App\Models\Setting::get('store.info', []) ?: [];
+        $invBrand   = \App\Models\Setting::get('site.branding', []) ?: [];
+        $invName    = $invInfo['name']    ?? (($invBrand['logo_prefix'] ?? 'SR') . ' ' . ($invBrand['logo_text'] ?? 'MAC SHOP'));
+        $invPhone   = $invInfo['phone']   ?? '+855 98 33 47 55';
+        $invAddress = $invInfo['address'] ?? 'Sangkat Kambol, Khan Kambol, Phnom Penh';
+        $invTagline = $invInfo['tagline'] ?? "Cambodia's #1 Apple Specialist";
+        $invLogoUrl = \App\Models\Setting::logoUrl();
+    @endphp
     <div class="inv-paper">
         {{-- Header --}}
         <div class="inv-header">
             <div class="inv-logo-wrap">
-                @php $invLogoUrl = \App\Models\Setting::logoUrl(); @endphp
-                <img src="{{ $invLogoUrl }}" alt="SR MAC SHOP" class="inv-logo-icon">
+                <img src="{{ $invLogoUrl }}" alt="{{ $invName }}" class="inv-logo-icon">
                 <div>
-                    <div class="inv-shop-name">SR MAC SHOP</div>
-                    <div class="inv-shop-sub">Cambodia's #1 MacBook Specialist</div>
+                    <div class="inv-shop-name">{{ $invName }}</div>
+                    <div class="inv-shop-sub">{{ $invTagline }}</div>
                     <div class="inv-shop-addr">
-                        Borey Pibhu Thmey Kambol III, Sangkat Kambol, Phnom Penh<br>
-                        Tel: +855 98 33 47 55 · www.srmacshop.com
+                        {{ $invAddress }}<br>
+                        Tel: {{ $invPhone }} · www.srmacshop.com
                     </div>
                 </div>
             </div>
@@ -101,11 +109,10 @@
         <div class="inv-parties">
             <div>
                 <div class="inv-party-label">From</div>
-                <div class="inv-party-name">SR MAC SHOP</div>
+                <div class="inv-party-name">{{ $invName }}</div>
                 <div class="inv-party-detail">
-                    Borey Pibhu Thmey Kambol III<br>
-                    Sangkat Kambol, Phnom Penh<br>
-                    +855 98 33 47 55
+                    {{ $invAddress }}<br>
+                    {{ $invPhone }}
                 </div>
             </div>
             <div>
@@ -163,13 +170,13 @@
 
         {{-- Warranty --}}
         <div class="inv-warranty">
-            ✓ All products sold by SR MAC SHOP come with official Apple warranty. Keep this invoice for warranty claims.
+            ✓ All products sold by {{ $invName }} come with official Apple warranty. Keep this invoice for warranty claims.
         </div>
 
         {{-- Signatures --}}
         <div class="inv-signatures">
             <div class="inv-sig-box">
-                <div class="inv-sig-name">SR MAC SHOP</div>
+                <div class="inv-sig-name">{{ $invName }}</div>
                 <div class="inv-sig-line">Authorized Signature</div>
             </div>
             <div class="inv-sig-box">
@@ -179,7 +186,7 @@
         </div>
 
         <div class="inv-footer">
-            Thank you for shopping with SR MAC SHOP · www.srmacshop.com · +855 98 33 47 55<br>
+            Thank you for shopping with {{ $invName }} · www.srmacshop.com · {{ $invPhone }}<br>
             This is a computer-generated invoice. Valid without signature.
         </div>
     </div>

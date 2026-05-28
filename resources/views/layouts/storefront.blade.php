@@ -5,22 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'SR MAC SHOP — Think Different. Buy Smarter.')</title>
-    <meta name="description" content="@yield('description', 'Buy authentic MacBooks in Cambodia with official Apple warranty. MacBook Air, MacBook Pro with M3/M4 chips. Same-day delivery in Phnom Penh.')">
+    @php
+        $seo        = \App\Models\Setting::get('site.seo', []) ?: [];
+        $seoTitle   = $seo['default_title']    ?? 'SR MAC SHOP — Think Different. Buy Smarter.';
+        $seoDesc    = $seo['meta_description'] ?? 'Buy authentic MacBooks, iPhones & iPads in Cambodia with official Apple warranty. Same-day delivery in Phnom Penh.';
+        $seoSuffix  = $seo['title_suffix']     ?? '';
+        $seoOgImg   = isset($seo['og_image_path']) && $seo['og_image_path']
+            ? \Illuminate\Support\Facades\Storage::disk('public')->url($seo['og_image_path'])
+            : asset('og-image.jpg');
+        $seoGaId    = $seo['google_analytics_id'] ?? config('services.analytics.google_id', '');
+        $seoFbPixel = $seo['facebook_pixel_id']   ?? config('services.analytics.facebook_pixel', '');
+        $storeBrand = (\App\Models\Setting::get('site.branding', []) ?: []);
+        $siteName   = ($storeBrand['logo_prefix'] ?? 'SR') . ' ' . ($storeBrand['logo_text'] ?? 'MAC SHOP');
+    @endphp
+    <title>@yield('title', $seoTitle)</title>
+    <meta name="description" content="@yield('description', $seoDesc)">
     <meta name="keywords" content="MacBook Cambodia, MacBook Phnom Penh, Apple Cambodia, MacBook Air, MacBook Pro, M3, M4, ម៉ាក់ប៊ុក, ភ្នំពេញ">
     <meta name="robots" content="index, follow">
-    <meta name="author" content="SR MAC SHOP">
+    <meta name="author" content="{{ $siteName }}">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="@yield('title', 'SR MAC SHOP — Premium MacBooks in Cambodia')">
-    <meta property="og:description" content="@yield('description', 'Authentic MacBooks with official Apple warranty. Same-day delivery in Phnom Penh.')">
-    <meta property="og:site_name" content="SR MAC SHOP">
-    <meta property="og:image" content="{{ asset('og-image.jpg') }}">
+    <meta property="og:title" content="@yield('title', $seoTitle)">
+    <meta property="og:description" content="@yield('description', $seoDesc)">
+    <meta property="og:site_name" content="{{ $siteName }}">
+    <meta property="og:image" content="{{ $seoOgImg }}">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="@yield('title', 'SR MAC SHOP — Premium MacBooks in Cambodia')">
-    <meta name="twitter:description" content="@yield('description', 'Authentic MacBooks with official Apple warranty.')">
+    <meta name="twitter:title" content="@yield('title', $seoTitle)">
+    <meta name="twitter:description" content="@yield('description', $seoDesc)">
 
     <link rel="canonical" href="{{ url()->current() }}">
     <link rel="sitemap" type="application/xml" href="{{ route('sitemap') }}">
@@ -39,25 +52,31 @@
     {{-- Iconify icons (used for flag icons in language switcher) --}}
     <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js" defer></script>
 
-    {{-- Google Analytics --}}
-    @if(config('services.analytics.google_id'))
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('services.analytics.google_id') }}"></script>
+    {{-- Theme accent color override (admin-controlled) --}}
+    @php $themeAccent = (\App\Models\Setting::get('site.theme', []) ?: [])['accent_color'] ?? null; @endphp
+    @if($themeAccent && strtoupper($themeAccent) !== '#007AFF')
+    <style>:root{--blue:{{ $themeAccent }};}</style>
+    @endif
+
+    {{-- Google Analytics (set via Admin › Settings › SEO) --}}
+    @if($seoGaId)
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ $seoGaId }}"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', '{{ config('services.analytics.google_id') }}');
+        gtag('config', '{{ $seoGaId }}');
     </script>
     @endif
 
-    {{-- Facebook Pixel --}}
-    @if(config('services.analytics.facebook_pixel'))
+    {{-- Facebook Pixel (set via Admin › Settings › SEO) --}}
+    @if($seoFbPixel)
     <script>
         !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
         if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
         t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script',
         'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '{{ config('services.analytics.facebook_pixel') }}');
+        fbq('init', '{{ $seoFbPixel }}');
         fbq('track', 'PageView');
     </script>
     @endif
