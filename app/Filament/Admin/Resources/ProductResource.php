@@ -121,6 +121,26 @@ class ProductResource extends Resource
 
             Forms\Components\Section::make('Details')->schema([
                 Forms\Components\Textarea::make('description')->rows(5)->columnSpanFull(),
+
+                Forms\Components\Select::make('condition_grade')
+                    ->label('Condition')
+                    ->options([
+                        'A+' => 'A+ — Like new (no scratches)',
+                        'A'  => 'A — Excellent (minor wear)',
+                        'B'  => 'B — Good (light scratches)',
+                        'C'  => 'C — Fair (visible wear)',
+                    ])
+                    ->placeholder('Select grade'),
+                Forms\Components\TextInput::make('battery_health')
+                    ->label('Battery health')
+                    ->numeric()->minValue(0)->maxValue(100)->suffix('%')
+                    ->helperText('Leave blank for devices without a battery (e.g. accessories).'),
+                Forms\Components\Select::make('storage')
+                    ->label('Storage')
+                    ->options(['64GB' => '64GB', '128GB' => '128GB', '256GB' => '256GB', '512GB' => '512GB', '1TB' => '1TB', '2TB' => '2TB'])
+                    ->searchable()
+                    ->placeholder('Select capacity'),
+
                 Forms\Components\TextInput::make('warranty')->placeholder('2 Year Apple Official'),
                 Forms\Components\TextInput::make('color')->placeholder('Space Black / Silver'),
                 Forms\Components\TextInput::make('weight')->placeholder('1.6 kg'),

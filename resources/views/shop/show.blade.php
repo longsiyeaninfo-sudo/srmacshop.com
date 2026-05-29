@@ -27,6 +27,9 @@
     $firstImg = $product->getFirstMediaUrl('gallery');
     $specs = [];
     if ($product->spec) $specs['Specs'] = $product->spec;
+    if ($product->storage)         $specs['Storage']        = $product->storage;
+    if ($product->condition_grade) $specs['Condition']      = 'Grade ' . $product->condition_grade;
+    if ($product->battery_health)  $specs['Battery Health'] = $product->battery_health . '%';
     if ($product->warranty) $specs['Warranty'] = $product->warranty;
     if ($product->color) $specs['Color'] = $product->color;
     if ($product->weight) $specs['Weight'] = $product->weight;
@@ -143,6 +146,12 @@
                         @endif
                     </div>
                     <div class="detail-tags">
+                        @if($product->condition_grade)
+                            <span class="dtag" style="background:var(--blue-l);color:var(--blue)">Grade {{ $product->condition_grade }}</span>
+                        @endif
+                        @if($product->battery_health)
+                            <span class="dtag">🔋 {{ $product->battery_health }}%</span>
+                        @endif
                         @foreach(array_filter(explode('·', $product->spec)) as $tag)
                             <span class="dtag">{{ trim($tag) }}</span>
                         @endforeach

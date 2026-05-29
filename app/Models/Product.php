@@ -16,6 +16,7 @@ class Product extends Model implements HasMedia
     protected $fillable = [
         'name', 'slug', 'spec', 'price', 'original_price', 'sale_ends_at', 'is_flash_deal',
         'emoji', 'category_id', 'stock', 'badge', 'description', 'warranty', 'color', 'weight',
+        'condition_grade', 'battery_health', 'storage',
         'is_active', 'sort_order',
     ];
 
@@ -27,6 +28,7 @@ class Product extends Model implements HasMedia
         'stock' => 'integer',
         'sort_order' => 'integer',
         'is_active' => 'boolean',
+        'battery_health' => 'integer',
     ];
 
     public function isOnSale(): bool

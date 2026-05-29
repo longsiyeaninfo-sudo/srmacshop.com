@@ -402,6 +402,19 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 [data-theme="dark"] .b-new{background:rgba(48,209,88,.15);color:#30D158}
 [data-theme="dark"] .b-hot{background:rgba(255,159,10,.15);color:#FF9F0A}
 
+/* Second-hand: condition grade + battery health on product card */
+.pcard-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:4px 0 2px}
+.pcard-grade{font-size:10px;font-weight:700;padding:2px 7px;border-radius:var(--radius-pill);letter-spacing:.3px}
+.pcard-grade.g-aplus{background:#E3F5E9;color:#1A7F3C}
+.pcard-grade.g-a{background:#E6F0FF;color:#0A66C2}
+.pcard-grade.g-b{background:#FFF7E6;color:#B25E00}
+.pcard-grade.g-c{background:#F0F0F0;color:#666}
+.pcard-batt{font-size:10px;font-weight:600;color:var(--text2)}
+[data-theme="dark"] .pcard-grade.g-aplus{background:rgba(48,209,88,.15);color:#30D158}
+[data-theme="dark"] .pcard-grade.g-a{background:rgba(10,132,255,.15);color:#0A84FF}
+[data-theme="dark"] .pcard-grade.g-b{background:rgba(255,159,10,.15);color:#FF9F0A}
+[data-theme="dark"] .pcard-grade.g-c{background:rgba(255,255,255,.08);color:#999}
+
 /* Compare checkbox — top-right of card, visible on hover or when active */
 .pcard-cmp{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--hairline);display:flex;align-items:center;justify-content:center;color:transparent;cursor:pointer;opacity:0;transition:opacity .2s var(--ease),background .2s var(--ease),color .2s var(--ease),transform .2s var(--ease);z-index:3;padding:0}
 .pcard-cmp svg{width:14px;height:14px}

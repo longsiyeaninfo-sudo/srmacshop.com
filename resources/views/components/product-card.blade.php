@@ -8,6 +8,9 @@
     $discountPct = $hasDiscount ? round((1 - $product->price / $product->original_price) * 100) : 0;
     $compareEnabled = is_array($compareIds);
     $inCompare = $compareEnabled && in_array($product->id, $compareIds);
+    $gradeColor = match($product->condition_grade) {
+        'A+' => 'g-aplus', 'A' => 'g-a', 'B' => 'g-b', 'C' => 'g-c', default => null,
+    };
 @endphp
 
 <div class="pcard {{ $inCompare ? 'is-comparing' : '' }}">
@@ -48,6 +51,16 @@
     {{-- Body --}}
     <div class="pcard-body">
         <div class="pcard-cat">{{ $product->category?->name }}</div>
+        @if($product->condition_grade || $product->battery_health)
+            <div class="pcard-meta">
+                @if($product->condition_grade)
+                    <span class="pcard-grade {{ $gradeColor }}">Grade {{ $product->condition_grade }}</span>
+                @endif
+                @if($product->battery_health)
+                    <span class="pcard-batt">🔋 {{ $product->battery_health }}%</span>
+                @endif
+            </div>
+        @endif
         <a href="{{ route('product', $product->slug) }}" class="pcard-link">
             <div class="pcard-name">{{ $product->name }}</div>
             <div class="pcard-spec">{{ $product->spec }}</div>
