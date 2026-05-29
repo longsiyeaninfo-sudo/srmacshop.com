@@ -44,7 +44,12 @@
         ?? ('https://t.me/' . ltrim($storeInfo['telegram_channel'] ?? '@srmacshop', '@'));
     $footerCfg   = \App\Models\Setting::get('site.footer', []) ?: [];
     $waCustomMsg = $footerCfg['wa_message'] ?? "Hi {$shopName}! I'm interested in: {$product->name}.";
-    $waMsg       = urlencode("{$waCustomMsg} {$product->spec} ({$priceFormatted})");
+    $waExtra = collect([
+        $product->storage ?: null,
+        $product->condition_grade ? "Grade {$product->condition_grade}" : null,
+        $product->battery_health ? "Battery {$product->battery_health}%" : null,
+    ])->filter()->implode(', ');
+    $waMsg       = urlencode(trim("{$waCustomMsg} {$product->spec} " . ($waExtra ? "[{$waExtra}] " : '') . "({$priceFormatted})"));
     $stockClass  = $product->stock > 5 ? 'tok' : ($product->stock > 0 ? 'tlow' : 'tout');
     $stockText   = $product->stock > 5 ? 'In Stock' : ($product->stock > 0 ? "Only {$product->stock} left" : 'Out of Stock');
 @endphp
@@ -89,6 +94,9 @@
                         @endif
                         @if($imgCount > 0)
                             <div class="detail-zoom-hint">🔍 <span data-en="Click to zoom" data-km="ចុចដើម្បីពង្រីក">Click to zoom</span></div>
+                        @endif
+                        @if($product->stock <= 0)
+                            <div class="sold-stamp sold-stamp--lg">SOLD</div>
                         @endif
                     </div>
 
@@ -210,10 +218,12 @@
                             data-en="Out of Stock" data-km="អស់ស្តុក">Out of Stock</button>
                     @endif
 
+                    <a class="detail-wa-btn"
+                        href="https://wa.me/{{ $shopPhoneWa }}?text={{ $waMsg }}"
+                        target="_blank" rel="noopener"
+                        data-en="💬 Ask on WhatsApp" data-km="💬 សួរតាម WhatsApp">💬 Ask on WhatsApp</a>
+
                     <div class="detail-secondary-links">
-                        <a class="detail-sec-link"
-                            href="https://wa.me/{{ $shopPhoneWa }}?text={{ $waMsg }}"
-                            target="_blank" rel="noopener">💬 <span data-en="WhatsApp" data-km="WhatsApp">WhatsApp</span></a>
                         <a class="detail-sec-link"
                             href="{{ $shopTg }}"
                             target="_blank" rel="noopener">✈️ <span data-en="Telegram" data-km="Telegram">Telegram</span></a>

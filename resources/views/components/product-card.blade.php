@@ -46,6 +46,9 @@
                 <div class="pcard-img-fallback" style="display:flex">{{ $product->emoji ?: '💻' }}</div>
             @endif
         </div>
+        @if($product->stock <= 0)
+            <div class="sold-stamp">SOLD</div>
+        @endif
     </a>
 
     {{-- Body --}}
