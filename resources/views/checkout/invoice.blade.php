@@ -44,8 +44,14 @@
         .inv-summary-box { min-width: 240px; }
         .inv-sum-row { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; border-bottom: 1px solid #f0f0f0; }
         .inv-sum-row:last-child { border-bottom: 2px solid #2563EB; padding-top: 8px; font-size: 15px; font-weight: 900; color: #1a3a8f; }
-        .inv-payment { background: #f0f7ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 16px; margin: 12px 0; font-size: 11px; }
+        .inv-payment { background: #f0f7ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 14px 16px; margin: 12px 0; font-size: 11px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+        .inv-payment-info { flex: 1; }
         .inv-payment-title { font-weight: 700; color: #1a3a8f; margin-bottom: 6px; font-size: 12px; }
+        .inv-pay-scan { margin-top: 8px; color: #1a3a8f; font-weight: 700; font-size: 11px; }
+        .inv-qr-wrap { text-align: center; flex-shrink: 0; }
+        .inv-qr-img { width: 124px; height: 124px; object-fit: contain; border: 1px solid #e0e0e0; border-radius: 10px; background: #fff; padding: 5px; display: block; }
+        .inv-qr-ph { width: 124px; height: 124px; border: 2px dashed #bfdbfe; border-radius: 10px; display: flex; align-items: center; justify-content: center; text-align: center; color: #9bb7e0; font-size: 10px; line-height: 1.4; padding: 6px; }
+        .inv-qr-cap { margin-top: 6px; font-size: 10px; font-weight: 800; color: #1a3a8f; letter-spacing: .5px; }
         .inv-warranty { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 8px 12px; font-size: 11px; color: #15803d; margin-bottom: 12px; }
         .inv-signatures { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 28px; padding-top: 16px; border-top: 1px solid #e0e0e0; }
         .inv-sig-box { text-align: center; }
@@ -163,9 +169,20 @@
 
         {{-- Payment info --}}
         <div class="inv-payment">
-            <div class="inv-payment-title">Payment Information</div>
-            <p>Method: <strong style="text-transform:capitalize">{{ $order->payment_method }}</strong> &nbsp;|&nbsp;
-            Amount Paid: <strong>${{ number_format($order->total / 100, 2) }}</strong></p>
+            <div class="inv-payment-info">
+                <div class="inv-payment-title">Payment Information</div>
+                <p>Method: <strong style="text-transform:capitalize">{{ $order->payment_method }}</strong> &nbsp;|&nbsp;
+                Amount Paid: <strong>${{ number_format($order->total / 100, 2) }}</strong></p>
+                @if(file_exists(public_path('img/aba-qr.png')))
+                    <p class="inv-pay-scan">📲 Scan the ABA KHQR to pay {{ $invName }}</p>
+                @endif
+            </div>
+            @if(file_exists(public_path('img/aba-qr.png')))
+                <div class="inv-qr-wrap">
+                    <img src="{{ asset('img/aba-qr.png') }}" alt="ABA KHQR — {{ $invName }}" class="inv-qr-img">
+                    <div class="inv-qr-cap">ABA PAY · KHQR</div>
+                </div>
+            @endif
         </div>
 
         {{-- Warranty --}}
