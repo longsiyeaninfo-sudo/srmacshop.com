@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\StripeWebhookController;
+use App\Http\Controllers\TradeInController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -16,6 +17,11 @@ Route::get('/shop/{product:slug}', [ProductController::class, 'show'])->name('pr
 Route::get('/compare', [CompareController::class, 'show'])->name('compare');
 Route::view('/about', 'about')->name('about');
 Route::view('/contact', 'contact')->name('contact');
+
+Route::get('/sell', [TradeInController::class, 'index'])->name('sell');
+Route::post('/sell', [TradeInController::class, 'submit'])
+    ->middleware('throttle:5,1')
+    ->name('sell.submit');
 
 Route::post('/checkout', [CheckoutController::class, 'process'])
     ->middleware('throttle:5,1')

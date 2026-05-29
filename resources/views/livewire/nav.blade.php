@@ -1,4 +1,9 @@
 <div x-data="{ mobileOpen: false, searchOpen: false }">
+    <style>
+        .cn-sell{color:#1ebe57 !important;font-weight:700}
+        .cn-sell:hover,.cn-sell.on{color:#0d8a3e !important}
+        .cn-panel-link.cn-sell{color:#1ebe57 !important}
+    </style>
     <nav id="cust-nav">
         <div class="cn-inner">
             <a href="{{ route('home') }}" class="cn-logo">
@@ -64,6 +69,7 @@
                     </div>
                     @endif
                 </li>
+                <li><a href="{{ route('sell') }}" class="cn-sell {{ request()->routeIs('sell') ? 'on' : '' }}" data-en="💵 Sell" data-km="💵 លក់" data-zh="💵 出售">💵 Sell</a></li>
                 <li><a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'on' : '' }}" data-en="About" data-km="អំពីយើង" data-zh="关于">About</a></li>
                 <li><a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'on' : '' }}" data-en="Contact" data-km="ទំនាក់ទំនង" data-zh="联系">Contact</a></li>
                 <li><a href="{{ route('track-order') }}" class="{{ request()->routeIs('track-order') ? 'on' : '' }}" data-en="Track Order" data-km="តាមដានការបញ្ជាទិញ" data-zh="追踪订单">Track Order</a></li>
@@ -183,6 +189,9 @@
                 </a>
                 <a href="{{ route('shop') }}" class="cn-panel-link {{ request()->routeIs('shop') || request()->routeIs('product') ? 'on' : '' }}" @click="mobileOpen = false">
                     🛍 <span data-en="Shop" data-km="ហាង" data-zh="商店">Shop</span>
+                </a>
+                <a href="{{ route('sell') }}" class="cn-panel-link cn-sell {{ request()->routeIs('sell') ? 'on' : '' }}" @click="mobileOpen = false">
+                    💵 <span data-en="Sell Your Device" data-km="លក់ឧបករណ៍" data-zh="出售设备">Sell Your Device</span>
                 </a>
                 <a href="{{ route('about') }}" class="cn-panel-link {{ request()->routeIs('about') ? 'on' : '' }}" @click="mobileOpen = false">
                     🍎 <span data-en="About" data-km="អំពីយើង" data-zh="关于">About</span>

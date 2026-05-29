@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\Setting;
+use App\Models\TradeIn;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -76,6 +77,36 @@ class TelegramService
             . "👤 Customer: {$order->customer_name}\n"
             . "📞 Phone: {$order->customer_phone}\n"
             . "🔄 New Status: *{$status}*";
+
+        $this->send($text);
+    }
+
+    public function notifyNewTradeIn(TradeIn $tradeIn): void
+    {
+        if (! $this->token || ! $this->chatId) {
+            return;
+        }
+        if (array_key_exists('notify_new', $this->settings) && ! $this->settings['notify_new']) {
+            return;
+        }
+
+        $device = trim("{$tradeIn->device_type} {$tradeIn->model}");
+        $extra = collect([
+            $tradeIn->storage ?: null,
+            $tradeIn->condition_grade ? "Grade {$tradeIn->condition_grade}" : null,
+            $tradeIn->battery_health ? "Battery {$tradeIn->battery_health}%" : null,
+        ])->filter()->implode(', ');
+
+        $text = "💵 *New Trade-in — SR MAC SHOP*\n\n"
+            . "🎫 *Ref:* `{$tradeIn->ticket_number}`\n"
+            . "📱 *Device:* {$device}\n"
+            . ($extra ? "🔧 *Details:* {$extra}\n" : '')
+            . ($tradeIn->asking_price ? "💰 *Asking:* \${$this->fmt($tradeIn->asking_price)}\n" : '')
+            . "👤 *Seller:* {$tradeIn->customer_name}\n"
+            . "📞 *Phone:* {$tradeIn->customer_phone}\n"
+            . ($tradeIn->contact_method ? "💬 *Prefers:* " . ucfirst($tradeIn->contact_method) . "\n" : '')
+            . ($tradeIn->description ? "📝 *Notes:* {$tradeIn->description}\n" : '')
+            . "\n⏰ " . $tradeIn->created_at->format('d M Y H:i');
 
         $this->send($text);
     }
