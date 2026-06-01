@@ -183,6 +183,7 @@
         <script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js" crossorigin=""></script>
         <script src="https://unpkg.com/sortablejs@1.15.2/Sortable.min.js" crossorigin=""></script>
         @include('filament.admin.pages._photo-uploader-script')
+        @include('filament.admin.pages._map-script')
     @endpush
 
     <div class="pp-wrap" wire:ignore.self>
@@ -469,38 +470,6 @@
                     </div>
                 </div>
             </form>
-
-            <script>
-                window.ppMap = (lat, lng) => ({
-                    map: null,
-                    marker: null,
-                    init(el) {
-                        if (this.map || !window.L) {
-                            if (!window.L) return setTimeout(() => this.init(el), 200);
-                        }
-                        const start = [lat || 11.5564, lng || 104.9282];
-                        this.map = L.map(el).setView(start, 14);
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            maxZoom: 19,
-                            attribution: '&copy; OpenStreetMap contributors'
-                        }).addTo(this.map);
-                        this.marker = L.marker(start, { draggable: true }).addTo(this.map);
-                        const send = (latlng) => {
-                            if (window.Livewire && window.Livewire.find) {
-                                const id = el.closest('[wire\\:id]')?.getAttribute('wire:id');
-                                if (id) {
-                                    const comp = window.Livewire.find(id);
-                                    comp?.set('latitude', latlng.lat, false);
-                                    comp?.set('longitude', latlng.lng, false);
-                                }
-                            }
-                        };
-                        this.marker.on('dragend', (e) => send(e.target.getLatLng()));
-                        this.map.on('click', (e) => { this.marker.setLatLng(e.latlng); send(e.latlng); });
-                        setTimeout(() => this.map.invalidateSize(), 200);
-                    }
-                });
-            </script>
         @endif
     </div>
 </x-filament-panels::page>

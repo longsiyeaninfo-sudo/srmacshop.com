@@ -72,8 +72,8 @@ class PostProduct extends Page
     #[Validate('required|string|max:255')]
     public string $address = 'Sangkat Kambol, Khan Kambol';
 
-    public ?float $latitude = 11.5564;
-    public ?float $longitude = 104.9282;
+    public ?float $latitude = 11.4991644;
+    public ?float $longitude = 104.7708382;
 
     #[Validate('required|string|max:120')]
     public string $contact_name = 'SR MAC SHOP';
@@ -251,8 +251,8 @@ class PostProduct extends Page
         $this->contact_phones = ['+855 98 33 47 55'];
         $this->warranty = '2 Year Apple Official';
         $this->stock = 1;
-        $this->latitude = 11.5564;
-        $this->longitude = 104.9282;
+        $this->latitude = 11.4991644;
+        $this->longitude = 104.7708382;
         $this->mount();
     }
 
@@ -271,8 +271,8 @@ class PostProduct extends Page
         $this->free_delivery = false;
         $this->province      = 'Phnom Penh';
         $this->address       = 'Sangkat Kambol, Khan Kambol';
-        $this->latitude      = 11.5564;
-        $this->longitude     = 104.9282;
+        $this->latitude      = 11.4991644;
+        $this->longitude     = 104.7708382;
         $this->contact_name  = 'SR MAC SHOP';
         $this->contact_phones = ['+855 98 33 47 55'];
         $this->contact_email = '';

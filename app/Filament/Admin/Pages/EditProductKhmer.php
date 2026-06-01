@@ -68,8 +68,8 @@ class EditProductKhmer extends Page
     #[Validate('required|string|max:255')]
     public string $address = 'Sangkat Kambol, Khan Kambol';
 
-    public ?float $latitude = 11.5564;
-    public ?float $longitude = 104.9282;
+    public ?float $latitude = 11.4991644;
+    public ?float $longitude = 104.7708382;
 
     #[Validate('required|string|max:120')]
     public string $contact_name = 'SR MAC SHOP';
