@@ -32,7 +32,9 @@ class AdminPanelProvider extends PanelProvider
         ->id('admin')
           ->path('admin')
             ->brandName('SR MAC SHOP — Admin')
-            ->brandLogo(fn () => \App\Models\Setting::logoUrl())
+            ->brandLogo(fn () => new \Illuminate\Support\HtmlString(
+                view('filament.admin.brand-logo')->render()
+            ))
             ->brandLogoHeight('2.25rem')
             ->favicon(fn () => \App\Models\Setting::logoUrl())
             ->login()
