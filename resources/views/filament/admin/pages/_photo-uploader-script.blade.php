@@ -18,6 +18,10 @@
             cropOpen: false,
             cropper: null,
             aspect: 1,
+            baseRotate: 0,   // accumulated 90° steps from the ↺/↻ buttons
+            straighten: 0,   // fine angle from the dial (-45..45)
+            scaleX: 1,       // -1 = flipped horizontally
+            scaleY: 1,       // -1 = flipped vertically
             _cropFile: null,
             _cropResolve: null,
             _recropItem: null,
@@ -112,6 +116,11 @@
                             const img = this.$refs.cropImg;
                             img.src = e.target.result;
                             if (this.cropper) { this.cropper.destroy(); this.cropper = null; }
+                            // fresh transform state for each photo
+                            this.baseRotate = 0;
+                            this.straighten = 0;
+                            this.scaleX = 1;
+                            this.scaleY = 1;
                             this.cropper = new window.Cropper(img, {
                                 viewMode: 1,
                                 autoCropArea: 1,
@@ -126,7 +135,29 @@
                 });
             },
 
-            rotate(deg) { if (this.cropper) this.cropper.rotate(deg); },
+            // 90° steps — keep the fine straighten offset applied on top
+            rotate(deg) {
+                if (!this.cropper) return;
+                this.baseRotate = (this.baseRotate + deg) % 360;
+                this.cropper.rotateTo(this.baseRotate + this.straighten);
+            },
+
+            // fine straighten dial (-45..45) on top of the base rotation
+            applyAngle() {
+                if (this.cropper) this.cropper.rotateTo(this.baseRotate + this.straighten);
+            },
+
+            flipX() {
+                if (!this.cropper) return;
+                this.scaleX = -this.scaleX;
+                this.cropper.scaleX(this.scaleX);
+            },
+
+            flipY() {
+                if (!this.cropper) return;
+                this.scaleY = -this.scaleY;
+                this.cropper.scaleY(this.scaleY);
+            },
 
             setAspect(a) {
                 this.aspect = a ? 1 : 0;

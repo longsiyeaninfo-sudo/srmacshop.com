@@ -46,6 +46,12 @@
     .dark .pp-crop-tools button.on{background:#1e3a8a;color:#fff}
     .pp-crop-spacer{flex:1}
     .pp-crop-apply{background:#2563eb!important;border-color:#2563eb!important;color:#fff!important}
+    .pp-crop-straighten{display:flex;align-items:center;gap:10px;padding:12px 14px 0}
+    .pp-crop-straighten input[type=range]{flex:1;height:4px;accent-color:#2563eb;cursor:pointer}
+    .pp-crop-angle{font-size:13px;font-weight:700;color:#2563eb;min-width:48px;text-align:center;font-variant-numeric:tabular-nums}
+    .pp-crop-angle-reset{border:1px solid #d1d5db;background:#fff;color:#111827;border-radius:8px;
+        padding:5px 10px;font-size:12px;font-weight:600;cursor:pointer}
+    .dark .pp-crop-angle-reset{background:#374151;border-color:#4b5563;color:#f9fafb}
 </style>
 
 <div class="pp-card"
@@ -94,9 +100,20 @@
     <div class="pp-crop-backdrop" x-show="cropOpen" x-cloak style="display:none">
         <div class="pp-crop-modal" @click.outside="skipCrop()">
             <div class="pp-crop-stage"><img x-ref="cropImg" alt="crop"></div>
+
+            {{-- Straighten dial (fine rotation) --}}
+            <div class="pp-crop-straighten">
+                <span class="pp-crop-angle" x-text="(straighten > 0 ? '+' : '') + straighten + '°'"></span>
+                <input type="range" min="-45" max="45" step="1" x-model.number="straighten" @input="applyAngle()" title="Straighten">
+                <button type="button" class="pp-crop-angle-reset" x-show="straighten !== 0"
+                        @click="straighten = 0; applyAngle()">Reset</button>
+            </div>
+
             <div class="pp-crop-tools">
                 <button type="button" @click="rotate(-90)" title="Rotate left">↺</button>
                 <button type="button" @click="rotate(90)" title="Rotate right">↻</button>
+                <button type="button" @click="flipX()" :class="scaleX === -1 && 'on'" title="Flip horizontal">⇆</button>
+                <button type="button" @click="flipY()" :class="scaleY === -1 && 'on'" title="Flip vertical">⇅</button>
                 <button type="button" @click="setAspect(1)" :class="aspect === 1 && 'on'">Square</button>
                 <button type="button" @click="setAspect(0)" :class="!aspect && 'on'">Free</button>
                 <span class="pp-crop-spacer"></span>
