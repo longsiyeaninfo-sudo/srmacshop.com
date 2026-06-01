@@ -107,6 +107,7 @@
         .pp-spec-sum{font-size:12px;color:#6b7280;margin-top:4px;min-height:16px}
         .dark .pp-spec-sum{color:#9ca3af}
         </style>
+        @include('filament.admin.pages._spec-picker-styles')
     @endpush
 
     @push('scripts')
@@ -159,14 +160,7 @@
                     </select>
                 </div>
 
-                <div class="pp-field">
-                    <label>Brand <span class="pp-req">*</span></label>
-                    <select wire:model="brand" class="pp-input">
-                        @foreach($this->brands as $b)
-                            <option value="{{ $b }}">{{ $b }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                @include('filament.admin.pages._spec-picker', ['field' => 'brand', 'label' => 'Brand', 'options' => $this->brands, 'required' => true])
 
                 <div class="pp-field">
                     <label>Condition <span class="pp-req">*</span></label>
@@ -176,59 +170,15 @@
                     </div>
                 </div>
 
-                <div class="pp-field">
-                    <label>Screen Size <span class="pp-req">*</span></label>
-                    <div class="pp-chips">
-                        @foreach($this->screenSizes as $s)
-                            <button type="button" wire:click="$set('screen_size', '{{ $s }}')"
-                                class="pp-chip {{ $screen_size === $s ? 'on' : '' }}">{{ $s }}</button>
-                        @endforeach
-                    </div>
-                    @error('screen_size') <div class="pp-err">{{ $message }}</div> @enderror
-                </div>
+                @include('filament.admin.pages._spec-picker', ['field' => 'screen_size', 'label' => 'Screen Size', 'options' => $this->screenSizes, 'required' => true])
 
-                <div class="pp-field">
-                    <label>Storage <span class="pp-req">*</span></label>
-                    <div class="pp-chips">
-                        @foreach($this->storageOptions as $s)
-                            <button type="button" wire:click="$set('storage', '{{ $s }}')"
-                                class="pp-chip {{ $storage === $s ? 'on' : '' }}">{{ $s }}</button>
-                        @endforeach
-                    </div>
-                    @error('storage') <div class="pp-err">{{ $message }}</div> @enderror
-                </div>
+                @include('filament.admin.pages._spec-picker', ['field' => 'storage', 'label' => 'Storage', 'options' => $this->storageOptions, 'required' => true])
 
-                <div class="pp-field">
-                    <label>RAM <span class="pp-req">*</span></label>
-                    <div class="pp-chips">
-                        @foreach($this->ramOptions as $r)
-                            <button type="button" wire:click="$set('ram', '{{ $r }}')"
-                                class="pp-chip {{ $ram === $r ? 'on' : '' }}">{{ $r }}</button>
-                        @endforeach
-                    </div>
-                    @error('ram') <div class="pp-err">{{ $message }}</div> @enderror
-                </div>
+                @include('filament.admin.pages._spec-picker', ['field' => 'ram', 'label' => 'RAM', 'options' => $this->ramOptions, 'required' => true])
 
-                <div class="pp-field">
-                    <label>CPU <span class="pp-req">*</span></label>
-                    <div class="pp-chips">
-                        @foreach($this->cpuOptions as $c)
-                            <button type="button" wire:click="$set('cpu', '{{ $c }}')"
-                                class="pp-chip {{ $cpu === $c ? 'on' : '' }}">{{ $c }}</button>
-                        @endforeach
-                    </div>
-                    @error('cpu') <div class="pp-err">{{ $message }}</div> @enderror
-                </div>
+                @include('filament.admin.pages._spec-picker', ['field' => 'cpu', 'label' => 'CPU', 'options' => $this->cpuOptions, 'required' => true])
 
-                <div class="pp-field">
-                    <label>VGA / GPU</label>
-                    <div class="pp-chips">
-                        @foreach($this->vgaOptions as $v)
-                            <button type="button" wire:click="$set('vga', '{{ $v }}')"
-                                class="pp-chip {{ $vga === $v ? 'on' : '' }}">{{ $v }}</button>
-                        @endforeach
-                    </div>
-                </div>
+                @include('filament.admin.pages._spec-picker', ['field' => 'vga', 'label' => 'VGA / GPU', 'options' => $this->vgaOptions])
 
                 <div class="pp-field">
                     <label>Stock</label>
