@@ -5,7 +5,7 @@ return [
     'enabled' => env('WATERMARK_ENABLED', true),
 
     // Text stamped across images.
-    'text' => env('WATERMARK_TEXT', '098 334 755'),
+    'text' => env('WATERMARK_TEXT', 'SRMACSHOP'),
 
     // Absolute path to a TrueType font (GD requires one for sized/angled text).
     'font' => resource_path('fonts/watermark.ttf'),
