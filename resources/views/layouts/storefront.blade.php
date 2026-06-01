@@ -81,6 +81,12 @@
     </script>
     @endif
 
+    {{-- Image copy deterrents (the baked watermark is the real protection; this just stops casual saving) --}}
+    <style>
+        img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;-o-user-drag:none;user-drag:none;-webkit-touch-callout:none}
+        .pcard-img,.detail-hero,.detail-main-img,.detail-thumbs-grid,.dthumb-cell,.lb-img{-webkit-user-select:none;-moz-user-select:none;user-select:none}
+    </style>
+
     @yield('head')
 </head>
 <body x-data>
@@ -280,5 +286,14 @@
     @livewireScripts
 
     @yield('scripts')
+
+    {{-- Block right-click + drag on images only (page stays fully usable elsewhere) --}}
+    <script>
+        (function(){
+            var block = function(e){ if(e.target && e.target.tagName === 'IMG'){ e.preventDefault(); } };
+            document.addEventListener('contextmenu', block);
+            document.addEventListener('dragstart', block);
+        })();
+    </script>
 </body>
 </html>
