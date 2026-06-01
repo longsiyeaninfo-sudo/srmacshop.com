@@ -226,7 +226,7 @@
                     <div class="detail-secondary-links">
                         <a class="detail-sec-link"
                             href="{{ $shopTg }}"
-                            target="_blank" rel="noopener">✈️ <span data-en="Telegram" data-km="Telegram">Telegram</span></a>
+                            target="_blank" rel="noopener"><x-icon-telegram :size="15" /> <span data-en="Telegram" data-km="Telegram">Telegram</span></a>
                     </div>
 
                     <div class="detail-contact-row">

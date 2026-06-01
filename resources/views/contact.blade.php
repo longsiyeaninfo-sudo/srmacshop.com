@@ -68,7 +68,7 @@
                 </div>
             </div>
             <div class="ct-card">
-                <div class="ct-card-ico">✈️</div>
+                <div class="ct-card-ico"><x-icon-telegram :size="18" /></div>
                 <div>
                     <div class="ct-card-lbl">Telegram</div>
                     <div class="ct-card-val"><a href="https://t.me/srmacshop" target="_blank" rel="noopener">@srmacshop</a></div>
@@ -84,7 +84,7 @@
 
             <div class="ct-actions">
                 <a href="https://wa.me/85598334755?text=Hi%20SR%20MAC%20SHOP!%20I%20have%20a%20question." target="_blank" rel="noopener" class="ct-action ct-action-wa">💬 WhatsApp</a>
-                <a href="https://t.me/srmacshop" target="_blank" rel="noopener" class="ct-action ct-action-tg">✈️ Telegram</a>
+                <a href="https://t.me/srmacshop" target="_blank" rel="noopener" class="ct-action ct-action-tg"><x-icon-telegram :size="15" color="#fff" /> Telegram</a>
             </div>
         </div>
 

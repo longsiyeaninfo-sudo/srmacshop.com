@@ -249,7 +249,7 @@
             <div class="cn-panel-section">
                 <h4 class="cn-panel-title" data-en="Connect" data-km="ភ្ជាប់" data-zh="联系">Connect</h4>
                 <a href="https://t.me/srmacshop" target="_blank" rel="noopener" class="cn-panel-link" @click="mobileOpen = false">
-                    ✈️ <span>Telegram</span>
+                    <x-icon-telegram :size="16" /> <span>Telegram</span>
                 </a>
                 <a href="https://wa.me/85598334755" target="_blank" rel="noopener" class="cn-panel-link" @click="mobileOpen = false">
                     💬 <span>WhatsApp</span>

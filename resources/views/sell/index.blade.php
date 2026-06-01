@@ -146,7 +146,7 @@
                 <label data-en="How should we reach you?" data-km="តើយើងគួរទាក់ទងអ្នកដោយរបៀបណា?" data-zh="我们该如何联系您？">How should we reach you?</label>
                 <div class="sl-radio-row">
                     <label class="sl-radio"><input type="radio" name="contact_method" value="whatsapp" @checked(old('contact_method','whatsapp')==='whatsapp')> 💬 WhatsApp</label>
-                    <label class="sl-radio"><input type="radio" name="contact_method" value="telegram" @checked(old('contact_method')==='telegram')> ✈️ Telegram</label>
+                    <label class="sl-radio"><input type="radio" name="contact_method" value="telegram" @checked(old('contact_method')==='telegram')> <x-icon-telegram :size="14" /> Telegram</label>
                     <label class="sl-radio"><input type="radio" name="contact_method" value="phone" @checked(old('contact_method')==='phone')> 📞 <span data-en="Phone" data-km="ទូរស័ព្ទ" data-zh="电话">Phone</span></label>
                 </div>
                 @error('contact_method')<span class="sl-err">{{ $message }}</span>@enderror

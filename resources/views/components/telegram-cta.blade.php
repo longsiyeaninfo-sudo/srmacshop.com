@@ -10,7 +10,7 @@
 
 <section>
     <div class="tg-cta-inner">
-        <div class="tg-cta-paper-plane" aria-hidden="true">✈️</div>
+        <div class="tg-cta-paper-plane" aria-hidden="true"><x-icon-telegram :size="54" color="#fff" /></div>
 
         <div class="tg-cta-eyebrow"
              data-en="Telegram Channel"
@@ -69,7 +69,7 @@
         </ul>
 
         <a href="{{ $tgUrl }}" target="_blank" rel="noopener" class="tg-cta-btn">
-            <span class="tg-cta-btn-icon" aria-hidden="true">✈️</span>
+            <span class="tg-cta-btn-icon" aria-hidden="true"><x-icon-telegram :size="20" /></span>
             <span data-en="Join {{ $tgHandle }}"
                   data-km="ចូលរួម {{ $tgHandle }}"
                   data-zh="加入 {{ $tgHandle }}">

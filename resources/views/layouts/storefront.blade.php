@@ -166,7 +166,7 @@
                 </div>
                 <div class="foot-social">
                     <a href="https://wa.me/{{ $footPhoneWa }}" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp">💬</a>
-                    <a href="{{ $footTelegram }}" target="_blank" rel="noopener" aria-label="Telegram" title="Telegram">✈️</a>
+                    <a href="{{ $footTelegram }}" target="_blank" rel="noopener" aria-label="Telegram" title="Telegram"><x-icon-telegram :size="15" /></a>
                     @if($footFacebook)
                         <a href="{{ $footFacebook }}" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">📘</a>
                     @endif
@@ -225,11 +225,7 @@
         @if($footShowTg)
         <a href="{{ $footTelegram }}"
             class="float-pill float-tg" target="_blank" rel="noopener" aria-label="Telegram">
-            <span class="float-icon" style="background:#229ED9">
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="#fff" aria-hidden="true">
-                    <path d="M21.94 4.66a1.2 1.2 0 0 0-1.27-.18L3.4 11.7c-.95.4-.9 1.77.08 2.1l4.3 1.43 1.64 5.06c.27.83 1.35 1.02 1.9.35l2.32-2.84 4.3 3.16c.6.44 1.46.12 1.62-.6l3.3-14.4a1.2 1.2 0 0 0-.42-1.16ZM9.7 14.3l8.2-5.1c.18-.11.36.13.21.27l-6.77 6.3a.9.9 0 0 0-.28.55l-.23 2.06c-.02.16-.24.19-.3.04l-1.1-3.2a.66.66 0 0 1 .27-.92Z"/>
-                </svg>
-            </span>
+            <span class="float-icon" style="background:#229ED9"><x-icon-telegram :size="13" color="#fff" /></span>
             <span class="float-label" data-en="Telegram" data-km="តេឡេក្រាម" data-zh="Telegram">Telegram</span>
         </a>
         @endif

@@ -48,7 +48,7 @@
 
         {{-- Telegram --}}
         <div class="st-card">
-            <h2 class="st-h">✈️ Telegram Channel</h2>
+            <h2 class="st-h"><x-icon-telegram :size="16" /> Telegram Channel</h2>
             <p class="st-sub">Promoted on the home page banner + embed widget + floating button.</p>
 
             <div class="st-row2">
@@ -79,7 +79,7 @@
 
             <div wire:click="$toggle('telegram_section_enabled')" class="st-toggle-row">
                 <div>
-                    <div class="st-tg-l">✈️ Telegram banner + embed</div>
+                    <div class="st-tg-l"><x-icon-telegram :size="14" /> Telegram banner + embed</div>
                     <div class="st-tg-d">Full-width Telegram banner and channel post embed on the home page.</div>
                 </div>
                 <div class="st-sw {{ $telegram_section_enabled ? 'on' : '' }}"><div class="st-sw-dot"></div></div>
