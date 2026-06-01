@@ -2,6 +2,7 @@
     @push('styles')
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
             integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css" crossorigin="" />
         <style>
         .pp-wrap{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
         .pp-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px}
@@ -10,6 +11,12 @@
         .dark .pp-h2{color:#f9fafb}
         .pp-sub{font-size:13px;color:#6b7280;margin:6px 0 16px}
         .dark .pp-sub{color:#9ca3af}
+        .pp-memrow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+            background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:4px}
+        .dark .pp-memrow{background:#1e3a8a;border-color:#2563eb;color:#dbeafe}
+        .pp-memrow-btn{background:transparent;border:1px solid currentColor;color:inherit;border-radius:8px;
+            padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+        .pp-memrow-btn:hover{background:rgba(37,99,235,.12)}
         .pp-section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #e5e7eb}
         .dark .pp-section-head{border-color:#374151}
         .pp-section-head .pp-sub{margin:0;font-size:13px}
@@ -172,6 +179,9 @@
     @push('scripts')
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js" crossorigin=""></script>
+        <script src="https://unpkg.com/sortablejs@1.15.2/Sortable.min.js" crossorigin=""></script>
+        @include('filament.admin.pages._photo-uploader-script')
     @endpush
 
     <div class="pp-wrap" wire:ignore.self>
@@ -232,38 +242,15 @@
         @else
             {{-- STEP 2: Fill Information --}}
             <form wire:submit.prevent="submit" enctype="multipart/form-data">
-                {{-- Photos --}}
-                <div class="pp-card">
-                    <div class="pp-section-head">
-                        <h2 class="pp-h2">📷 Photos</h2>
-                        <span class="pp-sub" style="{{ count($photos) >= 8 ? 'color:#f97316;font-weight:700' : '' }}">{{ count($photos) }} / 8 photos</span>
+                @if(session()->has('product_entry_memory'))
+                    <div class="pp-memrow">
+                        <span>✨ Brand, condition, location, contact &amp; warranty are pre-filled from your last product.</span>
+                        <button type="button" wire:click="clearMemory" class="pp-memrow-btn">Reset to blank defaults</button>
                     </div>
+                @endif
 
-                    <div class="pp-photos-grid">
-                        @foreach($photos as $i => $photo)
-                            <div class="pp-photo" wire:key="photo-{{ $i }}">
-                                @if(method_exists($photo, 'temporaryUrl'))
-                                    <img src="{{ $photo->temporaryUrl() }}" alt="photo">
-                                @endif
-                                <button type="button" wire:click="removePhoto({{ $i }})" class="pp-photo-x" aria-label="Remove">✕</button>
-                            </div>
-                        @endforeach
-
-                        @if(count($photos) < 8)
-                            <label class="pp-photo-add" wire:loading.class="loading" wire:target="photos">
-                                <input type="file" wire:model="photos" multiple accept="image/*" style="display:none">
-                                <div class="pp-photo-add-inner">
-                                    <span class="pp-photo-ico">🖼️</span>
-                                    <span>Drag &amp; Drop your photo here, <span class="pp-link">or Click to Browse</span></span>
-                                    <span class="pp-photo-hint">Supports: jpg, png, gif, jpeg, heic, heif, webp</span>
-                                </div>
-                                <div wire:loading wire:target="photos" class="pp-uploading">Uploading…</div>
-                            </label>
-                        @endif
-                    </div>
-                    @error('photos') <div class="pp-err">{{ $message }}</div> @enderror
-                    @error('photos.*') <div class="pp-err">{{ $message }}</div> @enderror
-                </div>
+                {{-- Photos (shared uploader: drag-drop + crop + reorder) --}}
+                @include('filament.admin.pages._photo-uploader', ['mode' => 'create'])
 
                 {{-- Post Details --}}
                 <div class="pp-card">

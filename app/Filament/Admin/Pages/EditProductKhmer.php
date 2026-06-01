@@ -337,6 +337,12 @@ class EditProductKhmer extends Page
             Media::whereIn('id', $toDelete)->delete();
         }
 
+        // Persist the kept-media order (drag-to-reorder). New uploads are appended after.
+        $keptOrder = array_values(array_filter($this->existing_media_ids, fn ($id) => ! in_array($id, $toDelete, true)));
+        if (! empty($keptOrder)) {
+            Media::setNewOrder($keptOrder);
+        }
+
         // Attach new uploads
         foreach ($this->photos as $photo) {
             $this->record->addMedia($photo->getRealPath())

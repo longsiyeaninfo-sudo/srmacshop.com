@@ -107,6 +107,47 @@ class PostProduct extends Page
         if ($default = Category::orderBy('name')->first()) {
             $this->category_id = $default->id;
         }
+        $this->applyMemory();
+    }
+
+    /**
+     * Overlay the last-saved product's reusable fields (brand, condition, location,
+     * contact + warranty) on top of the hardcoded defaults so repeat entry is faster.
+     * Deliberately does NOT remember product-specific fields (name, specs, price,
+     * discount, stock, badge, description, sale fields).
+     */
+    protected function applyMemory(): void
+    {
+        $mem = session('product_entry_memory');
+        if (! is_array($mem)) {
+            return;
+        }
+
+        if (! empty($mem['category_id'])) {
+            $this->category_id = (int) $mem['category_id'];
+        }
+
+        foreach (['brand', 'condition', 'discount_type', 'province', 'address', 'contact_name', 'contact_email', 'warranty'] as $key) {
+            if (isset($mem[$key]) && $mem[$key] !== null) {
+                $this->{$key} = $mem[$key];
+            }
+        }
+
+        if (array_key_exists('latitude', $mem)) {
+            $this->latitude = $mem['latitude'] !== null ? (float) $mem['latitude'] : null;
+        }
+        if (array_key_exists('longitude', $mem)) {
+            $this->longitude = $mem['longitude'] !== null ? (float) $mem['longitude'] : null;
+        }
+
+        if (array_key_exists('free_delivery', $mem)) {
+            $this->free_delivery = (bool) $mem['free_delivery'];
+        }
+
+        if (! empty($mem['contact_phones']) && is_array($mem['contact_phones'])) {
+            $phones = array_values(array_filter($mem['contact_phones'], fn ($p) => trim((string) $p) !== ''));
+            $this->contact_phones = $phones ?: ['+855 98 33 47 55'];
+        }
     }
 
     public function getCategoriesProperty()
@@ -215,6 +256,35 @@ class PostProduct extends Page
         $this->mount();
     }
 
+    /**
+     * Forget the remembered fields and restore the hardcoded system defaults
+     * for the reusable fields (without touching product-specific input).
+     */
+    public function clearMemory(): void
+    {
+        session()->forget('product_entry_memory');
+
+        $this->category_id   = optional(Category::orderBy('name')->first())->id;
+        $this->brand         = 'Apple';
+        $this->condition     = 'new';
+        $this->discount_type = '%';
+        $this->free_delivery = false;
+        $this->province      = 'Phnom Penh';
+        $this->address       = 'Sangkat Kambol, Khan Kambol';
+        $this->latitude      = 11.5564;
+        $this->longitude     = 104.9282;
+        $this->contact_name  = 'SR MAC SHOP';
+        $this->contact_phones = ['+855 98 33 47 55'];
+        $this->contact_email = '';
+        $this->warranty      = '2 Year Apple Official';
+
+        Notification::make()
+            ->title('Reset to blank defaults')
+            ->body('Brand, condition, location, contact and warranty are back to the shop defaults.')
+            ->success()
+            ->send();
+    }
+
     public function submit(): void
     {
         $this->validate([
@@ -297,6 +367,23 @@ class PostProduct extends Page
             ->body($product->name . ' has been added to your catalog.')
             ->success()
             ->send();
+
+        // Remember reusable fields so the next product is mostly pre-filled.
+        session()->put('product_entry_memory', [
+            'category_id'    => $this->category_id,
+            'brand'          => $this->brand,
+            'condition'      => $this->condition,
+            'discount_type'  => $this->discount_type,
+            'free_delivery'  => $this->free_delivery,
+            'province'       => $this->province,
+            'address'        => $this->address,
+            'latitude'       => $this->latitude,
+            'longitude'      => $this->longitude,
+            'contact_name'   => $this->contact_name,
+            'contact_phones' => $this->contact_phones,
+            'contact_email'  => $this->contact_email,
+            'warranty'       => $this->warranty,
+        ]);
 
         $this->reset_form();
 

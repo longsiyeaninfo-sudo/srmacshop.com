@@ -2,6 +2,7 @@
     @push('styles')
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
             integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css" crossorigin="" />
         <style>
         {{-- Reuse the exact same .pp-* classes from the Add Product page --}}
         .pp-wrap{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
@@ -111,6 +112,9 @@
     @push('scripts')
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js" crossorigin=""></script>
+        <script src="https://unpkg.com/sortablejs@1.15.2/Sortable.min.js" crossorigin=""></script>
+        @include('filament.admin.pages._photo-uploader-script')
     @endpush
 
     <div class="pp-wrap">
@@ -125,47 +129,8 @@
         </div>
 
         <form wire:submit.prevent="submit" enctype="multipart/form-data">
-            {{-- Photos --}}
-            <div class="pp-card">
-                @php $totalPhotos = count($existing_media_ids) + count($photos); @endphp
-                <div class="pp-section-head">
-                    <h2 class="pp-h2">📷 Photos</h2>
-                    <span class="pp-sub" style="{{ $totalPhotos >= 8 ? 'color:#f97316;font-weight:700' : '' }}">{{ $totalPhotos }} / 8 photos</span>
-                </div>
-
-                <div class="pp-photos-grid">
-                    @foreach($record->getMedia('gallery') as $media)
-                        @if(in_array($media->id, $existing_media_ids))
-                            <div class="pp-photo" wire:key="existing-{{ $media->id }}">
-                                <img src="{{ $media->getUrl() }}" alt="">
-                                <button type="button" wire:click="removeExistingMedia({{ $media->id }})" class="pp-photo-x" aria-label="Remove">✕</button>
-                            </div>
-                        @endif
-                    @endforeach
-
-                    @foreach($photos as $i => $photo)
-                        <div class="pp-photo" wire:key="new-{{ $i }}">
-                            @if(method_exists($photo, 'temporaryUrl'))
-                                <img src="{{ $photo->temporaryUrl() }}" alt="">
-                            @endif
-                            <button type="button" wire:click="removePhoto({{ $i }})" class="pp-photo-x" aria-label="Remove">✕</button>
-                        </div>
-                    @endforeach
-
-                    @if(count($existing_media_ids) + count($photos) < 8)
-                        <label class="pp-photo-add">
-                            <input type="file" wire:model="photos" multiple accept="image/*" style="display:none">
-                            <div class="pp-photo-add-inner">
-                                <span class="pp-photo-ico">🖼️</span>
-                                <span>Drag &amp; Drop more photos, <span class="pp-link">or Click to Browse</span></span>
-                                <span class="pp-photo-hint">Supports: jpg, png, gif, webp</span>
-                            </div>
-                            <div wire:loading wire:target="photos" class="pp-uploading">Uploading…</div>
-                        </label>
-                    @endif
-                </div>
-                @error('photos') <div class="pp-err">{{ $message }}</div> @enderror
-            </div>
+            {{-- Photos (shared uploader: drag-drop + crop + reorder) --}}
+            @include('filament.admin.pages._photo-uploader', ['mode' => 'edit'])
 
             {{-- Post Details --}}
             <div class="pp-card">
