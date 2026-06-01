@@ -97,9 +97,21 @@ class EditProductKhmer extends Page
 
     public bool $is_flash_deal = false;
 
+    // Top MacBooks homepage pick (optional, only meaningful for MacBook products)
+    public bool $is_top_pick = false;
+    public ?string $top_label_en = null;
+    public ?string $top_label_km = null;
+    public ?string $top_label_zh = null;
+
     public function mount(Product $record): void
     {
         $this->record = $record->load('media', 'category');
+
+        $top = \App\Models\TopMacbook::where('product_id', $this->record->id)->first();
+        $this->is_top_pick   = (bool) $top;
+        $this->top_label_en  = $top?->label_en;
+        $this->top_label_km  = $top?->label_km;
+        $this->top_label_zh  = $top?->label_zh;
 
         $this->category_id = $this->record->category_id;
         $this->name = $this->record->name;
@@ -149,6 +161,13 @@ class EditProductKhmer extends Page
     public function getCategoriesProperty()
     {
         return Category::orderBy('name')->get();
+    }
+
+    public function getIsMacbookProperty(): bool
+    {
+        $cat = $this->category_id ? Category::find($this->category_id) : null;
+
+        return $cat !== null && in_array($cat->slug, ['macbook-air', 'macbook-pro'], true);
     }
 
     public function getBrandsProperty(): array
@@ -295,6 +314,21 @@ class EditProductKhmer extends Page
             'description'   => $this->description,
             'warranty'      => $this->warranty,
         ]);
+
+        // Top MacBooks homepage pick — create/update when ticked (macbook only), else remove.
+        if ($this->is_top_pick && $this->is_macbook) {
+            \App\Models\TopMacbook::updateOrCreate(
+                ['product_id' => $this->record->id],
+                [
+                    'label_en'  => $this->top_label_en ?: null,
+                    'label_km'  => $this->top_label_km ?: null,
+                    'label_zh'  => $this->top_label_zh ?: null,
+                    'is_active' => true,
+                ]
+            );
+        } else {
+            \App\Models\TopMacbook::where('product_id', $this->record->id)->delete();
+        }
 
         // Remove media the admin deleted
         $currentMediaIds = $this->record->getMedia('gallery')->pluck('id')->all();

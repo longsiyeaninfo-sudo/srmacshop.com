@@ -314,6 +314,23 @@
                     </label>
                 </div>
 
+                @if($this->is_macbook)
+                <div class="pp-field" style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:12px">
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                        <input type="checkbox" wire:model.live="is_top_pick" style="width:18px;height:18px;cursor:pointer">
+                        <span>🏆 Feature in “Top MacBooks in Cambodia” (homepage)</span>
+                    </label>
+                    @if($is_top_pick)
+                    <div style="margin-top:10px;display:grid;gap:8px">
+                        <input type="text" wire:model="top_label_en" class="pp-input" placeholder="Rank label — English (e.g. Best Overall)">
+                        <input type="text" wire:model="top_label_km" class="pp-input" placeholder="ស្លាក — ខ្មែរ (ឧ. ល្អបំផុតរួម)">
+                        <input type="text" wire:model="top_label_zh" class="pp-input" placeholder="排名标签 — 中文 (如 综合最佳)">
+                    </div>
+                    <p style="margin:8px 0 0;font-size:12px;color:#92400e">Optional gold ribbon shown on the card. Leave blank for no ribbon.</p>
+                    @endif
+                </div>
+                @endif
+
                 <div class="pp-field"
                     x-data="{
                         get preview() {
