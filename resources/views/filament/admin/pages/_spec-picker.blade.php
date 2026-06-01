@@ -45,31 +45,45 @@
 
     <button type="button" class="pp-picker" :class="!value && 'is-empty'" @click="open()">
         <span class="pp-picker-val" x-text="value || @js($placeholder)"></span>
-        <span class="pp-picker-caret">▼</span>
+        <svg class="pp-picker-caret" :class="isOpen && 'is-open'" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="m6 8 4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
     </button>
 
     @error($field) <div class="pp-err">{{ $message }}</div> @enderror
 
     <template x-if="isOpen">
         <div class="pp-sheet-backdrop" @click="close()" x-transition.opacity.duration.150ms>
-            <div class="pp-sheet" @click.stop
-                 x-transition:enter="transition ease-out duration-200"
-                 x-transition:enter-start="opacity-0 translate-y-4"
-                 x-transition:enter-end="opacity-100 translate-y-0">
+            <div class="pp-sheet" @click.stop>
+                <div class="pp-sheet-grip"></div>
                 <div class="pp-sheet-head">
                     <span>{{ $label }}</span>
-                    <button type="button" class="pp-sheet-close" @click="close()" title="Close">✕</button>
+                    <button type="button" class="pp-sheet-close" @click="close()" title="Close" aria-label="Close">
+                        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                            <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                        </svg>
+                    </button>
                 </div>
 
                 <template x-if="searchable">
-                    <input x-ref="q" x-model="query" type="text" class="pp-sheet-search"
-                           placeholder="Search {{ strtolower($label) }}…">
+                    <div class="pp-sheet-search-wrap">
+                        <svg class="pp-sheet-search-ico" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                            <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.6"/>
+                            <path d="m14 14 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                        </svg>
+                        <input x-ref="q" x-model="query" type="text" class="pp-sheet-search"
+                               placeholder="Search {{ strtolower($label) }}…">
+                    </div>
                 </template>
 
                 <div class="pp-sheet-list">
                     <template x-for="opt in filtered" :key="opt">
-                        <button type="button" class="pp-sheet-opt" :class="opt === value && 'on'"
-                                @click="choose(opt)" x-text="opt"></button>
+                        <button type="button" class="pp-sheet-opt" :class="opt === value && 'on'" @click="choose(opt)">
+                            <span class="pp-opt-label" x-text="opt"></span>
+                            <svg class="pp-opt-check" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                                <path d="m5 10 3.5 3.5L15 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
                     </template>
                     <div class="pp-sheet-empty" x-show="filtered.length === 0">No matches</div>
                 </div>
