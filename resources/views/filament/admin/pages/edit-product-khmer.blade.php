@@ -195,10 +195,7 @@
                     </select>
                 </div>
 
-                <div class="pp-field">
-                    <label>Warranty</label>
-                    <input type="text" wire:model="warranty" class="pp-input">
-                </div>
+                @include('filament.admin.pages._spec-picker', ['field' => 'warranty', 'label' => 'Warranty', 'options' => $this->warrantyOptions])
 
                 <div class="pp-field">
                     <label>Discount</label>

@@ -91,7 +91,7 @@ class PostProduct extends Page
     #[Validate('nullable|in:new,hot,sale')]
     public ?string $badge = null;
 
-    public string $warranty = '2 Year Apple Official';
+    public string $warranty = '2 Years';
 
     // Sale/promo fields (Phase 1)
     #[Validate('nullable|numeric|min:0')]
@@ -187,7 +187,12 @@ class PostProduct extends Page
 
     public function getVgaOptionsProperty(): array
     {
-        return ['Integrated', 'Apple GPU', 'NVIDIA RTX 3050', 'NVIDIA RTX 3060', 'NVIDIA RTX 4050', 'NVIDIA RTX 4060', 'NVIDIA RTX 4070', 'NVIDIA RTX 4080', 'NVIDIA RTX 4090', 'AMD Radeon'];
+        return ['Integrated', '2GB & Under', '4GB', '6GB', '8GB', '12GB', '16GB & Larger'];
+    }
+
+    public function getWarrantyOptionsProperty(): array
+    {
+        return ['15 Days', '1 Month', '2 Months', '3 Months', '6 Months', '1 Year', '2 Years'];
     }
 
     public function getProvincesProperty(): array
@@ -249,7 +254,7 @@ class PostProduct extends Page
         $this->address = 'Sangkat Kambol, Khan Kambol';
         $this->contact_name = 'SR MAC SHOP';
         $this->contact_phones = ['+855 98 33 47 55'];
-        $this->warranty = '2 Year Apple Official';
+        $this->warranty = '2 Years';
         $this->stock = 1;
         $this->latitude = 11.4991644;
         $this->longitude = 104.7708382;
@@ -276,7 +281,7 @@ class PostProduct extends Page
         $this->contact_name  = 'SR MAC SHOP';
         $this->contact_phones = ['+855 98 33 47 55'];
         $this->contact_email = '';
-        $this->warranty      = '2 Year Apple Official';
+        $this->warranty      = '2 Years';
 
         Notification::make()
             ->title('Reset to blank defaults')

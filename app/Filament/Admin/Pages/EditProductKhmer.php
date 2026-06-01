@@ -86,7 +86,7 @@ class EditProductKhmer extends Page
     #[Validate('nullable|in:new,hot,sale')]
     public ?string $badge = null;
 
-    public string $warranty = '2 Year Apple Official';
+    public string $warranty = '2 Years';
 
     // Sale/promo fields (Phase 1)
     #[Validate('nullable|numeric|min:0')]
@@ -119,7 +119,7 @@ class EditProductKhmer extends Page
         $this->stock = $this->record->stock ?? 1;
         $this->badge = $this->record->badge;
         $this->description = $this->record->description ?? '';
-        $this->warranty = $this->record->warranty ?? '2 Year Apple Official';
+        $this->warranty = $this->record->warranty ?? '2 Years';
 
         $this->original_price = $this->record->original_price ? $this->record->original_price / 100 : null;
         $this->sale_ends_at = $this->record->sale_ends_at?->format('Y-m-d\TH:i');
@@ -202,7 +202,12 @@ class EditProductKhmer extends Page
 
     public function getVgaOptionsProperty(): array
     {
-        return ['Integrated', 'Apple GPU', 'NVIDIA RTX 3050', 'NVIDIA RTX 3060', 'NVIDIA RTX 4050', 'NVIDIA RTX 4060', 'NVIDIA RTX 4070', 'NVIDIA RTX 4080', 'NVIDIA RTX 4090', 'AMD Radeon'];
+        return ['Integrated', '2GB & Under', '4GB', '6GB', '8GB', '12GB', '16GB & Larger'];
+    }
+
+    public function getWarrantyOptionsProperty(): array
+    {
+        return ['15 Days', '1 Month', '2 Months', '3 Months', '6 Months', '1 Year', '2 Years'];
     }
 
     public function getProvincesProperty(): array
