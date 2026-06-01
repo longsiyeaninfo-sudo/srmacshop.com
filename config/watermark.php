@@ -20,6 +20,9 @@ return [
     // Font size as a fraction of the image's shorter side (auto-scales to image).
     'font_scale' => 0.045,
 
-    // Tile spacing as a fraction of the shorter side (gap between repeats).
-    'tile_scale' => 0.40,
+    // Tile spacing as a fraction of the shorter side (higher = fewer, sparser repeats).
+    'tile_scale' => 0.70,
+
+    // Extra horizontal gap between repeats, as a fraction of the shorter side.
+    'gap_scale' => 0.55,
 ];

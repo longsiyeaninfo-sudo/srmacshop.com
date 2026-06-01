@@ -80,7 +80,7 @@ class ImageWatermarker
         // Tile across a grid; offset rows so repeats interlock.
         $box = imagettfbbox($fontSize, $angle, $font, $text);
         $textW = abs($box[2] - $box[0]);
-        $stepX = max(80, $textW + (int) round($short * 0.10));
+        $stepX = max(80, $textW + (int) round($short * (float) config('watermark.gap_scale', 0.10)));
         $stepY = max(60, (int) round($short * (float) config('watermark.tile_scale')));
 
         $row = 0;
