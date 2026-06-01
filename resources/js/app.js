@@ -120,6 +120,8 @@ document.addEventListener('livewire:initialized', () => {
         } else if (delta < -4) {
             bar.classList.remove('is-hidden');
         }
+        // When the tab bar slides away, let the sticky deal bar drop into its place.
+        document.body.classList.toggle('tabbar-hidden', bar.classList.contains('is-hidden'));
         lastY = y;
         ticking = false;
     };
