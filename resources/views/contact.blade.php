@@ -91,7 +91,7 @@
         {{-- Map (OpenStreetMap via iframe — no API key needed) --}}
         <div class="ct-map">
             <iframe
-                src="https://www.openstreetmap.org/export/embed.html?bbox=104.870,11.545,104.913,11.573&layer=mapnik&marker=11.5595,104.8916"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=104.749,11.485,104.792,11.513&layer=mapnik&marker=11.4991644,104.7708382"
                 loading="lazy"
                 title="SR MAC SHOP location on map"></iframe>
             <div class="ct-map-overlay">
@@ -99,7 +99,7 @@
                     <div class="ct-map-overlay-text">SR MAC SHOP</div>
                     <div class="ct-map-overlay-sub" data-en="Borey Pibhu Thmey Kambol III" data-km="បុរីពិភពថ្មីកំបូល III">Borey Pibhu Thmey Kambol III</div>
                 </div>
-                <a href="https://maps.google.com/?q=11.5595,104.8916" target="_blank" rel="noopener" class="btn btn-blue btn-sm" data-en="Directions →" data-km="ទិសដៅ →">Directions →</a>
+                <a href="https://maps.google.com/?q=11.4991644,104.7708382" target="_blank" rel="noopener" class="btn btn-blue btn-sm" data-en="Directions →" data-km="ទិសដៅ →">Directions →</a>
             </div>
         </div>
     </div>
