@@ -6,6 +6,7 @@ use App\Models\HomePromoCard;
 use App\Models\HomeSlide;
 use App\Models\Product;
 use App\Models\Setting;
+use App\Models\TopMacbook;
 
 class HomeController extends Controller
 {
@@ -77,9 +78,23 @@ class HomeController extends Controller
 
         $smartphones = $loadProducts('smartphones');
         $tablets     = $loadProducts('tablets-ipad');
-        $macbooks    = $loadProducts('macbook-air', 2)
-            ->concat($loadProducts('macbook-pro', 2))
-            ->values();
+
+        // Top MacBooks: admin-curated ranked picks first, fall back to automatic 2 Air + 2 Pro.
+        $topMacbooks = TopMacbook::active()
+            ->with(['product' => fn ($q) => $q->with('media', 'category')])
+            ->take(8)
+            ->get();
+
+        $macbooks = $topMacbooks->isNotEmpty()
+            ? $topMacbooks
+                ->map(fn ($t) => $t->product?->setAttribute('top_label_en', $t->label_en)
+                    ->setAttribute('top_label_km', $t->label_km)
+                    ->setAttribute('top_label_zh', $t->label_zh))
+                ->filter()
+                ->values()
+            : $loadProducts('macbook-air', 2)
+                ->concat($loadProducts('macbook-pro', 2))
+                ->values();
 
         // Slideshow display config (admin-controlled via Settings → Slideshow).
         $ssConfig = Setting::get('site.slideshow', []) ?: [];

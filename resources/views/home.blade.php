@@ -249,6 +249,13 @@
     {{-- ────────────────────────────────────────  ⑥  MACBOOK HIGHLIGHTS  ─── --}}
     @php $macbookList = $macbooks->isNotEmpty() ? $macbooks : $featured; @endphp
     @if($macbookList->isNotEmpty())
+    <style>
+        .top-mac-pick{position:relative}
+        .top-mac-ribbon{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:3;
+            background:linear-gradient(135deg,#B8860B,#E0A722);color:#fff;font-size:11px;font-weight:800;
+            letter-spacing:.2px;padding:4px 12px;border-radius:980px;white-space:nowrap;
+            box-shadow:0 2px 6px rgba(0,0,0,.2)}
+    </style>
     <section class="shop-section" style="background:var(--bg)">
         <div class="inner">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:8px">
@@ -273,7 +280,19 @@
             </div>
             <div class="pgrid" style="margin-top:20px">
                 @foreach($macbookList as $product)
-                    <x-product-card :product="$product" />
+                    @if($product->top_label_en ?? null)
+                        <div class="top-mac-pick">
+                            <div class="top-mac-ribbon"
+                                 data-en="🏆 {{ $product->top_label_en }}"
+                                 data-km="🏆 {{ $product->top_label_km ?: $product->top_label_en }}"
+                                 data-zh="🏆 {{ $product->top_label_zh ?: $product->top_label_en }}">
+                                🏆 {{ $product->top_label_en }}
+                            </div>
+                            <x-product-card :product="$product" />
+                        </div>
+                    @else
+                        <x-product-card :product="$product" />
+                    @endif
                 @endforeach
             </div>
             <div style="text-align:center;margin-top:1.5rem">
