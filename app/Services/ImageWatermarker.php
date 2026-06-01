@@ -2,10 +2,39 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Storage;
+
 class ImageWatermarker
 {
     /**
-     * Stamp the configured domain text diagonally and tiled across the image,
+     * Watermark a file stored on a Laravel disk (e.g. Filament FileUpload paths
+     * like slides/foo.jpg). Idempotent via a sibling ".wm" marker file.
+     * Returns true if it stamped the image this call.
+     */
+    public function stampDiskImage(string $relativePath, string $disk = 'public', bool $force = false): bool
+    {
+        if (! $relativePath) {
+            return false;
+        }
+
+        $absolute = Storage::disk($disk)->path($relativePath);
+        $marker = $absolute.'.wm';
+
+        if (! $force && is_file($marker)) {
+            return false;
+        }
+
+        if (! $this->stamp($absolute)) {
+            return false;
+        }
+
+        @file_put_contents($marker, '');
+
+        return true;
+    }
+
+    /**
+     * Stamp the configured text diagonally and tiled across the image,
      * overwriting the file in place. Returns true if applied.
      */
     public function stamp(string $path): bool

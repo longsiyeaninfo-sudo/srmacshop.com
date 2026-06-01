@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\WatermarksImagePath;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 class HomePromoCard extends Model
 {
+    use WatermarksImagePath;
+
     protected $fillable = [
         'platform',
         'image_path',
