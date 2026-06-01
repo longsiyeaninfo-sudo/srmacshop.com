@@ -184,6 +184,13 @@
                 if (resolve) resolve(original);
             },
 
+            // ✕ / Cancel — close without adding this photo at all
+            cancelCrop() {
+                const resolve = this._cropResolve;
+                this._closeCrop();
+                if (resolve) resolve(null);
+            },
+
             _closeCrop() {
                 if (this.cropper) { this.cropper.destroy(); this.cropper = null; }
                 this.cropOpen = false;
