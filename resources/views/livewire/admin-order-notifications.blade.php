@@ -42,7 +42,10 @@
 /* Dropdown */
 .aon-dropdown{position:absolute;top:calc(100% + 10px);right:0;width:340px;background:#fff;border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,.18),0 2px 8px rgba(0,0,0,.08);border:1px solid rgba(0,0,0,.07);z-index:9999;overflow:hidden}
 .dark .aon-dropdown{background:#1e2432;border-color:rgba(255,255,255,.09);box-shadow:0 16px 48px rgba(0,0,0,.55)}
-@media(max-width:380px){.aon-dropdown{width:calc(100vw - 16px);right:-8px}}
+@media(max-width:639px){
+  .aon-dropdown{position:fixed;top:68px;left:8px;right:8px;width:auto;border-radius:14px;max-height:calc(100dvh - 88px);overflow-y:auto}
+  .aon-scroll{max-height:calc(100dvh - 260px)}
+}
 
 /* CSS-only transitions (no Tailwind) */
 @keyframes aonIn{from{opacity:0;transform:scale(.93) translateY(-8px)}to{opacity:1;transform:scale(1) translateY(0)}}
