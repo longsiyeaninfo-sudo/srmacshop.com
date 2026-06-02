@@ -94,6 +94,7 @@
                         <div class="hp-ss-slide" :class="{ 'is-on': active === i }">
                             <button type="button" class="hp-ss-img-btn"
                                     @click="openZoom()" :aria-label="`Zoom slide ${i+1}`" tabindex="-1">
+                                <img :src="s.img" alt="" aria-hidden="true" class="hp-ss-img-bg">
                                 <img :src="s.img" :alt="s.name" class="hp-ss-img">
                             </button>
                             <template x-if="s.titleEn || s.price">

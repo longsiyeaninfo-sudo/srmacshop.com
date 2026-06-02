@@ -158,8 +158,10 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
   transition:opacity .5s cubic-bezier(.4,0,.2,1)}
 .hp-ss-slide.is-on{opacity:1;pointer-events:auto;z-index:1}
 .hp-ss-img-btn{background:transparent;border:0;padding:0;width:100%;height:100%;
-  cursor:zoom-in;display:block}
-.hp-ss-img{width:100%;height:100%;object-fit:cover;display:block}
+  cursor:zoom-in;display:block;position:relative;overflow:hidden}
+.hp-ss-img-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  transform:scale(1.15);filter:blur(28px) brightness(.82);z-index:0;pointer-events:none}
+.hp-ss-img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;display:block}
 .hp-ss-caption{position:absolute;left:0;right:0;bottom:0;
   display:flex;align-items:center;gap:14px;padding:18px 22px;
   background:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.78) 100%);
