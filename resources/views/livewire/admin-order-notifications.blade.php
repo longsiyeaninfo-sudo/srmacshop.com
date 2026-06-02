@@ -42,17 +42,32 @@
 /* Dropdown */
 .aon-dropdown{position:absolute;top:calc(100% + 10px);right:0;width:340px;background:#fff;border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,.18),0 2px 8px rgba(0,0,0,.08);border:1px solid rgba(0,0,0,.07);z-index:9999;overflow:hidden}
 .dark .aon-dropdown{background:#1e2432;border-color:rgba(255,255,255,.09);box-shadow:0 16px 48px rgba(0,0,0,.55)}
-@media(max-width:639px){
-  .aon-dropdown{position:fixed;top:68px;left:8px;right:8px;width:auto;border-radius:14px;max-height:calc(100dvh - 88px);overflow-y:auto}
-  .aon-scroll{max-height:calc(100dvh - 260px)}
-}
-
 /* CSS-only transitions (no Tailwind) */
 @keyframes aonIn{from{opacity:0;transform:scale(.93) translateY(-8px)}to{opacity:1;transform:scale(1) translateY(0)}}
 @keyframes aonOut{from{opacity:1;transform:scale(1) translateY(0)}to{opacity:0;transform:scale(.93) translateY(-8px)}}
 .aon-dropdown[x-show]{transform-origin:top right}
 .aon-enter{animation:aonIn .15s cubic-bezier(.16,1,.3,1) forwards}
 .aon-leave{animation:aonOut .1s ease forwards}
+
+/* ---- Mobile (<640px): full-width sheet, safe-area aware, smooth ---- */
+@media(max-width:639px){
+  .aon-dropdown{
+    position:fixed;
+    top:calc(env(safe-area-inset-top,0px) + 68px);
+    left:8px;right:8px;width:auto;
+    display:flex;flex-direction:column;
+    border-radius:16px;
+    max-height:calc(100vh - 88px);
+    max-height:calc(100dvh - env(safe-area-inset-top,0px) - 88px);
+  }
+  .aon-head,.aon-stats,.aon-footer{flex-shrink:0}
+  .aon-scroll{flex:1 1 auto;min-height:0;max-height:none}
+  .aon-backdrop{background:rgba(15,23,42,.5)}
+  .aon-enter{animation:aonInM .22s cubic-bezier(.16,1,.3,1) forwards}
+  .aon-leave{animation:aonOutM .14s ease forwards}
+}
+@keyframes aonInM{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes aonOutM{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-10px)}}
 
 /* Header */
 .aon-head{padding:13px 15px 12px;background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 100%);display:flex;align-items:center;gap:9px}
@@ -124,7 +139,7 @@
 </style>
 
     {{-- Backdrop (closes dropdown on tap-outside on mobile) --}}
-    <div class="aon-backdrop" x-show="open" x-cloak @click="close()" @touchend.prevent="close()"></div>
+    <div class="aon-backdrop" x-show="open" x-cloak x-transition.opacity.duration.150ms @click="close()" @touchend.prevent="close()"></div>
 
     {{-- Bell --}}
     <button type="button" class="aon-bell"
