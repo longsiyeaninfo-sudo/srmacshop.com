@@ -150,7 +150,7 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 .cart-badge{background:rgba(255,255,255,.25);border-radius:10px;padding:1px 6px;font-size:11px;font-weight:800;min-width:18px;text-align:center}
 
 /* Homepage slideshow — main image + thumbnail strip */
-.hp-slideshow-section{padding-top:18px}
+.shop-section.hp-slideshow-section{padding:6px 0.5rem}
 .hp-ss-main{position:relative;width:100%;max-width:1100px;margin:8px auto 0;aspect-ratio:16/9;
   border-radius:24px;overflow:hidden;background:var(--bg2);
   box-shadow:0 12px 32px rgba(0,0,0,.10),0 2px 6px rgba(0,0,0,.04)}
