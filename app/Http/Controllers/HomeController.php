@@ -102,7 +102,7 @@ class HomeController extends Controller
 
         // Homepage slideshow — admin-curated slides first, fall back to product photos.
         $homeSlides = HomeSlide::active()
-            ->with(['product' => fn ($q) => $q->with('media')])
+            ->with(['product' => fn ($q) => $q->with('media', 'category')])
             ->take($ssMax)
             ->get();
 

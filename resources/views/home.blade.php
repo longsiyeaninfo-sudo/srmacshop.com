@@ -32,6 +32,9 @@
                     'url'     => $s->resolvedUrl(),
                     'price'   => $formatPrice($s->resolvedPriceCents()),
                     'orig'    => $formatPrice($s->resolvedOriginalPriceCents()),
+                    'discountPct' => $s->resolvedDiscountPercent(),
+                    'savings'     => $formatPrice($s->resolvedSavingsCents()),
+                    'category'    => $s->resolvedCategoryName(),
                 ];
             })->values();
         } else {
@@ -45,6 +48,9 @@
                 'price'   => $formatPrice($p->price ?? null),
                 'orig'    => ($p->original_price && $p->price && $p->original_price > $p->price)
                     ? $formatPrice($p->original_price) : null,
+                'discountPct' => $p->isOnSale() ? $p->discountPercent() : null,
+                'savings'     => $p->isOnSale() ? $formatPrice($p->discountAmount()) : null,
+                'category'    => $p->category?->name,
             ])->values();
         }
     @endphp
@@ -97,9 +103,15 @@
                                 <img :src="s.img" alt="" aria-hidden="true" class="hp-ss-img-bg">
                                 <img :src="s.img" :alt="s.name" class="hp-ss-img">
                             </button>
+                            <template x-if="s.discountPct">
+                                <div class="hp-ss-badge"><span x-text="`−${s.discountPct}%`"></span></div>
+                            </template>
                             <template x-if="s.titleEn || s.price">
                                 <div class="hp-ss-caption">
                                     <div class="hp-ss-info">
+                                        <template x-if="s.category">
+                                            <div class="hp-ss-eyebrow" x-text="s.category"></div>
+                                        </template>
                                         <template x-if="s.titleEn">
                                             <div class="hp-ss-title"
                                                  :data-en="s.titleEn"
@@ -112,6 +124,9 @@
                                                 <span class="hp-ss-price" x-text="s.price"></span>
                                                 <template x-if="s.orig">
                                                     <span class="hp-ss-orig" x-text="s.orig"></span>
+                                                </template>
+                                                <template x-if="s.savings">
+                                                    <span class="hp-ss-save"><span data-en="Save" data-km="សន្សំ" data-zh="省">Save</span> <span x-text="s.savings"></span></span>
                                                 </template>
                                             </div>
                                         </template>

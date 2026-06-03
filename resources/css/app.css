@@ -162,20 +162,30 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 .hp-ss-img-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
   transform:scale(1.15);filter:blur(28px) brightness(.82);z-index:0;pointer-events:none}
 .hp-ss-img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;display:block}
-.hp-ss-caption{position:absolute;left:0;right:0;bottom:0;
+.hp-ss-badge{position:absolute;top:14px;left:14px;z-index:3;pointer-events:none;
+  background:#ff3b30;color:#fff;font-size:14px;font-weight:800;letter-spacing:.3px;
+  padding:6px 13px;border-radius:var(--radius-pill);
+  box-shadow:0 4px 14px rgba(255,59,48,.42)}
+.hp-ss-caption{position:absolute;left:0;right:0;bottom:0;z-index:2;
   display:flex;align-items:center;gap:14px;padding:18px 22px;
   background:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.78) 100%);
   color:#fff;text-align:left;pointer-events:none}
 .hp-ss-caption > *{pointer-events:auto}
-.hp-ss-info{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2;gap:4px}
+.hp-ss-info{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2;gap:5px}
+.hp-ss-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
+  color:rgba(255,255,255,.85);text-shadow:0 1px 4px rgba(0,0,0,.45)}
 .hp-ss-title{font-size:20px;font-weight:700;letter-spacing:-.01em;
   text-shadow:0 2px 8px rgba(0,0,0,.45);
   overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.hp-ss-price-row{display:flex;align-items:baseline;gap:10px}
+.hp-ss-price-row{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 10px}
 .hp-ss-price{font-size:22px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;
   text-shadow:0 2px 8px rgba(0,0,0,.5)}
 .hp-ss-orig{font-size:14px;font-weight:500;text-decoration:line-through;opacity:.7;
   font-variant-numeric:tabular-nums}
+.hp-ss-save{align-self:center;display:inline-flex;align-items:center;gap:4px;
+  background:#16a34a;color:#fff;font-weight:800;font-size:12px;letter-spacing:.2px;
+  padding:3px 10px;border-radius:var(--radius-pill);white-space:nowrap;
+  box-shadow:0 2px 8px rgba(22,163,74,.38)}
 .hp-ss-btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 22px;
   background:linear-gradient(180deg,#ff9522,#f97316);color:#fff !important;
   border-radius:980px;font-size:15px;font-weight:700;letter-spacing:-.005em;
@@ -210,11 +220,14 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 
 @media (max-width:640px){
   .hp-ss-main{aspect-ratio:4/3;border-radius:18px}
-  .hp-ss-arrow{opacity:1;width:36px;height:36px;font-size:20px}
+  .hp-ss-arrow{display:none}
   .hp-ss-caption{flex-direction:column;align-items:flex-start;gap:10px;padding:14px 16px 16px}
+  .hp-ss-badge{top:10px;left:10px;font-size:12px;padding:5px 11px}
+  .hp-ss-eyebrow{font-size:10px;letter-spacing:1.2px}
   .hp-ss-title{font-size:16px}
   .hp-ss-price{font-size:19px}
   .hp-ss-orig{font-size:13px}
+  .hp-ss-save{font-size:11px;padding:3px 9px}
   .hp-ss-btn{width:100%;padding:11px 18px;font-size:14px}
   .hp-ss-thumb{width:calc((100% - 30px) / 4);border-radius:10px}
 }

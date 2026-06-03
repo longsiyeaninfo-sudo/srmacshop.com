@@ -70,6 +70,21 @@ class HomeSlide extends Model
         return ($orig && $price && $orig > $price) ? $orig : null;
     }
 
+    public function resolvedDiscountPercent(): ?int
+    {
+        return $this->product?->isOnSale() ? $this->product->discountPercent() : null;
+    }
+
+    public function resolvedSavingsCents(): ?int
+    {
+        return $this->product?->isOnSale() ? $this->product->discountAmount() : null;
+    }
+
+    public function resolvedCategoryName(): ?string
+    {
+        return $this->product?->category?->name;
+    }
+
     public function resolvedUrl(): ?string
     {
         if ($this->link_url) {
