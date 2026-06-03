@@ -229,7 +229,7 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
   .hp-ss-price{font-size:19px}
   .hp-ss-orig{font-size:13px}
   .hp-ss-save{font-size:11px;padding:3px 9px}
-  .hp-ss-btn{width:auto;align-self:flex-end;margin-top:2px;padding:8px 15px;font-size:12.5px}
+  .hp-ss-btn{position:absolute;right:14px;bottom:13px;width:auto;padding:8px 15px;font-size:12.5px}
   .hp-ss-thumb{width:calc((100% - 30px) / 4);border-radius:10px}
 }
 
