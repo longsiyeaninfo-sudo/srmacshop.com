@@ -168,7 +168,7 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
   box-shadow:0 4px 14px rgba(255,59,48,.42)}
 .hp-ss-caption{position:absolute;left:0;right:0;bottom:0;z-index:2;
   display:flex;align-items:center;gap:14px;padding:18px 22px;
-  background:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.78) 100%);
+  background:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.40) 50%,rgba(0,0,0,.84) 100%);
   color:#fff;text-align:left;pointer-events:none}
 .hp-ss-caption > *{pointer-events:auto}
 .hp-ss-info{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2;gap:5px}
@@ -221,10 +221,11 @@ body,#cust-nav,.footer,.pcard,.suc-card,.detail-contact-card,.detail-info-card{t
 @media (max-width:640px){
   .hp-ss-main{aspect-ratio:4/3;border-radius:18px}
   .hp-ss-arrow{display:none}
-  .hp-ss-caption{flex-direction:column;align-items:flex-start;gap:10px;padding:14px 16px 16px}
+  .hp-ss-caption{flex-direction:column;align-items:flex-start;gap:8px;padding:13px 14px 13px}
+  .hp-ss-info{gap:3px}
   .hp-ss-badge{top:10px;left:10px;font-size:12px;padding:5px 11px}
   .hp-ss-eyebrow{font-size:10px;letter-spacing:1.2px}
-  .hp-ss-title{font-size:16px}
+  .hp-ss-title{font-size:15px}
   .hp-ss-price{font-size:19px}
   .hp-ss-orig{font-size:13px}
   .hp-ss-save{font-size:11px;padding:3px 9px}
